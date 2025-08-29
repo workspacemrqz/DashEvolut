@@ -324,4 +324,23 @@
   [data-testid="button-filter"] svg {
     color: #060606 !important;
   }
+
+  /* Force status badge text colors with highest priority */
+  .status-badge.status-active,
+  .status-badge.status-inactive,
+  .status-badge.status-prospect,
+  .status-badge.status-discovery,
+  .status-badge.status-development,
+  .status-badge.status-delivery,
+  .status-badge.status-post-sale,
+  .status-badge.status-overdue,
+  .status-badge.status-completed,
+  .status-badge.status-cancelled {
+    color: #060606 !important;
+  }
+
+  /* Additional specificity for any Badge component with status classes */
+  [class*="status-badge"][class*="status-"] {
+    color: #060606 !important;
+  }
 }
