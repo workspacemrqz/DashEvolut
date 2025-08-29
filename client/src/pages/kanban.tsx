@@ -252,7 +252,7 @@ export default function Kanban() {
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-bg-primary kanban-page">
+    <div className="flex-1 flex flex-col bg-bg-primary">
       <Header title="Kanban" />
       
       <div className="flex-1 p-6">
