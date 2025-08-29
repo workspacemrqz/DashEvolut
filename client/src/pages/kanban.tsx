@@ -48,7 +48,10 @@ export default function Kanban() {
 
   const updateClientStatus = useMutation({
     mutationFn: async ({ clientId, status }: { clientId: string; status: string }) => {
-      return apiRequest("PATCH", `/api/clients/${clientId}`, { status });
+      return apiRequest("PATCH", `/api/clients/${clientId}`, { 
+        status,
+        updatedAt: new Date().toISOString()
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
@@ -68,7 +71,10 @@ export default function Kanban() {
 
   const updateProjectStatus = useMutation({
     mutationFn: async ({ projectId, status }: { projectId: string; status: string }) => {
-      return apiRequest("PATCH", `/api/projects/${projectId}`, { status });
+      return apiRequest("PATCH", `/api/projects/${projectId}`, { 
+        status,
+        updatedAt: new Date().toISOString()
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
@@ -121,11 +127,21 @@ export default function Kanban() {
   };
 
   const getClientsByStatus = (status: string): Client[] => {
-    return clients?.filter(client => client.status === status) || [];
+    const filteredClients = clients?.filter(client => client.status === status) || [];
+    return filteredClients.sort((a, b) => {
+      const aUpdated = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const bUpdated = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return bUpdated - aUpdated;
+    });
   };
 
   const getProjectsByStatus = (status: string): ProjectWithClient[] => {
-    return projects?.filter(project => project.status === status) || [];
+    const filteredProjects = projects?.filter(project => project.status === status) || [];
+    return filteredProjects.sort((a, b) => {
+      const aUpdated = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const bUpdated = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return bUpdated - aUpdated;
+    });
   };
 
   const ClientCard = ({ client }: { client: Client }) => (
@@ -138,6 +154,12 @@ export default function Kanban() {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
+        </div>
+        <div className="text-xs text-[#fafafa]">
+          {client.updatedAt ? 
+            new Date(client.updatedAt).toLocaleDateString('pt-BR') : 
+            new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR')
+          }
         </div>
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
@@ -185,6 +207,12 @@ export default function Kanban() {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
+        </div>
+        <div className="text-xs text-[#fafafa]">
+          {project.updatedAt ? 
+            new Date(project.updatedAt).toLocaleDateString('pt-BR') : 
+            new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR')
+          }
         </div>
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
