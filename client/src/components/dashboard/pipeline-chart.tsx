@@ -1,14 +1,13 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { ProjectWithClient } from "@shared/schema";
-import { useLocation } from "wouter";
+
 
 interface PipelineChartProps {
   "data-testid"?: string;
 }
 
 export default function PipelineChart({ "data-testid": testId }: PipelineChartProps) {
-  const [, setLocation] = useLocation();
   const { data: projects } = useQuery<ProjectWithClient[]>({
     queryKey: ["/api/projects"],
   });
@@ -36,21 +35,10 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
 
   const data = generatePipelineData();
 
-  const handleViewDetails = () => {
-    setLocation("/projects");
-  };
-
   return (
     <div className="container-bg rounded-xl p-6 border border-border-secondary" data-testid={testId}>
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6">
         <h3 className="text-lg font-semibold text-text-primary">Pipeline de Projetos</h3>
-        <button 
-          className="btn-secondary px-3 py-1 rounded-lg text-xs"
-          onClick={handleViewDetails}
-          data-testid="btn-pipeline-details"
-        >
-          Ver Detalhes
-        </button>
       </div>
       <div className="h-64">
         {data.length === 0 ? (
