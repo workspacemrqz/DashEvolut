@@ -166,7 +166,7 @@ export default function Kanban() {
           <span className="truncate">{client.email}</span>
         </div>
         {client.phone && (
-          <div className="flex items-center text-xs text-text-secondary lg:block hidden">
+          <div className="flex items-center text-xs text-text-secondary hidden lg:flex">
             <Phone className="w-3 h-3 mr-1" />
             {client.phone}
           </div>
