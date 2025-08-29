@@ -215,6 +215,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/alerts/:id/read", async (req, res) => {
+    try {
+      const alert = await storage.markAlertAsRead(req.params.id);
+      if (!alert) {
+        return res.status(404).json({ message: "Alert not found" });
+      }
+      res.json(alert);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to mark alert as read" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
