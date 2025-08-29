@@ -411,6 +411,11 @@
     }
   }
 
+  /* Ensure "Horas Trabalhadas" has the same color as "Margem de Lucro" */
+  [data-testid="label-worked-hours"] {
+    color: hsl(0 0% 89.8%) !important;
+  }
+
   /* Start/Iniciar button text and icon color override */
   button[data-testid="button-start"] {
     color: #060606 !important;
