@@ -17,14 +17,12 @@ export const userSettings = pgTable("user_settings", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").references(() => users.id).notNull(),
   notifications: json("notifications").$type<{
-    email: boolean;
     push: boolean;
     projectUpdates: boolean;
     clientMessages: boolean;
     deadlineAlerts: boolean;
     weeklyReports: boolean;
   }>().default({
-    email: true,
     push: true,
     projectUpdates: true,
     clientMessages: true,

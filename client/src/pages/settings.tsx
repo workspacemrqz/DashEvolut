@@ -331,18 +331,6 @@ export default function Settings() {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-text-primary font-medium">Notificações por Email</Label>
-                      <p className="text-sm text-text-secondary">Receba notificações no seu email</p>
-                    </div>
-                    <Switch
-                      checked={userSettings?.notifications?.email || false}
-                      onCheckedChange={(value) => handleNotificationChange("email", value)}
-                      data-testid="switch-email-notifications"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
                       <Label className="text-text-primary font-medium">Notificações Push</Label>
                       <p className="text-sm text-text-secondary">Receba notificações no navegador</p>
                     </div>

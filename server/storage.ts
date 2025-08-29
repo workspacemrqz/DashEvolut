@@ -93,7 +93,6 @@ export class MemStorage implements IStorage {
       id: randomUUID(),
       userId: user.id,
       notifications: {
-        email: true,
         push: true,
         projectUpdates: true,
         clientMessages: true,
@@ -327,7 +326,6 @@ export class MemStorage implements IStorage {
       ...insertSettings,
       id: randomUUID(),
       notifications: insertSettings.notifications || {
-        email: true,
         push: true,
         projectUpdates: true,
         clientMessages: true,
