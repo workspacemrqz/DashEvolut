@@ -1,7 +1,9 @@
-import { ClientWithStats } from "@shared/schema";
-import { Eye, MessageCircle, Mail, MoreHorizontal } from "lucide-react";
+import { ClientWithStats, ProjectWithClient } from "@shared/schema";
+import { Eye, MessageCircle, Mail, MoreHorizontal, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import {
   Dialog,
   DialogContent,
@@ -34,10 +36,22 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
   const { toast } = useToast();
   const [selectedClient, setSelectedClient] = useState<ClientWithStats | null>(null);
   const [showClientDetails, setShowClientDetails] = useState(false);
+  const [, navigate] = useLocation();
+
+  // Buscar projetos do cliente selecionado
+  const { data: clientProjects } = useQuery<ProjectWithClient[]>({
+    queryKey: [`/api/clients/${selectedClient?.id}/projects`],
+    enabled: !!selectedClient?.id,
+  });
 
   const handleViewClient = (client: ClientWithStats) => {
     setSelectedClient(client);
     setShowClientDetails(true);
+  };
+
+  const handleProjectClick = (projectId: string) => {
+    navigate(`/projects`);
+    setShowClientDetails(false);
   };
 
   const handleWhatsAppContact = (client: ClientWithStats) => {
@@ -245,6 +259,40 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 <span className={`font-semibold ${upsellMap[selectedClient.upsellPotential || 'medium'].color}`}>
                   {upsellMap[selectedClient.upsellPotential || 'medium'].label}
                 </span>
+              </div>
+
+              {/* Projects Section */}
+              <div>
+                <h4 className="font-semibold text-text-primary mb-3">Projetos do Cliente</h4>
+                {clientProjects && clientProjects.length > 0 ? (
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {clientProjects.map((project) => (
+                      <div
+                        key={project.id}
+                        onClick={() => handleProjectClick(project.id)}
+                        className="flex items-center justify-between p-3 rounded-lg bg-bg-secondary border border-border-secondary hover:border-border-primary cursor-pointer transition-all"
+                        data-testid={`client-project-${project.id}`}
+                      >
+                        <div className="flex-1">
+                          <p className="font-medium text-text-primary">{project.name}</p>
+                          <p className="text-sm text-text-secondary">R$ {project.value.toLocaleString('pt-BR')}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge className={`status-badge status-${project.status}`}>
+                            {project.status === 'discovery' ? 'Discovery' :
+                             project.status === 'development' ? 'Desenvolvimento' :
+                             project.status === 'delivery' ? 'Entrega' :
+                             project.status === 'post_sale' ? 'Pós-venda' :
+                             project.status === 'completed' ? 'Concluído' : 'Cancelado'}
+                          </Badge>
+                          <ExternalLink className="w-4 h-4 text-text-secondary" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-text-secondary text-sm">Nenhum projeto encontrado para este cliente.</p>
+                )}
               </div>
             </div>
           )}
