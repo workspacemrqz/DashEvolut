@@ -90,7 +90,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             {onEdit && (
               <Button 
                 onClick={onEdit}
-                className="btn-secondary"
+                className="btn-primary"
                 data-testid="button-edit-project"
               >
                 Editar
