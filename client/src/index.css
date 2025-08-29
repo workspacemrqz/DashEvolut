@@ -310,4 +310,9 @@
     @apply bg-gray-500/20;
     color: #060606 !important;
   }
+
+  .status-overdue {
+    @apply bg-red-500/20;
+    color: #060606 !important;
+  }
 }

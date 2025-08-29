@@ -77,11 +77,11 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
                 {project.description}
               </p>
               <div className="flex items-center gap-3">
-                <Badge className={`status-badge ${getStatusColor(project.status)}`} data-testid="project-status">
+                <Badge className={`status-badge ${getStatusColor(project.status)}`} data-testid="project-status" style={{color: '#060606'}}>
                   {getStatusLabel(project.status)}
                 </Badge>
                 {isOverdue() && (
-                  <Badge className="status-badge status-overdue">
+                  <Badge className="status-badge status-overdue" style={{color: '#060606'}}>
                     Atrasado
                   </Badge>
                 )}
@@ -92,6 +92,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
                 onClick={onEdit}
                 className="btn-secondary"
                 data-testid="button-edit-project"
+                style={{color: '#060606'}}
               >
                 Editar
               </Button>
