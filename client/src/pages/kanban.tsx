@@ -162,11 +162,17 @@ export default function Kanban() {
           </div>
         )}
         <div className="flex justify-between items-center">
-          <Badge className="text-xs kanban-badge">
+          <Badge 
+            className="text-xs" 
+            style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
+          >
             {client.sector}
           </Badge>
           {client.upsellPotential && (
-            <Badge className="text-xs kanban-badge">
+            <Badge 
+              className="text-xs" 
+              style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
+            >
               {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
             </Badge>
           )}
@@ -237,7 +243,10 @@ export default function Kanban() {
       <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{title}</h3>
-          <Badge className="text-xs kanban-badge">
+          <Badge 
+            className="text-xs" 
+            style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
+          >
             {count}
           </Badge>
         </div>
@@ -255,11 +264,17 @@ export default function Kanban() {
       <div className="flex-1 p-6">
         <Tabs defaultValue="clients" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
-            <TabsTrigger value="clients" className="data-[state=active]:kanban-tab-active">
+            <TabsTrigger 
+              value="clients" 
+              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606]"
+            >
               <Users className="w-4 h-4 mr-2" />
               Clientes
             </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:kanban-tab-active">
+            <TabsTrigger 
+              value="projects" 
+              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606]"
+            >
               <FolderOpen className="w-4 h-4 mr-2" />
               Projetos
             </TabsTrigger>
