@@ -8,7 +8,6 @@ import { Users, FolderOpen, Building, Mail, Phone, Calendar, DollarSign } from "
 import { Client, Project, ProjectWithClient } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { motion } from "framer-motion";
 
 type ClientWithDrag = Client & {
   isDragging?: boolean;
@@ -23,7 +22,6 @@ export default function Kanban() {
   const queryClient = useQueryClient();
   const [draggedClient, setDraggedClient] = useState<ClientWithDrag | null>(null);
   const [draggedProject, setDraggedProject] = useState<ProjectWithDrag | null>(null);
-  const [activeColumn, setActiveColumn] = useState<string | null>(null);
 
   const { data: clients } = useQuery<Client[]>({
     queryKey: ["/api/clients"],
@@ -101,7 +99,6 @@ export default function Kanban() {
       });
     }
     setDraggedClient(null);
-    setActiveColumn(null);
   };
 
   const handleProjectDragStart = (project: ProjectWithClient) => {
@@ -117,16 +114,10 @@ export default function Kanban() {
       });
     }
     setDraggedProject(null);
-    setActiveColumn(null);
   };
 
-  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    setActiveColumn(columnId);
-  };
-
-  const handleDragLeave = () => {
-    setActiveColumn(null);
   };
 
   const getClientsByStatus = (status: string): Client[] => {
@@ -138,109 +129,89 @@ export default function Kanban() {
   };
 
   const ClientCard = ({ client }: { client: Client }) => (
-    <motion.div
-      layout
-      layoutId={`client-${client.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      whileHover={{ scale: 1.02 }}
-      whileDrag={{ scale: 1.05, rotate: 2 }}
+    <Card 
+      className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
+      draggable
+      onDragStart={() => handleClientDragStart(client)}
+      data-testid={`client-card-${client.id}`}
     >
-      <Card 
-        className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
-        draggable
-        onDragStart={() => handleClientDragStart(client)}
-        data-testid={`client-card-${client.id}`}
-      >
-        <CardHeader className="pb-2">
-          <div className="flex items-start justify-between">
-            <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-2">
+        <div className="flex items-center text-xs text-text-secondary">
+          <Building className="w-3 h-3 mr-1" />
+          {client.company}
+        </div>
+        <div className="flex items-center text-xs text-text-secondary">
+          <Mail className="w-3 h-3 mr-1" />
+          {client.email}
+        </div>
+        {client.phone && (
           <div className="flex items-center text-xs text-text-secondary">
-            <Building className="w-3 h-3 mr-1" />
-            {client.company}
+            <Phone className="w-3 h-3 mr-1" />
+            {client.phone}
           </div>
-          <div className="flex items-center text-xs text-text-secondary">
-            <Mail className="w-3 h-3 mr-1" />
-            {client.email}
+        )}
+        {client.ltv && client.ltv > 0 && (
+          <div className="flex items-center text-xs">
+            <DollarSign className="w-3 h-3 mr-1 text-green-500" />
+            <span className="text-green-500">R$ {client.ltv.toLocaleString('pt-BR')}</span>
           </div>
-          {client.phone && (
-            <div className="flex items-center text-xs text-text-secondary">
-              <Phone className="w-3 h-3 mr-1" />
-              {client.phone}
-            </div>
-          )}
-          {client.ltv && client.ltv > 0 && (
-            <div className="flex items-center text-xs">
-              <DollarSign className="w-3 h-3 mr-1 text-green-500" />
-              <span className="text-green-500">R$ {client.ltv.toLocaleString('pt-BR')}</span>
-            </div>
-          )}
-          <div className="flex justify-between items-center">
+        )}
+        <div className="flex justify-between items-center">
+          <Badge className="status-badge status-active text-xs">
+            {client.sector}
+          </Badge>
+          {client.upsellPotential && (
             <Badge className="status-badge status-active text-xs">
-              {client.sector}
+              {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
             </Badge>
-            {client.upsellPotential && (
-              <Badge className="status-badge status-active text-xs">
-                {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
-              </Badge>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 
   const ProjectCard = ({ project }: { project: ProjectWithClient }) => (
-    <motion.div
-      layout
-      layoutId={`project-${project.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      whileHover={{ scale: 1.02 }}
-      whileDrag={{ scale: 1.05, rotate: 2 }}
+    <Card 
+      className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
+      draggable
+      onDragStart={() => handleProjectDragStart(project)}
+      data-testid={`project-card-${project.id}`}
     >
-      <Card 
-        className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
-        draggable
-        onDragStart={() => handleProjectDragStart(project)}
-        data-testid={`project-card-${project.id}`}
-      >
-        <CardHeader className="pb-2">
-          <div className="flex items-start justify-between">
-            <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-2">
+        <p className="text-xs text-text-secondary line-clamp-2">{project.description}</p>
+        <div className="flex items-center text-xs text-text-secondary">
+          <Users className="w-3 h-3 mr-1" />
+          {project.client?.name}
+        </div>
+        <div className="flex items-center text-xs">
+          <DollarSign className="w-3 h-3 mr-1 text-green-500" />
+          <span className="text-green-500">R$ {project.value.toLocaleString('pt-BR')}</span>
+        </div>
+        <div className="flex items-center text-xs text-text-secondary">
+          <Calendar className="w-3 h-3 mr-1" />
+          {new Date(project.dueDate).toLocaleDateString('pt-BR')}
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="w-full bg-muted rounded-full h-2">
+            <div 
+              className="bg-primary h-2 rounded-full transition-all" 
+              style={{ width: `${project.progress}%` }}
+            />
           </div>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
-          <p className="text-xs text-text-secondary line-clamp-2">{project.description}</p>
-          <div className="flex items-center text-xs text-text-secondary">
-            <Users className="w-3 h-3 mr-1" />
-            {project.client?.name}
-          </div>
-          <div className="flex items-center text-xs">
-            <DollarSign className="w-3 h-3 mr-1 text-green-500" />
-            <span className="text-green-500">R$ {project.value.toLocaleString('pt-BR')}</span>
-          </div>
-          <div className="flex items-center text-xs text-text-secondary">
-            <Calendar className="w-3 h-3 mr-1" />
-            {new Date(project.dueDate).toLocaleDateString('pt-BR')}
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="w-full bg-muted rounded-full h-2">
-              <div 
-                className="bg-primary h-2 rounded-full transition-all" 
-                style={{ width: `${project.progress}%` }}
-              />
-            </div>
-            <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+          <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
+        </div>
+      </CardContent>
+    </Card>
   );
 
   const KanbanColumn = ({ 
@@ -248,48 +219,34 @@ export default function Kanban() {
     color, 
     children, 
     onDrop, 
-    count,
-    columnId 
+    count 
   }: { 
     title: string; 
     color: string; 
     children: React.ReactNode; 
     onDrop: (e: React.DragEvent) => void; 
     count: number;
-    columnId: string;
-  }) => {
-    const isActive = activeColumn === columnId;
-    
-    return (
-      <motion.div 
-        className={`flex-1 min-h-96 transition-colors duration-200 ${
-          isActive ? "bg-muted/30" : ""
-        }`}
-        onDrop={onDrop}
-        onDragOver={(e) => handleDragOver(e, columnId)}
-        onDragLeave={handleDragLeave}
-        data-testid={`kanban-column-${title.toLowerCase()}`}
-        layout
-      >
-        <div className={`${color} h-1 rounded-t-lg`} />
-        <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-text-primary">{title}</h3>
-            <Badge variant="outline" className="text-xs">
-              {count}
-            </Badge>
-          </div>
-          <motion.div 
-            className="space-y-3"
-            layout
-            transition={{ duration: 0.2 }}
-          >
-            {children}
-          </motion.div>
+  }) => (
+    <div 
+      className="flex-1 min-h-96"
+      onDrop={onDrop}
+      onDragOver={handleDragOver}
+      data-testid={`kanban-column-${title.toLowerCase()}`}
+    >
+      <div className="h-1 rounded-t-lg bg-[#3571e6]" />
+      <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-text-primary">{title}</h3>
+          <Badge variant="outline" className="text-xs">
+            {count}
+          </Badge>
         </div>
-      </motion.div>
-    );
-  };
+        <div className="space-y-3">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex-1 flex flex-col bg-bg-primary">
@@ -327,7 +284,6 @@ export default function Kanban() {
                     title={status.name}
                     color={status.color}
                     count={clientsInStatus.length}
-                    columnId={status.id}
                     onDrop={(e) => handleClientDrop(e, status.id)}
                   >
                     {clientsInStatus.map((client) => (
@@ -349,7 +305,6 @@ export default function Kanban() {
                     title={status.name}
                     color={status.color}
                     count={projectsInStatus.length}
-                    columnId={status.id}
                     onDrop={(e) => handleProjectDrop(e, status.id)}
                   >
                     {projectsInStatus.map((project) => (
