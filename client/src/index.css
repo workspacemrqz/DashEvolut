@@ -179,8 +179,16 @@
     color: var(--kanban-badge-text) !important;
   }
   
+  .kanban-badge * {
+    color: var(--kanban-badge-text) !important;
+  }
+  
   .kanban-tab-active {
     background-color: var(--kanban-badge-bg) !important;
+    color: var(--kanban-badge-text) !important;
+  }
+  
+  .kanban-tab-active * {
     color: var(--kanban-badge-text) !important;
   }
   
