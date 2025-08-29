@@ -216,7 +216,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 <div>
                   <h3 className="text-xl font-bold text-text-primary">{selectedClient.name}</h3>
                   <p className="text-text-secondary">{selectedClient.company}</p>
-                  <Badge className={`status-badge ${statusMap[selectedClient.status].className} mt-2`}>
+                  <Badge className={`status-badge ${statusMap[selectedClient.status].className} mt-2`} style={{color: '#060606'}}>
                     {statusMap[selectedClient.status].label}
                   </Badge>
                 </div>
@@ -278,7 +278,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                           <p className="text-sm text-text-secondary">R$ {project.value.toLocaleString('pt-BR')}</p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge className={`status-badge status-${project.status}`}>
+                          <Badge className={`status-badge status-${project.status}`} style={{color: '#060606'}}>
                             {project.status === 'discovery' ? 'Discovery' :
                              project.status === 'development' ? 'Desenvolvimento' :
                              project.status === 'delivery' ? 'Entrega' :
