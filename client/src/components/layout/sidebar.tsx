@@ -1,11 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { BarChart3, Users, FolderOpen, FileText, Settings } from "lucide-react";
+import { BarChart3, Users, FolderOpen, Settings } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
   { name: "Clientes", href: "/clients", icon: Users },
   { name: "Projetos", href: "/projects", icon: FolderOpen },
-  { name: "Relatórios", href: "/reports", icon: FileText },
   { name: "Configurações", href: "/settings", icon: Settings },
 ];
 
