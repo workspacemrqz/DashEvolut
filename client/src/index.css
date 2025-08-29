@@ -343,4 +343,10 @@
   [class*="status-badge"][class*="status-"] {
     color: #060606 !important;
   }
+
+  /* Cancel button text color override with high specificity */
+  button[data-testid="button-cancel"],
+  .btn-secondary[data-testid="button-cancel"] {
+    color: #060606 !important;
+  }
 }
