@@ -155,24 +155,6 @@ export default function Kanban() {
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
         </div>
-        <div className="text-xs" style={{color: '#2D81EA'}}>
-          {client.updatedAt ? 
-            new Date(client.updatedAt).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            }) : 
-            new Date(client.createdAt || Date.now()).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })
-          }
-        </div>
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
         <div className="flex items-center text-xs text-text-secondary">
@@ -205,6 +187,27 @@ export default function Kanban() {
             </Badge>
           )}
         </div>
+        <div className="text-xs mt-2">
+          <span style={{color: '#FFFFFF'}}>Atualização: </span>
+          <span style={{color: '#2D81EA'}}>
+            {client.updatedAt ? 
+              new Date(client.updatedAt).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) : 
+              new Date(client.createdAt || Date.now()).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            }
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
@@ -219,24 +222,6 @@ export default function Kanban() {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
-        </div>
-        <div className="text-xs" style={{color: '#2D81EA'}}>
-          {project.updatedAt ? 
-            new Date(project.updatedAt).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            }) : 
-            new Date(project.createdAt || Date.now()).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })
-          }
         </div>
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
@@ -261,6 +246,27 @@ export default function Kanban() {
             />
           </div>
           <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
+        </div>
+        <div className="text-xs mt-2">
+          <span style={{color: '#FFFFFF'}}>Atualização: </span>
+          <span style={{color: '#2D81EA'}}>
+            {project.updatedAt ? 
+              new Date(project.updatedAt).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) : 
+              new Date(project.createdAt || Date.now()).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            }
+          </span>
         </div>
       </CardContent>
     </Card>
