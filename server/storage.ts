@@ -1,5 +1,5 @@
 import { 
-  type User, type InsertUser, type UpdateUserProfile, type ChangePassword,
+  type User, type InsertUser, type UpdateUserProfile,
   type UserSettings, type InsertUserSettings, type UpdateUserSettings,
   type Client, type InsertClient,
   type Project, type InsertProject, type ProjectWithClient,
@@ -17,7 +17,6 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserProfile(id: string, updates: UpdateUserProfile): Promise<User | undefined>;
-  changePassword(id: string, passwordHash: string): Promise<User | undefined>;
   
   // User Settings
   getUserSettings(userId: string): Promise<UserSettings | undefined>;
@@ -83,7 +82,6 @@ export class MemStorage implements IStorage {
       email: "joao@exemplo.com",
       company: "Minha Empresa",
       phone: "(11) 99999-9999",
-      passwordHash: "$2b$10$hashedPassword123", // In real app, this would be properly hashed
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -318,18 +316,6 @@ export class MemStorage implements IStorage {
     return updatedUser;
   }
 
-  async changePassword(id: string, passwordHash: string): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-
-    const updatedUser: User = {
-      ...user,
-      passwordHash,
-      updatedAt: new Date()
-    };
-    this.users.set(id, updatedUser);
-    return updatedUser;
-  }
 
   // User Settings methods
   async getUserSettings(userId: string): Promise<UserSettings | undefined> {

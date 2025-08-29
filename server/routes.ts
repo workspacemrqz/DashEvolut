@@ -3,7 +3,6 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   updateUserProfileSchema, 
-  changePasswordSchema, 
   updateUserSettingsSchema,
   insertClientSchema, 
   insertProjectSchema, 
@@ -23,9 +22,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      // Don't send the password hash
-      const { passwordHash, ...userProfile } = user;
-      res.json(userProfile);
+      res.json(user);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch user profile" });
     }
@@ -47,39 +44,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Don't send the password hash
-      const { passwordHash, ...userProfile } = updatedUser;
-      res.json(userProfile);
+      res.json(updatedUser);
     } catch (error) {
       res.status(400).json({ message: "Invalid profile data" });
     }
   });
 
-  app.patch("/api/user/password", async (req, res) => {
-    try {
-      const validatedData = changePasswordSchema.parse(req.body);
-      // For now, we'll use the first user as the current user
-      const storageUsers = (storage as any).users as Map<string, any>;
-      const users = Array.from(storageUsers.values());
-      const currentUser = users[0];
-      if (!currentUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // In a real app, you would verify the current password here
-      // For now, we'll just update with the new password hash
-      const hashedPassword = `$2b$10$hashed_${validatedData.newPassword}`;
-      const updatedUser = await storage.changePassword(currentUser.id, hashedPassword);
-      
-      if (!updatedUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      res.json({ message: "Password updated successfully" });
-    } catch (error) {
-      res.status(400).json({ message: "Invalid password data" });
-    }
-  });
 
   // User Settings routes
   app.get("/api/user/settings", async (req, res) => {

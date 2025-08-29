@@ -9,7 +9,6 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   company: text("company"),
   phone: text("phone"),
-  passwordHash: text("password_hash").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -137,19 +136,10 @@ export const insertUserSchema = createInsertSchema(users).omit({
 
 export const updateUserProfileSchema = createInsertSchema(users).omit({
   id: true,
-  passwordHash: true,
   createdAt: true,
   updatedAt: true,
 }).partial();
 
-export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Senha atual é obrigatória"),
-  newPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Senhas não coincidem",
-  path: ["confirmPassword"],
-});
 
 export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   id: true,
@@ -200,7 +190,6 @@ export const insertAlertSchema = createInsertSchema(alerts).omit({
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
-export type ChangePassword = z.infer<typeof changePasswordSchema>;
 
 export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;

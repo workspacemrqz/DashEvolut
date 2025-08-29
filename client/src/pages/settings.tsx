@@ -33,8 +33,6 @@ import {
   Upload,
   Trash2,
   Save,
-  Eye,
-  EyeOff
 } from "lucide-react";
 
 const profileSchema = z.object({
@@ -44,22 +42,12 @@ const profileSchema = z.object({
   phone: z.string().optional(),
 });
 
-const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Senha atual é obrigatória"),
-  newPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Senhas não coincidem",
-  path: ["confirmPassword"],
-});
 
 type ProfileFormData = z.infer<typeof profileSchema>;
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export default function Settings() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("profile");
-  const [showPassword, setShowPassword] = useState(false);
 
   // Buscar perfil do usuário
   const { data: userProfile, isLoading: isLoadingProfile } = useQuery({
@@ -81,14 +69,6 @@ export default function Settings() {
     },
   });
 
-  const passwordForm = useForm<ChangePasswordFormData>({
-    resolver: zodResolver(changePasswordSchema),
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
 
   // Mutations para atualizar perfil e senha
   const updateProfileMutation = useMutation({
@@ -112,26 +92,6 @@ export default function Settings() {
     },
   });
 
-  const changePasswordMutation = useMutation({
-    mutationFn: async (data: ChangePasswordFormData) => {
-      const response = await apiRequest("PATCH", "/api/user/password", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Senha alterada",
-        description: "Sua senha foi alterada com sucesso.",
-      });
-      passwordForm.reset();
-    },
-    onError: () => {
-      toast({
-        title: "Erro ao alterar senha",
-        description: "Não foi possível alterar a senha.",
-        variant: "destructive",
-      });
-    },
-  });
 
   const updateSettingsMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -158,10 +118,10 @@ export default function Settings() {
   useEffect(() => {
     if (userProfile) {
       form.reset({
-        name: userProfile.name || "",
-        email: userProfile.email || "",
-        company: userProfile.company || "",
-        phone: userProfile.phone || "",
+        name: userProfile?.name || "",
+        email: userProfile?.email || "",
+        company: userProfile?.company || "",
+        phone: userProfile?.phone || "",
       });
     }
   }, [userProfile]);
@@ -170,13 +130,12 @@ export default function Settings() {
     updateProfileMutation.mutate(data);
   };
 
-  const onSubmitPassword = (data: ChangePasswordFormData) => {
-    changePasswordMutation.mutate(data);
-  };
 
   const handleNotificationChange = (key: string, value: boolean) => {
+    if (!userSettings) return;
+    
     const updatedNotifications = {
-      ...userSettings?.notifications,
+      ...userSettings.notifications,
       [key]: value
     };
     
@@ -186,8 +145,10 @@ export default function Settings() {
   };
 
   const handleUISettingChange = (key: string, value: string | boolean) => {
+    if (!userSettings) return;
+    
     const updatedUISettings = {
-      ...userSettings?.uiSettings,
+      ...userSettings.uiSettings,
       [key]: value
     };
     
@@ -377,98 +338,6 @@ export default function Settings() {
                   </form>
                 </Form>
 
-                <Separator />
-
-                {/* Formulário de Senha */}
-                <Form {...passwordForm}>
-                  <form onSubmit={passwordForm.handleSubmit(onSubmitPassword)} className="space-y-4">
-                    <h3 className="text-lg font-semibold text-text-primary">Alterar Senha</h3>
-                    
-                    <FormField
-                      control={passwordForm.control}
-                      name="currentPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-text-primary">Senha Atual</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                {...field}
-                                type={showPassword ? "text" : "password"}
-                                className="bg-bg-primary border-border-secondary text-text-primary pr-10"
-                                data-testid="input-current-password"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                              >
-                                {showPassword ? (
-                                  <EyeOff className="w-4 h-4 text-text-secondary" />
-                                ) : (
-                                  <Eye className="w-4 h-4 text-text-secondary" />
-                                )}
-                              </button>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={passwordForm.control}
-                        name="newPassword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-text-primary">Nova Senha</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="password"
-                                className="bg-bg-primary border-border-secondary text-text-primary"
-                                data-testid="input-new-password"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={passwordForm.control}
-                        name="confirmPassword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-text-primary">Confirmar Nova Senha</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="password"
-                                className="bg-bg-primary border-border-secondary text-text-primary"
-                                data-testid="input-confirm-password"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div className="flex justify-end">
-                      <Button 
-                        type="submit" 
-                        className="btn-primary flex items-center gap-2"
-                        data-testid="button-change-password"
-                        disabled={changePasswordMutation.isPending}
-                      >
-                        <Save className="w-4 h-4" />
-                        {changePasswordMutation.isPending ? "Alterando..." : "Alterar Senha"}
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
               </CardContent>
             </Card>
           )}
