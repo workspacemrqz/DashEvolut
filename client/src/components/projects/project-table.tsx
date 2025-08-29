@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import ProjectDetails from "@/components/projects/project-details";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -230,60 +231,17 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
       </div>
 
       {/* Project Details Modal */}
-      <Dialog open={showProjectDetails} onOpenChange={setShowProjectDetails}>
-        <DialogContent className="bg-bg-container border-border-secondary max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-text-primary">Detalhes do Projeto</DialogTitle>
-            <DialogDescription className="text-text-secondary">
-              Informações completas sobre o projeto
-            </DialogDescription>
-          </DialogHeader>
-          {selectedProject && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Nome</label>
-                  <p className="text-text-primary">{selectedProject.name}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Cliente</label>
-                  <p className="text-text-primary">{selectedProject.client.name}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Status</label>
-                  <Badge className={`status-badge ${statusMap[selectedProject.status].className}`}>
-                    {statusMap[selectedProject.status].label}
-                  </Badge>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Valor</label>
-                  <p className="text-text-primary">R$ {selectedProject.value.toLocaleString('pt-BR')}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Progresso</label>
-                  <p className="text-text-primary">{selectedProject.progress}%</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Margem de Lucro</label>
-                  <p className="text-text-primary">{(selectedProject.profitMargin || 0).toFixed(0)}%</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Horas Trabalhadas</label>
-                  <p className="text-text-primary">{selectedProject.workedHours || 0}h</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Prazo</label>
-                  <p className="text-text-primary">{new Date(selectedProject.dueDate).toLocaleDateString('pt-BR')}</p>
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-text-secondary">Descrição</label>
-                <p className="text-text-primary">{selectedProject.description}</p>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {selectedProject && (
+        <ProjectDetails 
+          open={showProjectDetails} 
+          onOpenChange={setShowProjectDetails}
+          project={selectedProject}
+          onEdit={() => {
+            setShowProjectDetails(false);
+            handleEditProject(selectedProject);
+          }}
+        />
+      )}
 
       {/* Time Tracker Modal */}
       <Dialog open={showTimeTracker} onOpenChange={setShowTimeTracker}>

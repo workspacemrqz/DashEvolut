@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -60,6 +61,9 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
       <DialogContent className="sm:max-w-[600px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="gradient-text">Detalhes do Projeto</DialogTitle>
+          <DialogDescription className="text-text-secondary">
+            Informações completas sobre o projeto
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
