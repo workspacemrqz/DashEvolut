@@ -37,7 +37,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
   const { toast } = useToast();
 
   const markAsReadMutation = useMutation({
-    mutationFn: (alertId: string) => apiRequest(`/api/alerts/${alertId}/read`, "POST", {}),
+    mutationFn: (alertId: string) => apiRequest("POST", `/api/alerts/${alertId}/read`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
