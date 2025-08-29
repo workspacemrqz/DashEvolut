@@ -233,11 +233,11 @@ export default function Kanban() {
       onDragOver={handleDragOver}
       data-testid={`kanban-column-${title.toLowerCase()}`}
     >
-      <div className={`${color} h-1 rounded-t-lg`} />
+      <div className="h-1 rounded-t-lg bg-[#3571e6]" />
       <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{title}</h3>
-          <Badge className="status-badge status-active text-xs">
+          <Badge variant="outline" className="text-xs">
             {count}
           </Badge>
         </div>
