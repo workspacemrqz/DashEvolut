@@ -20,6 +20,7 @@ export default function Projects() {
   const [filter, setFilter] = useState("all");
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
   
   const { data: projects, isLoading } = useQuery<ProjectWithClient[]>({
     queryKey: ["/api/projects"],
@@ -54,7 +55,7 @@ export default function Projects() {
   }) || [];
 
   // Calculate KPIs
-  const avgProfitMargin = projects?.reduce((sum, p) => sum + (p.profitMargin || 0), 0) / (projects?.length || 1);
+  const avgProfitMargin = projects?.reduce((sum, p) => sum + (p.profitMargin || 0), 0) / (projects?.length || 1) || 0;
   const totalWorkedHours = projects?.reduce((sum, p) => sum + (p.workedHours || 0), 0) || 0;
   const totalRevenue = projects?.reduce((sum, p) => sum + p.value, 0) || 0;
   
@@ -63,8 +64,8 @@ export default function Projects() {
 
   // Get upcoming milestones
   const upcomingMilestones = milestones?.filter((m: any) => !m.isCompleted)
-    .sort((a: any, b: any) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-    .slice(0, 5) || [];
+    ?.sort((a: any, b: any) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+    ?.slice(0, 5) || [];
 
   return (
     <div className="flex-1 flex flex-col">
@@ -183,6 +184,10 @@ export default function Projects() {
           <ProjectTable 
             projects={filteredProjects} 
             isLoading={isLoading}
+            onEditProject={(project) => {
+              setSelectedProjectForEdit(project);
+              setShowProjectForm(true);
+            }}
             data-testid="table-projects"
           />
         </div>
@@ -196,7 +201,13 @@ export default function Projects() {
         {/* Project Form Modal */}
         <ProjectForm 
           open={showProjectForm} 
-          onOpenChange={setShowProjectForm}
+          onOpenChange={(open) => {
+            setShowProjectForm(open);
+            if (!open) {
+              setSelectedProjectForEdit(null);
+            }
+          }}
+          project={selectedProjectForEdit}
         />
       </main>
     </div>

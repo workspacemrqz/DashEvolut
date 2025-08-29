@@ -18,6 +18,7 @@ import { apiRequest } from "@/lib/queryClient";
 interface ProjectTableProps {
   projects: ProjectWithClient[];
   isLoading: boolean;
+  onEditProject?: (project: ProjectWithClient) => void;
   "data-testid"?: string;
 }
 
@@ -30,7 +31,7 @@ const statusMap = {
   cancelled: { label: "Cancelado", className: "status-inactive" },
 };
 
-export default function ProjectTable({ projects, isLoading, "data-testid": testId }: ProjectTableProps) {
+export default function ProjectTable({ projects, isLoading, onEditProject, "data-testid": testId }: ProjectTableProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectWithClient | null>(null);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [showTimeTracker, setShowTimeTracker] = useState(false);
@@ -41,10 +42,7 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
 
   const updateProjectMutation = useMutation({
     mutationFn: (data: { id: string; workedHours: number }) =>
-      apiRequest(`/api/projects/${data.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ workedHours: data.workedHours }),
-      }),
+      apiRequest(`/api/projects/${data.id}`, 'PATCH', { workedHours: data.workedHours }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       toast({
@@ -60,11 +58,14 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
   };
 
   const handleEditProject = (project: ProjectWithClient) => {
-    // TODO: Implementar edição de projeto
-    toast({
-      title: "Em desenvolvimento",
-      description: "A funcionalidade de edição será implementada em breve.",
-    });
+    if (onEditProject) {
+      onEditProject(project);
+    } else {
+      toast({
+        title: "Em desenvolvimento",
+        description: "A funcionalidade de edição será implementada em breve.",
+      });
+    }
   };
 
   const handleTimeTracker = (project: ProjectWithClient) => {
@@ -180,10 +181,10 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
                 </td>
                 <td className="p-4">
                   <span 
-                    className={`font-semibold ${project.profitMargin >= 60 ? 'text-green-500' : project.profitMargin >= 40 ? 'text-yellow-500' : 'text-red-500'}`}
+                    className={`font-semibold ${(project.profitMargin || 0) >= 60 ? 'text-green-500' : (project.profitMargin || 0) >= 40 ? 'text-yellow-500' : 'text-red-500'}`}
                     data-testid={`project-margin-${project.id}`}
                   >
-                    {project.profitMargin.toFixed(0)}%
+                    {(project.profitMargin || 0).toFixed(0)}%
                   </span>
                 </td>
                 <td className="p-4 text-text-primary" data-testid={`project-value-${project.id}`}>
@@ -264,7 +265,7 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
                 </div>
                 <div>
                   <label className="text-sm font-medium text-text-secondary">Margem de Lucro</label>
-                  <p className="text-text-primary">{selectedProject.profitMargin.toFixed(0)}%</p>
+                  <p className="text-text-primary">{(selectedProject.profitMargin || 0).toFixed(0)}%</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-text-secondary">Horas Trabalhadas</label>

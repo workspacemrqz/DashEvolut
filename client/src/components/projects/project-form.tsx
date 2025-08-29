@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { insertProjectSchema, type InsertProject, type Client } from "@shared/schema";
+import { insertProjectSchema, type InsertProject, type Client, type ProjectWithClient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +34,7 @@ import {
 interface ProjectFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  project?: ProjectWithClient | null;
 }
 
 const formSchema = insertProjectSchema.extend({
@@ -40,7 +42,8 @@ const formSchema = insertProjectSchema.extend({
   dueDate: insertProjectSchema.shape.dueDate.transform((val) => new Date(val)),
 });
 
-export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
+export default function ProjectForm({ open, onOpenChange, project }: ProjectFormProps) {
+  const isEditMode = !!project;
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -48,26 +51,33 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
     queryKey: ["/api/clients"],
   });
 
-  const form = useForm<InsertProject>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      clientId: "",
-      status: "discovery",
-      value: 0,
-      estimatedHours: 0,
-      workedHours: 0,
-      profitMargin: 0,
-      progress: 0,
-      startDate: new Date(),
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      isRecurring: false,
-    },
+  const getDefaultValues = (project?: ProjectWithClient | null) => ({
+    name: project?.name || "",
+    description: project?.description || "",
+    clientId: project?.clientId || "",
+    status: project?.status || "discovery",
+    value: project?.value || 0,
+    estimatedHours: project?.estimatedHours || 0,
+    workedHours: project?.workedHours || 0,
+    profitMargin: project?.profitMargin || 0,
+    progress: project?.progress || 0,
+    startDate: project?.startDate ? new Date(project.startDate) : new Date(),
+    dueDate: project?.dueDate ? new Date(project.dueDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    isRecurring: project?.isRecurring || false,
   });
 
+  const form = useForm<InsertProject>({
+    resolver: zodResolver(formSchema),
+    defaultValues: getDefaultValues(project),
+  });
+
+  // Reset form when project changes
+  useEffect(() => {
+    form.reset(getDefaultValues(project));
+  }, [project, form]);
+
   const createProjectMutation = useMutation({
-    mutationFn: (data: InsertProject) => apiRequest("POST", "/api/projects", data),
+    mutationFn: (data: InsertProject) => apiRequest("/api/projects", "POST", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       toast({
@@ -86,17 +96,42 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
     },
   });
 
+  const updateProjectMutation = useMutation({
+    mutationFn: (data: InsertProject) => apiRequest(`/api/projects/${project!.id}`, "PATCH", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      toast({
+        title: "Projeto atualizado com sucesso!",
+        description: "As alterações foram salvas.",
+      });
+      onOpenChange(false);
+    },
+    onError: () => {
+      toast({
+        title: "Erro ao atualizar projeto",
+        description: "Ocorreu um erro ao salvar as alterações. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmit = (data: InsertProject) => {
-    createProjectMutation.mutate(data);
+    if (isEditMode) {
+      updateProjectMutation.mutate(data);
+    } else {
+      createProjectMutation.mutate(data);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="gradient-text">Novo Projeto</DialogTitle>
+          <DialogTitle className="gradient-text">
+            {isEditMode ? "Editar Projeto" : "Novo Projeto"}
+          </DialogTitle>
           <DialogDescription className="text-text-secondary">
-            Adicione um novo projeto ao sistema
+            {isEditMode ? "Edite as informações do projeto" : "Adicione um novo projeto ao sistema"}
           </DialogDescription>
         </DialogHeader>
 
@@ -299,7 +334,7 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
                         placeholder="65"
                         className="bg-bg-primary border-border-secondary text-text-primary"
                         data-testid="input-profit-margin"
-                        {...field}
+                        value={field.value || 0}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
@@ -322,7 +357,7 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
                         placeholder="0"
                         className="bg-bg-primary border-border-secondary text-text-primary"
                         data-testid="input-progress"
-                        {...field}
+                        value={field.value || 0}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
@@ -343,7 +378,7 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
                         placeholder="0"
                         className="bg-bg-primary border-border-secondary text-text-primary"
                         data-testid="input-worked-hours"
-                        {...field}
+                        value={field.value || 0}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
@@ -365,11 +400,14 @@ export default function ProjectForm({ open, onOpenChange }: ProjectFormProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={createProjectMutation.isPending}
+                disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
                 className="btn-primary"
                 data-testid="button-submit"
               >
-                {createProjectMutation.isPending ? "Criando..." : "Criar Projeto"}
+                {isEditMode 
+                  ? (updateProjectMutation.isPending ? "Salvando..." : "Salvar Alterações")
+                  : (createProjectMutation.isPending ? "Criando..." : "Criar Projeto")
+                }
               </Button>
             </div>
           </form>

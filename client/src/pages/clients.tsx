@@ -42,7 +42,7 @@ export default function Clients() {
 
   const activeClients = clients?.filter(c => c.status === "active").length || 0;
   const prospects = clients?.filter(c => c.status === "prospect").length || 0;
-  const avgNps = clients?.reduce((sum, c) => sum + (c.nps || 0), 0) / (clients?.length || 1);
+  const avgNps = clients?.reduce((sum, c) => sum + (c.nps || 0), 0) / (clients?.length || 1) || 0;
 
   return (
     <div className="flex-1 flex flex-col">
