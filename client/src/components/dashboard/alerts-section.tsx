@@ -33,7 +33,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
   const queryClient = useQueryClient();
 
   const markAsReadMutation = useMutation({
-    mutationFn: (alertId: string) => apiRequest("PATCH", `/api/alerts/${alertId}/read`),
+    mutationFn: (alertId: string) => apiRequest(`/api/alerts/${alertId}/read`, "PATCH"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
