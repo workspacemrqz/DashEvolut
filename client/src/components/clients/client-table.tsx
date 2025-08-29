@@ -235,7 +235,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4 p-3 rounded-lg bg-bg-secondary border border-border-secondary">
                 <div className="text-center">
                   <h4 className="font-semibold text-text-primary">NPS</h4>
                   <p className={`text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
