@@ -250,7 +250,10 @@ export default function Kanban() {
 
   return (
     <div className="flex-1 flex flex-col bg-bg-primary">
-      <Header title="Kanban" />
+      <Header 
+        title="Kanban" 
+        subtitle="Gestão visual de clientes e projetos"
+      />
       
       <div className="flex-1 p-6">
         <Tabs defaultValue="clients" className="w-full">
