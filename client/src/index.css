@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0 0% 2.35%);
+  --foreground: hsl(0 0% 100%);
+  --card: hsl(209 32% 6.27%);
+  --card-foreground: hsl(0 0% 100%);
+  --popover: hsl(209 32% 6.27%);
+  --popover-foreground: hsl(0 0% 100%);
+  --primary: hsl(203.89 88.28% 53.14%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(0 0% 2.35%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(209 32% 6.27%);
+  --muted-foreground: hsl(0 0% 89.8%);
+  --accent: hsl(209 32% 6.27%);
+  --accent-foreground: hsl(203.89 88.28% 53.14%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(0 0% 18.82%);
+  --input: hsl(209 32% 6.27%);
+  --ring: hsl(203.89 88.28% 53.14%);
+  --chart-1: hsl(203.89 88.28% 53.14%);
+  --chart-2: hsl(142 76% 36%);
+  --chart-3: hsl(47 96% 53%);
+  --chart-4: hsl(142 69% 58%);
+  --chart-5: hsl(340 75% 55%);
+  --sidebar: hsl(209 32% 6.27%);
+  --sidebar-foreground: hsl(0 0% 100%);
+  --sidebar-primary: hsl(203.89 88.28% 53.14%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(209 32% 6.27%);
+  --sidebar-accent-foreground: hsl(203.89 88.28% 53.14%);
+  --sidebar-border: hsl(0 0% 18.82%);
+  --sidebar-ring: hsl(203.89 88.28% 53.14%);
+  --font-sans: Inter, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --radius: 0.5rem;
+
+  /* Custom variables for business dashboard */
+  --bg-primary: hsl(0 0% 2.35%);
+  --bg-container: hsl(209 32% 6.27%);
+  --text-primary: hsl(0 0% 100%);
+  --text-secondary: hsl(0 0% 89.8%);
+  --gradient-start: hsl(203.89 88.28% 53.14%);
+  --gradient-end: hsl(225 75% 56%);
+  --border-primary: hsl(203.89 88.28% 53.14%);
+  --border-secondary: hsl(0 0% 18.82%);
+}
+
+.dark {
+  --background: hsl(0 0% 2.35%);
+  --foreground: hsl(0 0% 100%);
+  --card: hsl(209 32% 6.27%);
+  --card-foreground: hsl(0 0% 100%);
+  --popover: hsl(209 32% 6.27%);
+  --popover-foreground: hsl(0 0% 100%);
+  --primary: hsl(203.89 88.28% 53.14%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(0 0% 2.35%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(209 32% 6.27%);
+  --muted-foreground: hsl(0 0% 89.8%);
+  --accent: hsl(209 32% 6.27%);
+  --accent-foreground: hsl(203.89 88.28% 53.14%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(0 0% 18.82%);
+  --input: hsl(209 32% 6.27%);
+  --ring: hsl(203.89 88.28% 53.14%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+}
+
+@layer components {
+  .gradient-bg {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    border: 1px solid var(--border-primary);
+  }
+
+  .gradient-text {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .container-bg {
+    background-color: var(--bg-container);
+  }
+
+  .btn-primary {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+  }
+
+  .btn-secondary {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+  }
+
+  .sidebar-active {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    border: 1px solid var(--border-primary);
+  }
+
+  .kpi-card {
+    background-color: var(--bg-container);
+    border: 1px solid var(--border-secondary);
+  }
+
+  .progress-bar {
+    background-color: var(--bg-primary);
+  }
+
+  .progress-fill {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  }
+
+  .status-badge {
+    @apply px-2 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .status-active {
+    @apply bg-green-500 text-white;
+  }
+
+  .status-inactive {
+    @apply bg-red-500 text-white;
+  }
+
+  .status-prospect {
+    @apply bg-yellow-500 text-white;
+  }
+
+  .status-discovery {
+    @apply bg-purple-500/20 text-purple-400;
+  }
+
+  .status-development {
+    @apply bg-blue-500/20 text-blue-400;
+  }
+
+  .status-delivery {
+    @apply bg-green-500/20 text-green-400;
+  }
+
+  .status-post-sale {
+    @apply bg-gray-500/20 text-gray-400;
+  }
+}
