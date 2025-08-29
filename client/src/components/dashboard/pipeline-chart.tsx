@@ -68,6 +68,7 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
                 outerRadius={100}
                 paddingAngle={5}
                 dataKey="value"
+                stroke="none"
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
