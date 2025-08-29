@@ -78,7 +78,7 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
                   backgroundColor: "var(--bg-container)",
                   border: "1px solid var(--border-secondary)",
                   borderRadius: "8px",
-                  color: "var(--text-primary)"
+                  color: "#FFFFFF"
                 }}
                 formatter={(value) => [value, "Projetos"]}
               />
