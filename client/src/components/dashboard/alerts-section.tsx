@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Alert } from "@shared/schema";
-import { AlertTriangle, Clock, Star, CircleAlert, Eye, CreditCard, MessageCircle } from "lucide-react";
+import { AlertTriangle, Clock, Star, CircleAlert, Eye, CreditCard, MessageCircle, CheckCheck } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -44,6 +44,24 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
     },
   });
 
+  const markAllAsReadMutation = useMutation({
+    mutationFn: () => {
+      // Mark all alerts as read by calling the API for each alert
+      const markAllPromises = alerts.map(alert => 
+        apiRequest("POST", `/api/alerts/${alert.id}/read`, {})
+      );
+      return Promise.all(markAllPromises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
+      toast({
+        title: "Todos os alertas foram marcados como lidos",
+        description: "Todos os alertas pendentes foram processados.",
+      });
+    },
+  });
+
   const handleAction = (alert: Alert) => {
     // Mark alert as read first
     markAsReadMutation.mutate(alert.id);
@@ -76,6 +94,21 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           title: "Alerta processado",
           description: "O alerta foi marcado como lido.",
         });
+    }
+  };
+
+  const handleAlertClick = (alert: Alert) => {
+    // Mark alert as read when clicked anywhere on the alert
+    markAsReadMutation.mutate(alert.id);
+    toast({
+      title: "Alerta marcado como lido",
+      description: "O alerta foi removido da lista.",
+    });
+  };
+
+  const handleMarkAllAsRead = () => {
+    if (alerts.length > 0) {
+      markAllAsReadMutation.mutate();
     }
   };
 
@@ -129,10 +162,23 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
 
   return (
     <div className="container-bg rounded-xl p-6 border border-border-secondary" data-testid={testId}>
-      <h3 className="text-lg font-semibold mb-4 text-text-primary flex items-center">
-        <AlertTriangle className="w-5 h-5 mr-2 text-yellow-500" />
-        Alertas Automáticos
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-text-primary flex items-center">
+          <AlertTriangle className="w-5 h-5 mr-2 text-yellow-500" />
+          Alertas Automáticos
+        </h3>
+        {alerts.length > 0 && (
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={markAllAsReadMutation.isPending}
+            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors"
+            data-testid="button-mark-all-read"
+          >
+            <CheckCheck className="w-3 h-3" />
+            {markAllAsReadMutation.isPending ? "Marcando..." : "Marcar Todas como Lidas"}
+          </button>
+        )}
+      </div>
       
       {alerts.length === 0 ? (
         <div className="text-center py-8">
@@ -146,7 +192,8 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
             return (
               <div 
                 key={alert.id}
-                className={`flex items-center justify-between p-4 rounded-lg border ${alertColors[alert.type]}`}
+                onClick={() => handleAlertClick(alert)}
+                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all hover:opacity-80 ${alertColors[alert.type]}`}
                 data-testid={`alert-${alert.id}`}
               >
                 <div className="flex items-center">
@@ -160,7 +207,9 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
                     </p>
                   </div>
                 </div>
-                {getActionButton(alert)}
+                <div onClick={(e) => e.stopPropagation()}>
+                  {getActionButton(alert)}
+                </div>
               </div>
             );
           })}
