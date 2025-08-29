@@ -315,14 +315,13 @@
     color: #060606 !important;
   }
 
-  /* Filter button text color override */
-  .btn-secondary .w-4,
-  .btn-secondary {
+  /* Filter button text color override - only for filter buttons */
+  [data-testid="button-filter"] {
     color: #060606 !important;
   }
 
   /* Specific override for filter button icon */
-  .btn-secondary svg {
+  [data-testid="button-filter"] svg {
     color: #060606 !important;
   }
 }
