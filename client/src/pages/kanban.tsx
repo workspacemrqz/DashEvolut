@@ -187,24 +187,12 @@ export default function Kanban() {
             </Badge>
           )}
         </div>
-        <div className="text-xs mt-2">
+        <div className="text-xs mt-3">
           <span style={{color: '#FFFFFF'}}>Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {client.updatedAt ? 
-              new Date(client.updatedAt).toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) : 
-              new Date(client.createdAt || Date.now()).toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
+              new Date(client.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(client.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
+              new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(client.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
             }
           </span>
         </div>
@@ -247,24 +235,12 @@ export default function Kanban() {
           </div>
           <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
         </div>
-        <div className="text-xs mt-2">
+        <div className="text-xs mt-3">
           <span style={{color: '#FFFFFF'}}>Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {project.updatedAt ? 
-              new Date(project.updatedAt).toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) : 
-              new Date(project.createdAt || Date.now()).toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
+              new Date(project.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(project.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
+              new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(project.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
             }
           </span>
         </div>
