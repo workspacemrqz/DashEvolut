@@ -80,6 +80,9 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
                   borderRadius: "8px",
                   color: "#FFFFFF"
                 }}
+                labelStyle={{
+                  color: "#FFFFFF"
+                }}
                 formatter={(value) => [value, "Projetos"]}
               />
               <Legend 
