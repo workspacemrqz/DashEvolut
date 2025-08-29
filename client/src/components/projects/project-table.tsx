@@ -156,7 +156,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 </td>
                 <td className="p-4">
                   <Badge 
-                    className={`status-badge ${statusMap[project.status].className}`}
+                    className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary hover:bg-primary/80 status-badge status-development text-[#060606]"
                     data-testid={`project-status-${project.id}`}
                   >
                     {statusMap[project.status].label}
@@ -229,7 +229,6 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
           </tbody>
         </table>
       </div>
-
       {/* Project Details Modal */}
       {selectedProject && (
         <ProjectDetails 
@@ -242,7 +241,6 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
           }}
         />
       )}
-
       {/* Time Tracker Modal */}
       <Dialog open={showTimeTracker} onOpenChange={setShowTimeTracker}>
         <DialogContent className="bg-bg-container border-border-secondary">
