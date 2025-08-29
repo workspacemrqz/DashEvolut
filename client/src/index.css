@@ -185,6 +185,7 @@
   .gradient-bg {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
+    color: #FFFFFF !important;
   }
 
   .gradient-text {
@@ -201,18 +202,19 @@
   .btn-primary {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: var(--text-primary);
+    color: #FFFFFF !important;
   }
 
   .btn-secondary {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-secondary);
-    color: var(--text-primary);
+    color: #FFFFFF !important;
   }
 
   .sidebar-active {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
+    color: #FFFFFF !important;
   }
 
   .kpi-card {
@@ -226,6 +228,7 @@
 
   .progress-fill {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    color: #FFFFFF !important;
   }
 
   .status-badge {
@@ -250,6 +253,36 @@
 
   .status-development {
     @apply bg-blue-500/20 text-blue-400;
+  }
+
+  /* Ensure white text on blue/black backgrounds */
+  .bg-blue-500,
+  .bg-blue-600,
+  .bg-blue-700,
+  .bg-blue-800,
+  .bg-blue-900,
+  .bg-black,
+  [class*="bg-blue-"],
+  [class*="bg-black"] {
+    color: #FFFFFF !important;
+  }
+
+  /* Override Tailwind primary colors to be white text */
+  .bg-primary,
+  .text-primary-foreground,
+  .bg-bg-primary,
+  [data-state=checked],
+  [class*="data-[state=checked]"],
+  [class*="bg-bg-primary"] {
+    color: #FFFFFF !important;
+  }
+  
+  /* Specific overrides for button and badge variants */
+  .bg-primary.text-primary-foreground,
+  .border-transparent.bg-primary,
+  button.bg-primary,
+  [role="button"].bg-primary {
+    color: #FFFFFF !important;
   }
 
   .status-delivery {
