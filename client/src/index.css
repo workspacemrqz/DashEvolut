@@ -100,6 +100,42 @@
   * {
     @apply border-border;
   }
+  
+  /* Remove all focus rings and outlines */
+  *:focus,
+  *:focus-visible,
+  *:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Remove Tailwind focus styles */
+  .focus\:outline-none:focus,
+  .focus\:ring-2:focus,
+  .focus\:ring-offset-2:focus,
+  .focus-visible\:outline-none:focus-visible,
+  .focus-visible\:ring-2:focus-visible,
+  .focus-visible\:ring-offset-2:focus-visible,
+  .focus\:ring:focus,
+  .focus\:ring-blue-500:focus,
+  .focus\:ring-primary:focus,
+  .focus\:ring-accent:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
+  
+  /* Remove focus styles from specific elements */
+  input:focus,
+  textarea:focus,
+  select:focus,
+  button:focus,
+  [role="button"]:focus,
+  [tabindex]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 
   body {
     @apply font-sans antialiased;
