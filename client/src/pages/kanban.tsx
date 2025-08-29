@@ -155,10 +155,22 @@ export default function Kanban() {
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
         </div>
-        <div className="text-xs text-[#fafafa]">
+        <div className="text-xs" style={{color: '#2D81EA'}}>
           {client.updatedAt ? 
-            new Date(client.updatedAt).toLocaleDateString('pt-BR') : 
-            new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR')
+            new Date(client.updatedAt).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : 
+            new Date(client.createdAt || Date.now()).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
           }
         </div>
       </CardHeader>
@@ -208,10 +220,22 @@ export default function Kanban() {
         <div className="flex items-start justify-between">
           <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
         </div>
-        <div className="text-xs text-[#fafafa]">
+        <div className="text-xs" style={{color: '#2D81EA'}}>
           {project.updatedAt ? 
-            new Date(project.updatedAt).toLocaleDateString('pt-BR') : 
-            new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR')
+            new Date(project.updatedAt).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : 
+            new Date(project.createdAt || Date.now()).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
           }
         </div>
       </CardHeader>
