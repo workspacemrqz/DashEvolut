@@ -208,7 +208,18 @@
   .btn-secondary {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-secondary);
-    color: #FFFFFF !important;
+    color: #060606 !important;
+  }
+  
+  /* Filter buttons specific styling */
+  .btn-secondary svg,
+  .btn-secondary .lucide,
+  button[data-testid*="filter"] svg,
+  button[data-testid*="filter"] .lucide,
+  button[data-testid="button-filter"] svg,
+  button[data-testid="button-filter"] .lucide,
+  button[data-testid="button-filter"] {
+    color: #060606 !important;
   }
 
   .sidebar-active {
