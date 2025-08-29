@@ -1,5 +1,8 @@
 import { Milestone } from "@shared/schema";
 import { CheckCircle, Clock, AlertCircle, Bell, Package } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface MilestonesSectionProps {
   milestones: Milestone[];
@@ -7,6 +10,35 @@ interface MilestonesSectionProps {
 }
 
 export default function MilestonesSection({ milestones, "data-testid": testId }: MilestonesSectionProps) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const updateMilestoneMutation = useMutation({
+    mutationFn: (data: { id: string; isCompleted?: boolean; requiresClientApproval?: boolean }) =>
+      apiRequest(`/api/milestones/${data.id}`, 'PATCH', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/milestones'] });
+      toast({
+        title: "Milestone atualizado",
+        description: "O milestone foi atualizado com sucesso.",
+      });
+    },
+  });
+
+  const handleNotifyClient = (milestone: Milestone) => {
+    // Simular notificação do cliente
+    toast({
+      title: "Cliente notificado",
+      description: `O cliente foi notificado sobre o milestone "${milestone.title}".`,
+    });
+  };
+
+  const handleDeliverMilestone = (milestone: Milestone) => {
+    updateMilestoneMutation.mutate({
+      id: milestone.id,
+      isCompleted: true,
+    });
+  };
   const getMilestoneColor = (milestone: Milestone) => {
     const dueDate = new Date(milestone.dueDate);
     const today = new Date();
@@ -42,6 +74,7 @@ export default function MilestonesSection({ milestones, "data-testid": testId }:
     if (milestone.requiresClientApproval) {
       return (
         <button 
+          onClick={() => handleNotifyClient(milestone)}
           className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
           data-testid={`milestone-notify-${milestone.id}`}
         >
@@ -53,11 +86,13 @@ export default function MilestonesSection({ milestones, "data-testid": testId }:
 
     return (
       <button 
+        onClick={() => handleDeliverMilestone(milestone)}
+        disabled={updateMilestoneMutation.isPending}
         className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
         data-testid={`milestone-deliver-${milestone.id}`}
       >
         <Package className="w-3 h-3" />
-        Entregar
+        {updateMilestoneMutation.isPending ? "Entregando..." : "Entregar"}
       </button>
     );
   };

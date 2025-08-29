@@ -260,6 +260,11 @@ export class MemStorage implements IStorage {
     const client: Client = {
       ...insertClient,
       id: randomUUID(),
+      phone: insertClient.phone ?? null,
+      status: insertClient.status ?? "prospect",
+      nps: insertClient.nps ?? null,
+      ltv: insertClient.ltv ?? null,
+      upsellPotential: insertClient.upsellPotential ?? null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -305,6 +310,11 @@ export class MemStorage implements IStorage {
     const project: Project = {
       ...insertProject,
       id: randomUUID(),
+      status: insertProject.status ?? "discovery",
+      progress: insertProject.progress ?? 0,
+      profitMargin: insertProject.profitMargin ?? 0,
+      workedHours: insertProject.workedHours ?? null,
+      isRecurring: insertProject.isRecurring ?? null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -338,6 +348,9 @@ export class MemStorage implements IStorage {
     const milestone: Milestone = {
       ...insertMilestone,
       id: randomUUID(),
+      description: insertMilestone.description ?? null,
+      isCompleted: insertMilestone.isCompleted ?? null,
+      requiresClientApproval: insertMilestone.requiresClientApproval ?? null,
       createdAt: new Date()
     };
     this.milestones.set(milestone.id, milestone);
@@ -369,6 +382,7 @@ export class MemStorage implements IStorage {
     const interaction: Interaction = {
       ...insertInteraction,
       id: randomUUID(),
+      notes: insertInteraction.notes ?? null,
       createdAt: new Date()
     };
     this.interactions.set(interaction.id, interaction);
@@ -385,6 +399,11 @@ export class MemStorage implements IStorage {
     const analytics: Analytics = {
       ...insertAnalytics,
       id: randomUUID(),
+      mrr: insertAnalytics.mrr ?? null,
+      churnRate: insertAnalytics.churnRate ?? null,
+      avgLifetimeValue: insertAnalytics.avgLifetimeValue ?? null,
+      activeProjects: insertAnalytics.activeProjects ?? null,
+      totalRevenue: insertAnalytics.totalRevenue ?? null,
       createdAt: new Date()
     };
     this.analytics.set(analytics.id, analytics);
@@ -404,6 +423,8 @@ export class MemStorage implements IStorage {
     const alert: Alert = {
       ...insertAlert,
       id: randomUUID(),
+      priority: insertAlert.priority ?? null,
+      isRead: insertAlert.isRead ?? null,
       createdAt: new Date()
     };
     this.alerts.set(alert.id, alert);

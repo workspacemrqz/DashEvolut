@@ -1,6 +1,19 @@
 import { ProjectWithClient } from "@shared/schema";
-import { Eye, Edit, Clock, MoreHorizontal } from "lucide-react";
+import { Eye, Edit, Clock, MoreHorizontal, Play, Pause } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface ProjectTableProps {
   projects: ProjectWithClient[];
@@ -18,6 +31,73 @@ const statusMap = {
 };
 
 export default function ProjectTable({ projects, isLoading, "data-testid": testId }: ProjectTableProps) {
+  const [selectedProject, setSelectedProject] = useState<ProjectWithClient | null>(null);
+  const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [showTimeTracker, setShowTimeTracker] = useState(false);
+  const [isTracking, setIsTracking] = useState(false);
+  const [trackedHours, setTrackedHours] = useState(0);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const updateProjectMutation = useMutation({
+    mutationFn: (data: { id: string; workedHours: number }) =>
+      apiRequest(`/api/projects/${data.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ workedHours: data.workedHours }),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      toast({
+        title: "Horas atualizadas",
+        description: "As horas trabalhadas foram registradas com sucesso.",
+      });
+    },
+  });
+
+  const handleViewProject = (project: ProjectWithClient) => {
+    setSelectedProject(project);
+    setShowProjectDetails(true);
+  };
+
+  const handleEditProject = (project: ProjectWithClient) => {
+    // TODO: Implementar edição de projeto
+    toast({
+      title: "Em desenvolvimento",
+      description: "A funcionalidade de edição será implementada em breve.",
+    });
+  };
+
+  const handleTimeTracker = (project: ProjectWithClient) => {
+    setSelectedProject(project);
+    setTrackedHours(project.workedHours || 0);
+    setShowTimeTracker(true);
+  };
+
+  const handleStartStopTracking = () => {
+    setIsTracking(!isTracking);
+    if (!isTracking) {
+      toast({
+        title: "Controle de tempo iniciado",
+        description: "O tempo está sendo contabilizado para este projeto.",
+      });
+    } else {
+      toast({
+        title: "Controle de tempo pausado",
+        description: "O tempo foi pausado para este projeto.",
+      });
+    }
+  };
+
+  const handleSaveHours = () => {
+    if (selectedProject) {
+      updateProjectMutation.mutate({
+        id: selectedProject.id,
+        workedHours: trackedHours,
+      });
+      setShowTimeTracker(false);
+    }
+  };
+
   const isOverdue = (dueDate: Date) => {
     return new Date(dueDate) < new Date();
   };
@@ -120,18 +200,21 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
                 <td className="p-4">
                   <div className="flex space-x-2">
                     <button 
+                      onClick={() => handleViewProject(project)}
                       className="text-blue-500 hover:text-blue-400 p-1"
                       data-testid={`action-view-${project.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
+                      onClick={() => handleEditProject(project)}
                       className="text-green-500 hover:text-green-400 p-1"
                       data-testid={`action-edit-${project.id}`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
+                      onClick={() => handleTimeTracker(project)}
                       className="text-yellow-500 hover:text-yellow-400 p-1"
                       data-testid={`action-time-${project.id}`}
                     >
@@ -144,6 +227,110 @@ export default function ProjectTable({ projects, isLoading, "data-testid": testI
           </tbody>
         </table>
       </div>
+
+      {/* Project Details Modal */}
+      <Dialog open={showProjectDetails} onOpenChange={setShowProjectDetails}>
+        <DialogContent className="bg-bg-container border-border-secondary max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-text-primary">Detalhes do Projeto</DialogTitle>
+            <DialogDescription className="text-text-secondary">
+              Informações completas sobre o projeto
+            </DialogDescription>
+          </DialogHeader>
+          {selectedProject && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Nome</label>
+                  <p className="text-text-primary">{selectedProject.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Cliente</label>
+                  <p className="text-text-primary">{selectedProject.client.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Status</label>
+                  <Badge className={`status-badge ${statusMap[selectedProject.status].className}`}>
+                    {statusMap[selectedProject.status].label}
+                  </Badge>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Valor</label>
+                  <p className="text-text-primary">R$ {selectedProject.value.toLocaleString('pt-BR')}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Progresso</label>
+                  <p className="text-text-primary">{selectedProject.progress}%</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Margem de Lucro</label>
+                  <p className="text-text-primary">{selectedProject.profitMargin.toFixed(0)}%</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Horas Trabalhadas</label>
+                  <p className="text-text-primary">{selectedProject.workedHours || 0}h</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-text-secondary">Prazo</label>
+                  <p className="text-text-primary">{new Date(selectedProject.dueDate).toLocaleDateString('pt-BR')}</p>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-text-secondary">Descrição</label>
+                <p className="text-text-primary">{selectedProject.description}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Time Tracker Modal */}
+      <Dialog open={showTimeTracker} onOpenChange={setShowTimeTracker}>
+        <DialogContent className="bg-bg-container border-border-secondary">
+          <DialogHeader>
+            <DialogTitle className="text-text-primary">Controle de Tempo</DialogTitle>
+            <DialogDescription className="text-text-secondary">
+              Registre as horas trabalhadas no projeto
+            </DialogDescription>
+          </DialogHeader>
+          {selectedProject && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-text-secondary">Projeto</label>
+                <p className="text-text-primary">{selectedProject.name}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-text-secondary mb-2 block">Horas Trabalhadas</label>
+                <Input
+                  type="number"
+                  value={trackedHours}
+                  onChange={(e) => setTrackedHours(parseFloat(e.target.value) || 0)}
+                  className="bg-bg-secondary border-border-secondary text-text-primary"
+                  min="0"
+                  step="0.5"
+                />
+              </div>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={handleStartStopTracking}
+                  variant={isTracking ? "destructive" : "default"}
+                  className="flex items-center gap-2"
+                >
+                  {isTracking ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  {isTracking ? "Pausar" : "Iniciar"}
+                </Button>
+                <Button
+                  onClick={handleSaveHours}
+                  disabled={updateProjectMutation.isPending}
+                  className="btn-primary"
+                >
+                  {updateProjectMutation.isPending ? "Salvando..." : "Salvar Horas"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

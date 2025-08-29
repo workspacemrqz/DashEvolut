@@ -2,12 +2,24 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import ProjectTable from "@/components/projects/project-table";
+import ProjectForm from "@/components/projects/project-form";
 import MilestonesSection from "@/components/projects/milestones-section";
 import { ProjectWithClient } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function Projects() {
   const [filter, setFilter] = useState("all");
+  const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
   
   const { data: projects, isLoading } = useQuery<ProjectWithClient[]>({
     queryKey: ["/api/projects"],
@@ -19,7 +31,26 @@ export default function Projects() {
 
   const filteredProjects = projects?.filter(project => {
     if (filter === "all") return true;
-    return project.status === filter;
+    if (filter === "discovery" || filter === "development" || filter === "delivery" || filter === "post_sale") {
+      return project.status === filter;
+    }
+    // Filter by value
+    if (filter === "high-value") return project.value > 20000;
+    if (filter === "medium-value") return project.value >= 10000 && project.value <= 20000;
+    if (filter === "low-value") return project.value < 10000;
+    // Filter by urgency
+    if (filter === "urgent") {
+      const dueDate = new Date(project.dueDate);
+      const today = new Date();
+      const daysUntilDue = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      return daysUntilDue <= 7 && daysUntilDue >= 0;
+    }
+    if (filter === "overdue") {
+      const dueDate = new Date(project.dueDate);
+      const today = new Date();
+      return dueDate < today;
+    }
+    return true;
   }) || [];
 
   // Calculate KPIs
@@ -42,20 +73,47 @@ export default function Projects() {
         subtitle="Controle financeiro e operacional"
         actions={
           <div className="flex space-x-3">
-            <button 
-              className="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
-              data-testid="button-filter"
-            >
-              <Filter className="w-4 h-4" />
-              Filtros
-            </button>
-            <button 
+            <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="secondary" 
+                  className="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                  data-testid="button-filter"
+                >
+                  <Filter className="w-4 h-4" />
+                  Filtros
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-bg-container border-border-secondary">
+                <DropdownMenuLabel className="text-text-primary">Filtrar por valor</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setFilter("high-value")} className="text-text-secondary hover:text-text-primary">
+                  Alto valor (&gt;R$ 20k)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("medium-value")} className="text-text-secondary hover:text-text-primary">
+                  Médio valor (R$ 10k-20k)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("low-value")} className="text-text-secondary hover:text-text-primary">
+                  Baixo valor (&lt;R$ 10k)
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-text-primary">Filtrar por urgência</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => setFilter("urgent")} className="text-text-secondary hover:text-text-primary">
+                  Urgente (vence em 7 dias)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("overdue")} className="text-text-secondary hover:text-text-primary">
+                  Atrasado
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button 
+              onClick={() => setShowProjectForm(true)}
               className="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
               data-testid="button-new-project"
             >
               <Plus className="w-4 h-4" />
               Novo Projeto
-            </button>
+            </Button>
           </div>
         }
       />
@@ -133,6 +191,12 @@ export default function Projects() {
         <MilestonesSection 
           milestones={upcomingMilestones}
           data-testid="section-milestones"
+        />
+
+        {/* Project Form Modal */}
+        <ProjectForm 
+          open={showProjectForm} 
+          onOpenChange={setShowProjectForm}
         />
       </main>
     </div>
