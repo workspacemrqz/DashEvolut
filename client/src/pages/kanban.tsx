@@ -162,17 +162,11 @@ export default function Kanban() {
           </div>
         )}
         <div className="flex justify-between items-center">
-          <Badge 
-            className="text-xs" 
-            style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
-          >
+          <Badge className="status-badge status-active text-xs">
             {client.sector}
           </Badge>
           {client.upsellPotential && (
-            <Badge 
-              className="text-xs" 
-              style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
-            >
+            <Badge className="status-badge status-active text-xs">
               {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
             </Badge>
           )}
@@ -243,10 +237,7 @@ export default function Kanban() {
       <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{title}</h3>
-          <Badge 
-            className="text-xs" 
-            style={{ backgroundColor: '#f5f5f5', color: '#060606' }}
-          >
+          <Badge className="status-badge status-active text-xs">
             {count}
           </Badge>
         </div>
