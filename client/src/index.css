@@ -116,10 +116,34 @@
   .focus-visible\:outline-none:focus-visible,
   .focus-visible\:ring-2:focus-visible,
   .focus-visible\:ring-offset-2:focus-visible,
+  .focus-visible\:ring-1:focus-visible,
+  .focus-visible\:ring-offset-1:focus-visible,
   .focus\:ring:focus,
   .focus\:ring-blue-500:focus,
   .focus\:ring-primary:focus,
-  .focus\:ring-accent:focus {
+  .focus\:ring-accent:focus,
+  .focus\:ring-ring:focus,
+  .focus-visible\:ring-ring:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
+  
+  /* Remove ring styles from all elements with ring classes */
+  [class*="ring-offset"],
+  [class*="focus:ring"],
+  [class*="focus-visible:ring"],
+  [class*="ring-2"],
+  [class*="ring-1"],
+  [class*="ring-ring"] {
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
+  
+  /* Specific overrides for shadcn components */
+  [class*="ring-offset"]:focus,
+  [class*="ring-offset"]:focus-visible {
     outline: none !important;
     box-shadow: none !important;
     --tw-ring-shadow: none !important;
@@ -132,8 +156,21 @@
   select:focus,
   button:focus,
   [role="button"]:focus,
-  [tabindex]:focus {
+  [tabindex]:focus,
+  /* Radix UI components */
+  [data-radix-collection-item]:focus,
+  [data-radix-collection-item]:focus-visible,
+  /* Shadcn specific */
+  .peer:focus + *,
+  .peer:focus-visible + * {
     outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
+  
+  /* Override any remaining box-shadow with ring */
+  *[style*="box-shadow"] {
     box-shadow: none !important;
   }
 
