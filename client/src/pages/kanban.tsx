@@ -190,8 +190,7 @@ export default function Kanban() {
           )}
         </div>
       </CardContent>
-      </Card>
-    </motion.div>
+    </Card>
   );
 
   const ProjectCard = ({ project }: { project: ProjectWithClient }) => (
