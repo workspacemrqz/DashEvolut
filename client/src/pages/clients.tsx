@@ -2,11 +2,23 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import ClientTable from "@/components/clients/client-table";
+import ClientForm from "@/components/clients/client-form";
 import { ClientWithStats } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function Clients() {
   const [filter, setFilter] = useState("all");
+  const [showClientForm, setShowClientForm] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
   
   const { data: clients, isLoading } = useQuery<ClientWithStats[]>({
     queryKey: ["/api/clients"],
@@ -14,7 +26,18 @@ export default function Clients() {
 
   const filteredClients = clients?.filter(client => {
     if (filter === "all") return true;
-    return client.status === filter;
+    if (filter === "active" || filter === "inactive" || filter === "prospect") {
+      return client.status === filter;
+    }
+    // Filter by sector
+    if (filter === "technology") return client.sector.toLowerCase().includes("tecnologia");
+    if (filter === "marketing") return client.sector.toLowerCase().includes("marketing");
+    if (filter === "consultoria") return client.sector.toLowerCase().includes("consultoria");
+    // Filter by source
+    if (filter === "indicacao") return client.source.toLowerCase().includes("indicação");
+    if (filter === "google") return client.source.toLowerCase().includes("google");
+    if (filter === "linkedin") return client.source.toLowerCase().includes("linkedin");
+    return true;
   }) || [];
 
   const activeClients = clients?.filter(c => c.status === "active").length || 0;
@@ -28,20 +51,50 @@ export default function Clients() {
         subtitle="Relacionamento e análise de clientes"
         actions={
           <div className="flex space-x-3">
-            <button 
-              className="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
-              data-testid="button-filter"
-            >
-              <Filter className="w-4 h-4" />
-              Filtros
-            </button>
-            <button 
+            <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="secondary" 
+                  className="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                  data-testid="button-filter"
+                >
+                  <Filter className="w-4 h-4" />
+                  Filtros
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-bg-container border-border-secondary">
+                <DropdownMenuLabel className="text-text-primary">Filtrar por setor</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setFilter("technology")} className="text-text-secondary hover:text-text-primary">
+                  Tecnologia
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("marketing")} className="text-text-secondary hover:text-text-primary">
+                  Marketing
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("consultoria")} className="text-text-secondary hover:text-text-primary">
+                  Consultoria
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-text-primary">Filtrar por fonte</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => setFilter("indicacao")} className="text-text-secondary hover:text-text-primary">
+                  Indicação
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("google")} className="text-text-secondary hover:text-text-primary">
+                  Google Ads
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter("linkedin")} className="text-text-secondary hover:text-text-primary">
+                  LinkedIn
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button 
+              onClick={() => setShowClientForm(true)}
               className="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
               data-testid="button-new-client"
             >
               <Plus className="w-4 h-4" />
               Novo Cliente
-            </button>
+            </Button>
           </div>
         }
       />
@@ -102,6 +155,12 @@ export default function Clients() {
           clients={filteredClients} 
           isLoading={isLoading}
           data-testid="table-clients"
+        />
+
+        {/* Client Form Modal */}
+        <ClientForm 
+          open={showClientForm} 
+          onOpenChange={setShowClientForm}
         />
       </main>
     </div>

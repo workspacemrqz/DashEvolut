@@ -1,6 +1,16 @@
 import { ClientWithStats } from "@shared/schema";
 import { Eye, MessageCircle, Mail, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface ClientTableProps {
   clients: ClientWithStats[];
@@ -21,6 +31,34 @@ const upsellMap = {
 };
 
 export default function ClientTable({ clients, isLoading, "data-testid": testId }: ClientTableProps) {
+  const { toast } = useToast();
+  const [selectedClient, setSelectedClient] = useState<ClientWithStats | null>(null);
+  const [showClientDetails, setShowClientDetails] = useState(false);
+
+  const handleViewClient = (client: ClientWithStats) => {
+    setSelectedClient(client);
+    setShowClientDetails(true);
+  };
+
+  const handleWhatsAppContact = (client: ClientWithStats) => {
+    const message = encodeURIComponent(`Olá ${client.name}, como posso ajudá-lo hoje?`);
+    const phone = client.phone?.replace(/\D/g, "") || "";
+    if (phone) {
+      window.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
+    } else {
+      toast({
+        title: "Telefone não encontrado",
+        description: "Este cliente não possui telefone cadastrado.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEmailContact = (client: ClientWithStats) => {
+    const subject = encodeURIComponent("Contato comercial");
+    const body = encodeURIComponent(`Olá ${client.name},\n\nEspero que esteja bem. Gostaria de...`);
+    window.open(`mailto:${client.email}?subject=${subject}&body=${body}`, "_blank");
+  };
   if (isLoading) {
     return (
       <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
@@ -115,18 +153,21 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 <td className="p-4">
                   <div className="flex space-x-2">
                     <button 
+                      onClick={() => handleViewClient(client)}
                       className="text-blue-500 hover:text-blue-400 p-1"
                       data-testid={`action-view-${client.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
+                      onClick={() => handleWhatsAppContact(client)}
                       className="text-green-500 hover:text-green-400 p-1"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
+                      onClick={() => handleEmailContact(client)}
                       className="text-blue-500 hover:text-blue-400 p-1"
                       data-testid={`action-email-${client.id}`}
                     >
@@ -139,6 +180,76 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
           </tbody>
         </table>
       </div>
+
+      {/* Client Details Modal */}
+      <Dialog open={showClientDetails} onOpenChange={setShowClientDetails}>
+        <DialogContent className="sm:max-w-[500px] container-bg border-border-secondary">
+          <DialogHeader>
+            <DialogTitle className="gradient-text">Detalhes do Cliente</DialogTitle>
+            <DialogDescription className="text-text-secondary">
+              Informações completas do cliente
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedClient && (
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center">
+                  <span className="text-lg font-semibold">
+                    {selectedClient.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-text-primary">{selectedClient.name}</h3>
+                  <p className="text-text-secondary">{selectedClient.company}</p>
+                  <Badge className={`status-badge ${statusMap[selectedClient.status].className} mt-2`}>
+                    {statusMap[selectedClient.status].label}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-text-primary mb-2">Contato</h4>
+                  <p className="text-sm text-text-secondary">Email: {selectedClient.email}</p>
+                  <p className="text-sm text-text-secondary">Telefone: {selectedClient.phone || "N/A"}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-text-primary mb-2">Informações</h4>
+                  <p className="text-sm text-text-secondary">Setor: {selectedClient.sector}</p>
+                  <p className="text-sm text-text-secondary">Fonte: {selectedClient.source}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <h4 className="font-semibold text-text-primary">NPS</h4>
+                  <p className={`text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
+                    {selectedClient.nps?.toFixed(1) || "N/A"}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <h4 className="font-semibold text-text-primary">LTV</h4>
+                  <p className="text-2xl font-bold text-text-primary">
+                    R$ {selectedClient.ltv?.toLocaleString('pt-BR') || '0'}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <h4 className="font-semibold text-text-primary">Projetos</h4>
+                  <p className="text-2xl font-bold text-text-primary">{selectedClient.projectCount}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-text-primary mb-2">Potencial de Upsell</h4>
+                <span className={`font-semibold ${upsellMap[selectedClient.upsellPotential || 'medium'].color}`}>
+                  {upsellMap[selectedClient.upsellPotential || 'medium'].label}
+                </span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
