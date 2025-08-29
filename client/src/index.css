@@ -299,4 +299,30 @@
     @apply bg-gray-500/20;
     color: #060606 !important;
   }
+
+  .status-overdue {
+    @apply bg-red-500/20;
+    color: #060606 !important;
+  }
+
+  .status-completed {
+    @apply bg-green-500/20;
+    color: #060606 !important;
+  }
+
+  .status-cancelled {
+    @apply bg-gray-500/20;
+    color: #060606 !important;
+  }
+
+  /* Filter button text color override */
+  .btn-secondary .w-4,
+  .btn-secondary {
+    color: #060606 !important;
+  }
+
+  /* Specific override for filter button icon */
+  .btn-secondary svg {
+    color: #060606 !important;
+  }
 }
