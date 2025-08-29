@@ -15,9 +15,12 @@ export default function Sidebar() {
   return (
     <div className="w-64 container-bg border-r border-border-secondary flex flex-col">
       <div className="p-6 border-b border-border-secondary">
-        <h1 className="text-xl font-bold gradient-text">
-          Business Dashboard
-        </h1>
+        <img 
+          src="/assets/LOGO Evolut IA com texto na horizontal.png" 
+          alt="Evolut IA Logo" 
+          className="h-10 w-auto"
+          data-testid="logo"
+        />
       </div>
       
       <nav className="flex-1 p-4 space-y-2">
