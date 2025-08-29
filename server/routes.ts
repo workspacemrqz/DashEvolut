@@ -1,9 +1,128 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertClientSchema, insertProjectSchema, insertMilestoneSchema, insertInteractionSchema } from "@shared/schema";
+import { 
+  updateUserProfileSchema, 
+  changePasswordSchema, 
+  updateUserSettingsSchema,
+  insertClientSchema, 
+  insertProjectSchema, 
+  insertMilestoneSchema, 
+  insertInteractionSchema 
+} from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // User routes
+  app.get("/api/user/profile", async (req, res) => {
+    try {
+      // For now, we'll use the first user as the current user
+      // In a real app, this would come from session/authentication
+      const storageUsers = (storage as any).users as Map<string, any>;
+      const users = Array.from(storageUsers.values());
+      const user = users[0];
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      // Don't send the password hash
+      const { passwordHash, ...userProfile } = user;
+      res.json(userProfile);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user profile" });
+    }
+  });
+
+  app.patch("/api/user/profile", async (req, res) => {
+    try {
+      const validatedData = updateUserProfileSchema.parse(req.body);
+      // For now, we'll use the first user as the current user
+      const storageUsers = (storage as any).users as Map<string, any>;
+      const users = Array.from(storageUsers.values());
+      const currentUser = users[0];
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const updatedUser = await storage.updateUserProfile(currentUser.id, validatedData);
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Don't send the password hash
+      const { passwordHash, ...userProfile } = updatedUser;
+      res.json(userProfile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid profile data" });
+    }
+  });
+
+  app.patch("/api/user/password", async (req, res) => {
+    try {
+      const validatedData = changePasswordSchema.parse(req.body);
+      // For now, we'll use the first user as the current user
+      const storageUsers = (storage as any).users as Map<string, any>;
+      const users = Array.from(storageUsers.values());
+      const currentUser = users[0];
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // In a real app, you would verify the current password here
+      // For now, we'll just update with the new password hash
+      const hashedPassword = `$2b$10$hashed_${validatedData.newPassword}`;
+      const updatedUser = await storage.changePassword(currentUser.id, hashedPassword);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      res.status(400).json({ message: "Invalid password data" });
+    }
+  });
+
+  // User Settings routes
+  app.get("/api/user/settings", async (req, res) => {
+    try {
+      // For now, we'll use the first user as the current user
+      const storageUsers = (storage as any).users as Map<string, any>;
+      const users = Array.from(storageUsers.values());
+      const currentUser = users[0];
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const settings = await storage.getUserSettings(currentUser.id);
+      if (!settings) {
+        return res.status(404).json({ message: "User settings not found" });
+      }
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user settings" });
+    }
+  });
+
+  app.patch("/api/user/settings", async (req, res) => {
+    try {
+      const validatedData = updateUserSettingsSchema.parse(req.body);
+      // For now, we'll use the first user as the current user
+      const storageUsers = (storage as any).users as Map<string, any>;
+      const users = Array.from(storageUsers.values());
+      const currentUser = users[0];
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const updatedSettings = await storage.updateUserSettings(currentUser.id, validatedData);
+      if (!updatedSettings) {
+        return res.status(404).json({ message: "User settings not found" });
+      }
+      res.json(updatedSettings);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid settings data" });
+    }
+  });
+
   // Analytics routes
   app.get("/api/analytics", async (req, res) => {
     try {

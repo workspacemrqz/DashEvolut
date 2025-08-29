@@ -1,4 +1,6 @@
 import { 
+  type User, type InsertUser, type UpdateUserProfile, type ChangePassword,
+  type UserSettings, type InsertUserSettings, type UpdateUserSettings,
   type Client, type InsertClient,
   type Project, type InsertProject, type ProjectWithClient,
   type Milestone, type InsertMilestone,
@@ -10,6 +12,18 @@ import {
 import { randomUUID } from "crypto";
 
 export interface IStorage {
+  // Users
+  getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUserProfile(id: string, updates: UpdateUserProfile): Promise<User | undefined>;
+  changePassword(id: string, passwordHash: string): Promise<User | undefined>;
+  
+  // User Settings
+  getUserSettings(userId: string): Promise<UserSettings | undefined>;
+  createUserSettings(settings: InsertUserSettings): Promise<UserSettings>;
+  updateUserSettings(userId: string, updates: UpdateUserSettings): Promise<UserSettings | undefined>;
+  
   // Clients
   getClients(): Promise<Client[]>;
   getClientsWithStats(): Promise<ClientWithStats[]>;
@@ -48,6 +62,8 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
+  private users: Map<string, User> = new Map();
+  private userSettings: Map<string, UserSettings> = new Map();
   private clients: Map<string, Client> = new Map();
   private projects: Map<string, Project> = new Map();
   private milestones: Map<string, Milestone> = new Map();
@@ -60,6 +76,45 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
+    // Create sample user
+    const user: User = {
+      id: randomUUID(),
+      name: "João Silva",
+      email: "joao@exemplo.com",
+      company: "Minha Empresa",
+      phone: "(11) 99999-9999",
+      passwordHash: "$2b$10$hashedPassword123", // In real app, this would be properly hashed
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    this.users.set(user.id, user);
+
+    // Create default user settings
+    const settings: UserSettings = {
+      id: randomUUID(),
+      userId: user.id,
+      notifications: {
+        email: true,
+        push: true,
+        projectUpdates: true,
+        clientMessages: true,
+        deadlineAlerts: true,
+        weeklyReports: false,
+      },
+      uiSettings: {
+        theme: "dark",
+        language: "pt-BR",
+        dateFormat: "DD/MM/YYYY",
+        currency: "BRL",
+        autoSave: true,
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    this.userSettings.set(settings.id, settings);
+
     // Create some sample clients
     const client1: Client = {
       id: randomUUID(),
@@ -226,6 +281,98 @@ export class MemStorage implements IStorage {
     this.alerts.set(alert1.id, alert1);
     this.alerts.set(alert2.id, alert2);
     this.alerts.set(alert3.id, alert3);
+  }
+
+  // User methods
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const user: User = {
+      ...insertUser,
+      id: randomUUID(),
+      company: insertUser.company ?? null,
+      phone: insertUser.phone ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.users.set(user.id, user);
+    return user;
+  }
+
+  async updateUserProfile(id: string, updates: UpdateUserProfile): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser: User = {
+      ...user,
+      ...updates,
+      updatedAt: new Date()
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async changePassword(id: string, passwordHash: string): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser: User = {
+      ...user,
+      passwordHash,
+      updatedAt: new Date()
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  // User Settings methods
+  async getUserSettings(userId: string): Promise<UserSettings | undefined> {
+    return Array.from(this.userSettings.values()).find(settings => settings.userId === userId);
+  }
+
+  async createUserSettings(insertSettings: InsertUserSettings): Promise<UserSettings> {
+    const settings: UserSettings = {
+      ...insertSettings,
+      id: randomUUID(),
+      notifications: insertSettings.notifications || {
+        email: true,
+        push: true,
+        projectUpdates: true,
+        clientMessages: true,
+        deadlineAlerts: true,
+        weeklyReports: false,
+      },
+      uiSettings: insertSettings.uiSettings || {
+        theme: "dark",
+        language: "pt-BR",
+        dateFormat: "DD/MM/YYYY",
+        currency: "BRL",
+        autoSave: true,
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.userSettings.set(settings.id, settings);
+    return settings;
+  }
+
+  async updateUserSettings(userId: string, updates: UpdateUserSettings): Promise<UserSettings | undefined> {
+    const settings = Array.from(this.userSettings.values()).find(s => s.userId === userId);
+    if (!settings) return undefined;
+
+    const updatedSettings: UserSettings = {
+      ...settings,
+      ...updates,
+      updatedAt: new Date()
+    };
+    this.userSettings.set(settings.id, updatedSettings);
+    return updatedSettings;
   }
 
   // Clients methods

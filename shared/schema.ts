@@ -1,7 +1,53 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, real, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, real, timestamp, boolean, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  company: text("company"),
+  phone: text("phone"),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const userSettings = pgTable("user_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  notifications: json("notifications").$type<{
+    email: boolean;
+    push: boolean;
+    projectUpdates: boolean;
+    clientMessages: boolean;
+    deadlineAlerts: boolean;
+    weeklyReports: boolean;
+  }>().default({
+    email: true,
+    push: true,
+    projectUpdates: true,
+    clientMessages: true,
+    deadlineAlerts: true,
+    weeklyReports: false,
+  }),
+  uiSettings: json("ui_settings").$type<{
+    theme: string;
+    language: string;
+    dateFormat: string;
+    currency: string;
+    autoSave: boolean;
+  }>().default({
+    theme: "dark",
+    language: "pt-BR",
+    dateFormat: "DD/MM/YYYY",
+    currency: "BRL",
+    autoSave: true,
+  }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
 
 export const clients = pgTable("clients", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -83,6 +129,41 @@ export const alerts = pgTable("alerts", {
 });
 
 // Insert schemas
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateUserProfileSchema = createInsertSchema(users).omit({
+  id: true,
+  passwordHash: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Senha atual é obrigatória"),
+  newPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
+  confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Senhas não coincidem",
+  path: ["confirmPassword"],
+});
+
+export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateUserSettingsSchema = createInsertSchema(userSettings).omit({
+  id: true,
+  userId: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
+
 export const insertClientSchema = createInsertSchema(clients).omit({
   id: true,
   createdAt: true,
@@ -116,6 +197,15 @@ export const insertAlertSchema = createInsertSchema(alerts).omit({
 });
 
 // Types
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
+export type ChangePassword = z.infer<typeof changePasswordSchema>;
+
+export type UserSettings = typeof userSettings.$inferSelect;
+export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
+export type UpdateUserSettings = z.infer<typeof updateUserSettingsSchema>;
+
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
 
