@@ -367,4 +367,13 @@
   label[data-testid="label-worked-hours"] {
     color: #060606 !important;
   }
+
+  /* Kanban page specific styles for text on white/light backgrounds */
+  .kanban-page [data-state="active"] {
+    color: #060606 !important;
+  }
+  
+  .kanban-page [data-state="active"] * {
+    color: #060606 !important;
+  }
 }
