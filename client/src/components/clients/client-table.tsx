@@ -96,76 +96,77 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
   return (
     <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[800px]">
           <thead>
             <tr className="border-b border-border-secondary">
-              <th className="text-left p-4 font-semibold text-text-primary">Cliente</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Status</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Fonte</th>
-              <th className="text-left p-4 font-semibold text-text-primary">NPS</th>
-              <th className="text-left p-4 font-semibold text-text-primary">LTV</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Upsell</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Ações</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Cliente</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Fonte</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">NPS</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">LTV</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">Upsell</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
             </tr>
           </thead>
           <tbody>
             {clients.map((client) => (
               <tr key={client.id} className="border-b border-border-secondary">
-                <td className="p-4">
+                <td className="p-2 lg:p-4">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center mr-3">
-                      <span className="text-sm font-semibold">
+                    <div className="w-8 lg:w-10 h-8 lg:h-10 gradient-bg rounded-full flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                      <span className="text-xs lg:text-sm font-semibold">
                         {client.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </span>
                     </div>
-                    <div>
-                      <p className="font-medium text-text-primary" data-testid={`client-name-${client.id}`}>
+                    <div className="min-w-0">
+                      <p className="font-medium text-text-primary text-sm lg:text-base truncate" data-testid={`client-name-${client.id}`}>
                         {client.name}
                       </p>
-                      <p className="text-sm text-text-secondary" data-testid={`client-sector-${client.id}`}>
+                      <p className="text-xs lg:text-sm text-text-secondary truncate" data-testid={`client-sector-${client.id}`}>
                         {client.sector}
                       </p>
                     </div>
                   </div>
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4">
                   <Badge 
-                    className={`status-badge ${statusMap[client.status].className}`}
+                    className={`status-badge ${statusMap[client.status].className} text-xs`}
                     data-testid={`client-status-${client.id}`}
                   >
                     {statusMap[client.status].label}
                   </Badge>
                 </td>
-                <td className="p-4 text-text-secondary" data-testid={`client-source-${client.id}`}>
+                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base hidden md:table-cell" data-testid={`client-source-${client.id}`}>
                   {client.source}
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4 hidden lg:table-cell">
                   {client.nps ? (
                     <div className="flex items-center">
                       <span 
-                        className={`font-semibold ${client.nps >= 8 ? 'text-green-500' : client.nps >= 6 ? 'text-yellow-500' : 'text-red-500'}`}
+                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-green-500' : client.nps >= 6 ? 'text-yellow-500' : 'text-red-500'}`}
                         data-testid={`client-nps-${client.id}`}
                       >
                         {client.nps.toFixed(1)}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-text-secondary">N/A</span>
+                    <span className="text-text-secondary text-sm lg:text-base">N/A</span>
                   )}
                 </td>
-                <td className="p-4 text-text-primary" data-testid={`client-ltv-${client.id}`}>
-                  R$ {client.ltv?.toLocaleString('pt-BR') || '0'}
+                <td className="p-2 lg:p-4 text-text-primary text-sm lg:text-base" data-testid={`client-ltv-${client.id}`}>
+                  <span className="lg:hidden">R$ {client.ltv ? Math.round(client.ltv / 1000) + 'k' : '0'}</span>
+                  <span className="hidden lg:inline">R$ {client.ltv?.toLocaleString('pt-BR') || '0'}</span>
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4 hidden lg:table-cell">
                   <span 
-                    className={`font-semibold ${upsellMap[client.upsellPotential || 'medium'].color}`}
+                    className={`font-semibold text-sm ${upsellMap[client.upsellPotential || 'medium'].color}`}
                     data-testid={`client-upsell-${client.id}`}
                   >
                     {upsellMap[client.upsellPotential || 'medium'].label}
                   </span>
                 </td>
-                <td className="p-4">
-                  <div className="flex space-x-2">
+                <td className="p-2 lg:p-4">
+                  <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewClient(client)}
                       className="text-blue-500 hover:text-blue-400 p-1"
@@ -175,14 +176,14 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                     </button>
                     <button 
                       onClick={() => handleWhatsAppContact(client)}
-                      className="text-green-500 hover:text-green-400 p-1"
+                      className="text-green-500 hover:text-green-400 p-1 hidden sm:block"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEmailContact(client)}
-                      className="text-blue-500 hover:text-blue-400 p-1"
+                      className="text-blue-500 hover:text-blue-400 p-1 hidden sm:block"
                       data-testid={`action-email-${client.id}`}
                     >
                       <Mail className="w-4 h-4" />
@@ -197,7 +198,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
 
       {/* Client Details Modal */}
       <Dialog open={showClientDetails} onOpenChange={setShowClientDetails}>
-        <DialogContent className="sm:max-w-[500px] container-bg border-border-secondary">
+        <DialogContent className="sm:max-w-[500px] max-w-[95vw] container-bg border-border-secondary">
           <DialogHeader>
             <DialogTitle className="gradient-text">Detalhes do Cliente</DialogTitle>
             <DialogDescription className="text-text-secondary">
@@ -206,26 +207,26 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
           </DialogHeader>
 
           {selectedClient && (
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center">
-                  <span className="text-lg font-semibold">
+            <div className="space-y-4 lg:space-y-6">
+              <div className="flex items-center space-x-3 lg:space-x-4">
+                <div className="w-12 lg:w-16 h-12 lg:h-16 gradient-bg rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-sm lg:text-lg font-semibold">
                     {selectedClient.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                   </span>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-text-primary">{selectedClient.name}</h3>
-                  <p className="text-text-secondary">{selectedClient.company}</p>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg lg:text-xl font-bold text-text-primary truncate">{selectedClient.name}</h3>
+                  <p className="text-text-secondary text-sm lg:text-base truncate">{selectedClient.company}</p>
                   <Badge className={`status-badge ${statusMap[selectedClient.status].className} mt-2`}>
                     {statusMap[selectedClient.status].label}
                   </Badge>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-semibold text-text-primary mb-2">Contato</h4>
-                  <p className="text-sm text-text-secondary">Email: {selectedClient.email}</p>
+                  <p className="text-sm text-text-secondary break-all">Email: {selectedClient.email}</p>
                   <p className="text-sm text-text-secondary">Telefone: {selectedClient.phone || "N/A"}</p>
                 </div>
                 <div>
@@ -235,22 +236,23 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 p-3 rounded-lg bg-bg-secondary border border-border-secondary">
+              <div className="grid grid-cols-3 gap-2 lg:gap-4 p-3 rounded-lg bg-bg-secondary border border-border-secondary">
                 <div className="text-center">
-                  <h4 className="font-semibold text-text-primary">NPS</h4>
-                  <p className={`text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
+                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">NPS</h4>
+                  <p className={`text-lg lg:text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
                     {selectedClient.nps?.toFixed(1) || "N/A"}
                   </p>
                 </div>
                 <div className="text-center">
-                  <h4 className="font-semibold text-text-primary">LTV</h4>
-                  <p className="text-2xl font-bold text-text-primary">
-                    R$ {selectedClient.ltv?.toLocaleString('pt-BR') || '0'}
+                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">LTV</h4>
+                  <p className="text-lg lg:text-2xl font-bold text-text-primary">
+                    <span className="lg:hidden">R$ {selectedClient.ltv ? Math.round(selectedClient.ltv / 1000) + 'k' : '0'}</span>
+                    <span className="hidden lg:inline">R$ {selectedClient.ltv?.toLocaleString('pt-BR') || '0'}</span>
                   </p>
                 </div>
                 <div className="text-center">
-                  <h4 className="font-semibold text-text-primary">Projetos</h4>
-                  <p className="text-2xl font-bold text-text-primary">{selectedClient.projectCount}</p>
+                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">Projetos</h4>
+                  <p className="text-lg lg:text-2xl font-bold text-text-primary">{selectedClient.projectCount}</p>
                 </div>
               </div>
 

@@ -146,48 +146,51 @@ export default function Kanban() {
 
   const ClientCard = ({ client }: { client: Client }) => (
     <Card 
-      className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
+      className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
       draggable
       onDragStart={() => handleClientDragStart(client)}
       data-testid={`client-card-${client.id}`}
     >
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 p-3 lg:p-6">
         <div className="flex items-start justify-between">
-          <CardTitle className="text-sm font-medium text-text-primary">{client.name}</CardTitle>
+          <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{client.name}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 space-y-2">
+      <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
         <div className="flex items-center text-xs text-text-secondary">
-          <Building className="w-3 h-3 mr-1" />
-          {client.company}
+          <Building className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">{client.company}</span>
         </div>
         <div className="flex items-center text-xs text-text-secondary">
-          <Mail className="w-3 h-3 mr-1" />
-          {client.email}
+          <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">{client.email}</span>
         </div>
         {client.phone && (
-          <div className="flex items-center text-xs text-text-secondary">
+          <div className="flex items-center text-xs text-text-secondary lg:block hidden">
             <Phone className="w-3 h-3 mr-1" />
             {client.phone}
           </div>
         )}
         {client.ltv && client.ltv > 0 && (
           <div className="flex items-center text-xs">
-            <DollarSign className="w-3 h-3 mr-1 text-green-500" />
-            <span className="text-green-500">R$ {client.ltv.toLocaleString('pt-BR')}</span>
+            <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
+            <span className="text-green-500">
+              <span className="lg:hidden">R$ {Math.round(client.ltv / 1000)}k</span>
+              <span className="hidden lg:inline">R$ {client.ltv.toLocaleString('pt-BR')}</span>
+            </span>
           </div>
         )}
-        <div className="flex justify-between items-center">
-          <Badge className="status-badge status-active text-xs">
+        <div className="flex justify-between items-center flex-wrap gap-1">
+          <Badge className="status-badge status-active text-xs truncate">
             {client.sector}
           </Badge>
           {client.upsellPotential && (
-            <Badge className="status-badge status-active text-xs">
+            <Badge className="status-badge status-active text-xs hidden lg:block">
               {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
             </Badge>
           )}
         </div>
-        <div className="text-xs mt-3">
+        <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
           <span style={{color: '#FFFFFF'}}>Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {client.updatedAt ? 
@@ -202,29 +205,32 @@ export default function Kanban() {
 
   const ProjectCard = ({ project }: { project: ProjectWithClient }) => (
     <Card 
-      className="mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
+      className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
       draggable
       onDragStart={() => handleProjectDragStart(project)}
       data-testid={`project-card-${project.id}`}
     >
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 p-3 lg:p-6">
         <div className="flex items-start justify-between">
-          <CardTitle className="text-sm font-medium text-text-primary">{project.name}</CardTitle>
+          <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{project.name}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 space-y-2">
-        <p className="text-xs text-text-secondary line-clamp-2">{project.description}</p>
+      <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
+        <p className="text-xs text-text-secondary line-clamp-2 leading-tight">{project.description}</p>
         <div className="flex items-center text-xs text-text-secondary">
-          <Users className="w-3 h-3 mr-1" />
-          {project.client?.name}
+          <Users className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">{project.client?.name}</span>
         </div>
         <div className="flex items-center text-xs">
-          <DollarSign className="w-3 h-3 mr-1 text-green-500" />
-          <span className="text-green-500">R$ {project.value.toLocaleString('pt-BR')}</span>
+          <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
+          <span className="text-green-500">
+            <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
+            <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
+          </span>
         </div>
         <div className="flex items-center text-xs text-text-secondary">
-          <Calendar className="w-3 h-3 mr-1" />
-          {new Date(project.dueDate).toLocaleDateString('pt-BR')}
+          <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">{new Date(project.dueDate).toLocaleDateString('pt-BR')}</span>
         </div>
         <div className="flex justify-between items-center">
           <div className="w-full bg-muted rounded-full h-2">
@@ -235,7 +241,7 @@ export default function Kanban() {
           </div>
           <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
         </div>
-        <div className="text-xs mt-3">
+        <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
           <span style={{color: '#FFFFFF'}}>Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {project.updatedAt ? 
@@ -262,20 +268,20 @@ export default function Kanban() {
     count: number;
   }) => (
     <div 
-      className="flex-1 min-h-96"
+      className="flex-shrink-0 w-72 lg:flex-1 lg:w-auto min-h-80 lg:min-h-96"
       onDrop={onDrop}
       onDragOver={handleDragOver}
       data-testid={`kanban-column-${title.toLowerCase()}`}
     >
       <div className="h-1 rounded-t-lg bg-[#3571e6]" />
-      <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-text-primary">{title}</h3>
+      <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-3 lg:p-4 min-h-80 lg:min-h-96">
+        <div className="flex items-center justify-between mb-3 lg:mb-4">
+          <h3 className="font-semibold text-text-primary text-sm lg:text-base">{title}</h3>
           <Badge variant="outline" className="text-xs">
             {count}
           </Badge>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2 lg:space-y-3">
           {children}
         </div>
       </div>
@@ -289,27 +295,27 @@ export default function Kanban() {
         subtitle="Gestão visual de clientes e projetos"
       />
       
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-3 lg:p-6">
         <Tabs defaultValue="clients" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
             <TabsTrigger 
               value="clients" 
-              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606]"
+              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606] text-xs lg:text-sm"
             >
-              <Users className="w-4 h-4 mr-2" />
+              <Users className="w-4 h-4 mr-1 lg:mr-2" />
               Clientes
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
-              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606]"
+              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606] text-xs lg:text-sm"
             >
-              <FolderOpen className="w-4 h-4 mr-2" />
+              <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" />
               Projetos
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="clients" className="space-y-4 mt-6">
-            <div className="flex gap-6">
+          <TabsContent value="clients" className="space-y-4 mt-4 lg:mt-6">
+            <div className="flex gap-3 lg:gap-6 overflow-x-auto pb-4">
               {clientStatuses.map((status) => {
                 const clientsInStatus = getClientsByStatus(status.id);
                 return (
@@ -329,8 +335,8 @@ export default function Kanban() {
             </div>
           </TabsContent>
 
-          <TabsContent value="projects" className="space-y-4 mt-6">
-            <div className="flex gap-6">
+          <TabsContent value="projects" className="space-y-4 mt-4 lg:mt-6">
+            <div className="flex gap-3 lg:gap-6 overflow-x-auto pb-4">
               {projectStatuses.map((status) => {
                 const projectsInStatus = getProjectsByStatus(status.id);
                 return (

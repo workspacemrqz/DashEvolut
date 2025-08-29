@@ -78,8 +78,8 @@ export default function Dashboard() {
         client.name,
         client.email,
         client.company || 'N/A',
-        client.npsScore || 0,
-        `R$ ${(client.lifetimeValue || 0).toLocaleString('pt-BR')}`,
+        client.nps || 0,
+        `R$ ${(client.ltv || 0).toLocaleString('pt-BR')}`,
         client.upsellPotential || 'Baixo'
       ]);
     });
@@ -152,32 +152,32 @@ export default function Dashboard() {
         title="Dashboard Analytics" 
         subtitle="Visão geral do desempenho do negócio"
         actions={
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4 flex-wrap gap-2">
             <select 
-              className="btn-secondary px-4 py-2 rounded-lg text-sm"
+              className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm min-w-0 flex-shrink"
               value={timeFilter}
               onChange={handleTimeFilterChange}
               data-testid="select-time-filter"
             >
-              <option value="30">Últimos 30 dias</option>
-              <option value="90">Últimos 90 dias</option>
-              <option value="365">Último ano</option>
+              <option value="30">30 dias</option>
+              <option value="90">90 dias</option>
+              <option value="365">1 ano</option>
             </select>
             <button 
-              className="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
               onClick={handleExport}
               data-testid="btn-export"
             >
               <Download className="w-4 h-4" />
-              Exportar
+              <span className="hidden sm:inline">Exportar</span>
             </button>
           </div>
         }
       />
 
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-3 lg:p-6 overflow-auto">
         {/* KPI Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-6 lg:mb-8">
           <KpiCard
             title="MRR (Receita Recorrente)"
             value={`R$ ${(analytics?.mrr || 0).toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`}
@@ -216,7 +216,7 @@ export default function Dashboard() {
         </div>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6 mb-6 lg:mb-8">
           <RevenueChart data-testid="chart-revenue" />
           <PipelineChart data-testid="chart-pipeline" />
         </div>

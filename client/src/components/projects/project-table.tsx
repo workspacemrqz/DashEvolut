@@ -128,46 +128,47 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
   return (
     <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[900px]">
           <thead>
             <tr className="border-b border-border-secondary">
-              <th className="text-left p-4 font-semibold text-text-primary">Projeto</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Status</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Cliente</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Progresso</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Margem</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Valor</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Prazo</th>
-              <th className="text-left p-4 font-semibold text-text-primary">Ações</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Projeto</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Cliente</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Progresso</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">Margem</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Valor</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Prazo</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
             </tr>
           </thead>
           <tbody>
             {projects.map((project) => (
               <tr key={project.id} className="border-b border-border-secondary">
-                <td className="p-4">
-                  <div>
-                    <p className="font-medium text-text-primary" data-testid={`project-name-${project.id}`}>
+                <td className="p-2 lg:p-4">
+                  <div className="min-w-0">
+                    <p className="font-medium text-text-primary text-sm lg:text-base truncate" data-testid={`project-name-${project.id}`}>
                       {project.name}
                     </p>
-                    <p className="text-sm text-text-secondary" data-testid={`project-description-${project.id}`}>
+                    <p className="text-xs lg:text-sm text-text-secondary line-clamp-2 lg:line-clamp-1" data-testid={`project-description-${project.id}`}>
                       {project.description}
                     </p>
                   </div>
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4">
                   <Badge 
-                    className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary hover:bg-primary/80 status-badge status-development text-[#060606]"
+                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary hover:bg-primary/80 status-badge status-development text-[#060606]"
                     data-testid={`project-status-${project.id}`}
                   >
-                    {statusMap[project.status].label}
+                    <span className="lg:hidden">{statusMap[project.status].label.slice(0, 4)}</span>
+                    <span className="hidden lg:inline">{statusMap[project.status].label}</span>
                   </Badge>
                 </td>
-                <td className="p-4 text-text-secondary" data-testid={`project-client-${project.id}`}>
+                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base hidden md:table-cell truncate" data-testid={`project-client-${project.id}`}>
                   {project.client.name}
                 </td>
-                <td className="p-4">
-                  <div className="w-full">
-                    <div className="flex justify-between text-sm mb-1">
+                <td className="p-2 lg:p-4">
+                  <div className="w-full min-w-[80px]">
+                    <div className="flex justify-between text-xs lg:text-sm mb-1">
                       <span className="text-text-secondary" data-testid={`project-progress-${project.id}`}>
                         {project.progress}%
                       </span>
@@ -180,27 +181,28 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                     </div>
                   </div>
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4 hidden lg:table-cell">
                   <span 
-                    className={`font-semibold ${(project.profitMargin || 0) >= 60 ? 'text-green-500' : (project.profitMargin || 0) >= 40 ? 'text-yellow-500' : 'text-red-500'}`}
+                    className={`font-semibold text-sm ${(project.profitMargin || 0) >= 60 ? 'text-green-500' : (project.profitMargin || 0) >= 40 ? 'text-yellow-500' : 'text-red-500'}`}
                     data-testid={`project-margin-${project.id}`}
                   >
                     {(project.profitMargin || 0).toFixed(0)}%
                   </span>
                 </td>
-                <td className="p-4 text-text-primary" data-testid={`project-value-${project.id}`}>
-                  R$ {project.value.toLocaleString('pt-BR')}
+                <td className="p-2 lg:p-4 text-text-primary text-sm lg:text-base" data-testid={`project-value-${project.id}`}>
+                  <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
+                  <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
                 </td>
-                <td className="p-4">
+                <td className="p-2 lg:p-4 hidden md:table-cell">
                   <span 
-                    className={isOverdue(project.dueDate) ? 'text-red-500' : 'text-text-secondary'}
+                    className={`text-xs lg:text-sm ${isOverdue(project.dueDate) ? 'text-red-500' : 'text-text-secondary'}`}
                     data-testid={`project-due-date-${project.id}`}
                   >
                     {new Date(project.dueDate).toLocaleDateString('pt-BR')}
                   </span>
                 </td>
-                <td className="p-4">
-                  <div className="flex space-x-2">
+                <td className="p-2 lg:p-4">
+                  <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewProject(project)}
                       className="text-blue-500 hover:text-blue-400 p-1"
@@ -210,14 +212,14 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                     </button>
                     <button 
                       onClick={() => handleEditProject(project)}
-                      className="text-green-500 hover:text-green-400 p-1"
+                      className="text-green-500 hover:text-green-400 p-1 hidden sm:block"
                       data-testid={`action-edit-${project.id}`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleTimeTracker(project)}
-                      className="text-yellow-500 hover:text-yellow-400 p-1"
+                      className="text-yellow-500 hover:text-yellow-400 p-1 hidden sm:block"
                       data-testid={`action-time-${project.id}`}
                     >
                       <Clock className="w-4 h-4" />
@@ -243,7 +245,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
       )}
       {/* Time Tracker Modal */}
       <Dialog open={showTimeTracker} onOpenChange={setShowTimeTracker}>
-        <DialogContent className="bg-bg-container border-border-secondary">
+        <DialogContent className="bg-bg-container border-border-secondary max-w-[95vw] sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-text-primary">Controle de Tempo</DialogTitle>
             <DialogDescription className="text-text-secondary">
@@ -254,7 +256,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-text-secondary">Projeto</label>
-                <p className="text-text-primary">{selectedProject.name}</p>
+                <p className="text-text-primary break-words">{selectedProject.name}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-text-secondary mb-2 block" data-testid="label-worked-hours">Horas Trabalhadas</label>
@@ -267,11 +269,11 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                   step="0.5"
                 />
               </div>
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                 <Button
                   onClick={handleStartStopTracking}
                   variant={isTracking ? "destructive" : "default"}
-                  className="flex items-center gap-2"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto"
                   data-testid={isTracking ? "button-pause" : "button-start"}
                 >
                   {isTracking ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -280,7 +282,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 <Button
                   onClick={handleSaveHours}
                   disabled={updateProjectMutation.isPending}
-                  className="btn-primary"
+                  className="btn-primary w-full sm:w-auto"
                 >
                   {updateProjectMutation.isPending ? "Salvando..." : "Salvar Horas"}
                 </Button>

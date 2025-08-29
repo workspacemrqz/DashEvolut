@@ -15,7 +15,7 @@ function Router() {
   return (
     <div className="flex min-h-screen bg-bg-primary">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col lg:ml-0 ml-0">
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/clients" component={Clients} />

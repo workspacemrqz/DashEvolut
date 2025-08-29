@@ -373,6 +373,44 @@
     color: #060606 !important;
   }
 
+  /* Mobile responsiveness improvements */
+  @media (max-width: 768px) {
+    /* Reduce sidebar width when open on mobile */
+    .sidebar {
+      max-width: 280px;
+    }
+    
+    /* Ensure modals don't overflow on small screens */
+    [role="dialog"] {
+      max-width: 95vw;
+      max-height: 95vh;
+    }
+    
+    /* Compact card spacing */
+    .card {
+      padding: 12px;
+    }
+    
+    /* Better text wrapping for small screens */
+    .truncate-mobile {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* Stack form buttons vertically on mobile */
+    .form-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    /* Ensure Kanban scroll works smoothly */
+    .kanban-container {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
   /* Start/Iniciar button text and icon color override */
   button[data-testid="button-start"] {
     color: #060606 !important;

@@ -99,16 +99,16 @@ export default function Projects() {
         title="Gestão de Projetos" 
         subtitle="Controle financeiro e operacional"
         actions={
-          <div className="flex space-x-3">
+          <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
             <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="secondary" 
-                  className="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                  className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
                   data-testid="button-filter"
                 >
                   <Filter className="w-4 h-4" />
-                  Filtros
+                  <span className="hidden sm:inline">Filtros</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
@@ -135,19 +135,19 @@ export default function Projects() {
             </DropdownMenu>
             <Button 
               onClick={() => setShowProjectForm(true)}
-              className="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
               data-testid="button-new-project"
             >
               <Plus className="w-4 h-4" />
-              Novo Projeto
+              <span className="hidden sm:inline">Novo Projeto</span>
             </Button>
           </div>
         }
       />
 
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-3 lg:p-6 overflow-auto">
         {/* Project KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-4 lg:mb-6">
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Margem de Lucro</h3>
             <div className="text-2xl font-bold text-green-500 mb-1" data-testid="kpi-profit-margin">
@@ -182,7 +182,7 @@ export default function Projects() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex space-x-4 mb-6">
+        <div className="flex space-x-2 lg:space-x-4 mb-4 lg:mb-6 overflow-x-auto pb-2">
           {[
             { key: "all", label: "Todos" },
             { key: "discovery", label: "Discovery" },
@@ -193,7 +193,7 @@ export default function Projects() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 filter === tab.key 
                   ? "btn-primary" 
                   : "btn-secondary"
