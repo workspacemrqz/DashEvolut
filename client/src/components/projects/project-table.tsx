@@ -257,7 +257,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 <p className="text-text-primary">{selectedProject.name}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-text-secondary mb-2 block">Horas Trabalhadas</label>
+                <label className="text-sm font-medium text-text-secondary mb-2 block" data-testid="label-worked-hours">Horas Trabalhadas</label>
                 <Input
                   type="number"
                   value={trackedHours}

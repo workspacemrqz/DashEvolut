@@ -359,4 +359,12 @@
   button[data-testid="button-start"] svg {
     color: #060606 !important;
   }
+
+  /* Horas Trabalhadas text color override with data-testid targeting */
+  [data-testid="label-worked-hours"],
+  h3[data-testid="label-worked-hours"],
+  h4[data-testid="label-worked-hours"],
+  label[data-testid="label-worked-hours"] {
+    color: #060606 !important;
+  }
 }
