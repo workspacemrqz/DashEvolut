@@ -4,6 +4,7 @@ import { useParams, useLocation } from "wouter";
 import Header from "@/components/layout/header";
 import ProjectTable from "@/components/projects/project-table";
 import ProjectForm from "@/components/projects/project-form";
+import ProjectDetails from "@/components/projects/project-details";
 import MilestonesSection from "@/components/projects/milestones-section";
 import { ProjectWithClient } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
@@ -20,8 +21,10 @@ import { Button } from "@/components/ui/button";
 export default function Projects() {
   const [filter, setFilter] = useState("all");
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
+  const [selectedProjectForView, setSelectedProjectForView] = useState<ProjectWithClient | null>(null);
   const params = useParams<{ projectId?: string }>();
   const projectId = params?.projectId;
   const [, navigate] = useLocation();
@@ -41,8 +44,8 @@ export default function Projects() {
     if (projectId && specificProject && projects) {
       const project = projects.find(p => p.id === projectId) || specificProject;
       if (project) {
-        setSelectedProjectForEdit(project);
-        setShowProjectForm(true);
+        setSelectedProjectForView(project);
+        setShowProjectDetails(true);
       }
     }
   }, [projectId, specificProject, projects]);
@@ -236,6 +239,29 @@ export default function Projects() {
           }}
           project={selectedProjectForEdit}
         />
+
+        {/* Project Details Modal */}
+        {selectedProjectForView && (
+          <ProjectDetails 
+            open={showProjectDetails} 
+            onOpenChange={(open) => {
+              setShowProjectDetails(open);
+              if (!open) {
+                setSelectedProjectForView(null);
+                // If we came from a direct project URL, navigate back to projects list
+                if (projectId) {
+                  navigate('/projects');
+                }
+              }
+            }}
+            project={selectedProjectForView}
+            onEdit={() => {
+              setSelectedProjectForEdit(selectedProjectForView);
+              setShowProjectDetails(false);
+              setShowProjectForm(true);
+            }}
+          />
+        )}
       </main>
     </div>
   );
