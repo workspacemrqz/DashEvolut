@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Alert } from "@shared/schema";
 import { AlertTriangle, Clock, Star, CircleAlert, Eye, CreditCard, MessageCircle } from "lucide-react";
+import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface AlertsSectionProps {
   alerts: Alert[];
@@ -31,9 +33,11 @@ const iconColors = {
 
 export default function AlertsSection({ alerts, "data-testid": testId }: AlertsSectionProps) {
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   const markAsReadMutation = useMutation({
-    mutationFn: (alertId: string) => apiRequest(`/api/alerts/${alertId}/read`, "PATCH"),
+    mutationFn: (alertId: string) => apiRequest(`/api/alerts/${alertId}/read`, "PATCH", {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
@@ -41,9 +45,38 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
   });
 
   const handleAction = (alert: Alert) => {
+    // Mark alert as read first
     markAsReadMutation.mutate(alert.id);
+    
     // Handle specific actions based on alert type
-    console.log(`Action for alert: ${alert.type}`, alert);
+    switch (alert.type) {
+      case "project_delayed":
+        setLocation("/projects");
+        toast({
+          title: "Redirecionando para projetos",
+          description: "Visualize os detalhes do projeto atrasado.",
+        });
+        break;
+      case "payment_pending":
+        setLocation("/clients");
+        toast({
+          title: "Redirecionando para clientes",
+          description: "Gerencie o pagamento pendente do cliente.",
+        });
+        break;
+      case "upsell_opportunity":
+        setLocation("/clients");
+        toast({
+          title: "Redirecionando para clientes",
+          description: "Aproveite a oportunidade de upsell identificada.",
+        });
+        break;
+      default:
+        toast({
+          title: "Alerta processado",
+          description: "O alerta foi marcado como lido.",
+        });
+    }
   };
 
   const getActionButton = (alert: Alert) => {
