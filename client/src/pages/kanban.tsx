@@ -162,14 +162,11 @@ export default function Kanban() {
           </div>
         )}
         <div className="flex justify-between items-center">
-          <Badge variant="secondary" className="text-xs">
+          <Badge className="text-xs kanban-badge">
             {client.sector}
           </Badge>
           {client.upsellPotential && (
-            <Badge 
-              variant={client.upsellPotential === 'high' ? 'default' : 'outline'} 
-              className="text-xs"
-            >
+            <Badge className="text-xs kanban-badge">
               {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
             </Badge>
           )}
@@ -240,7 +237,7 @@ export default function Kanban() {
       <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-4 min-h-96">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-text-primary">{title}</h3>
-          <Badge variant="outline" className="text-xs">
+          <Badge className="text-xs kanban-badge">
             {count}
           </Badge>
         </div>
@@ -258,11 +255,11 @@ export default function Kanban() {
       <div className="flex-1 p-6">
         <Tabs defaultValue="clients" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
-            <TabsTrigger value="clients" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="clients" className="data-[state=active]:kanban-tab-active">
               <Users className="w-4 h-4 mr-2" />
               Clientes
             </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="projects" className="data-[state=active]:kanban-tab-active">
               <FolderOpen className="w-4 h-4 mr-2" />
               Projetos
             </TabsTrigger>

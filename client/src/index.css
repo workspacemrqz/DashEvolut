@@ -59,6 +59,10 @@
   --shadow-2xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
   --shadow-2xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
   --tracking-normal: 0em;
+  
+  /* Custom colors for Kanban page */
+  --kanban-badge-bg: #f5f5f5;
+  --kanban-badge-text: #060606;
 }
 
 .dark {
@@ -167,6 +171,17 @@
     box-shadow: none !important;
     --tw-ring-shadow: none !important;
     --tw-ring-offset-shadow: none !important;
+  }
+  
+  /* Kanban page custom styles */
+  .kanban-badge {
+    background-color: var(--kanban-badge-bg) !important;
+    color: var(--kanban-badge-text) !important;
+  }
+  
+  .kanban-tab-active {
+    background-color: var(--kanban-badge-bg) !important;
+    color: var(--kanban-badge-text) !important;
   }
   
   /* Override any remaining box-shadow with ring */
