@@ -26,12 +26,6 @@ import {
 import {
   User,
   Bell,
-  Shield,
-  Palette,
-  Database,
-  Download,
-  Upload,
-  Trash2,
   Save,
 } from "lucide-react";
 
@@ -157,33 +151,10 @@ export default function Settings() {
     });
   };
 
-  const handleExportData = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "Seus dados estão sendo preparados para download.",
-    });
-  };
-
-  const handleImportData = () => {
-    // Simular upload de arquivo
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json,.csv';
-    input.onchange = () => {
-      toast({
-        title: "Importação iniciada",
-        description: "Seus dados estão sendo processados.",
-      });
-    };
-    input.click();
-  };
 
   const tabs = [
     { id: "profile", label: "Perfil", icon: User },
     { id: "notifications", label: "Notificações", icon: Bell },
-    { id: "interface", label: "Interface", icon: Palette },
-    { id: "security", label: "Segurança", icon: Shield },
-    { id: "data", label: "Dados", icon: Database },
   ];
 
   if (isLoadingProfile || isLoadingSettings) {
@@ -386,89 +357,6 @@ export default function Settings() {
             </Card>
           )}
 
-          {/* Other tabs simplified */}
-          {activeTab === "interface" && (
-            <Card className="container-bg border-border-secondary">
-              <CardHeader>
-                <CardTitle className="text-text-primary flex items-center gap-2">
-                  <Palette className="w-5 h-5" />
-                  Configurações de Interface
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-text-primary font-medium">Tema</Label>
-                    <Select
-                      value={userSettings?.uiSettings?.theme || "dark"}
-                      onValueChange={(value) => handleUISettingChange("theme", value)}
-                    >
-                      <SelectTrigger className="bg-bg-primary border-border-secondary text-text-primary mt-2">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dark">Escuro</SelectItem>
-                        <SelectItem value="light">Claro</SelectItem>
-                        <SelectItem value="system">Sistema</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTab === "security" && (
-            <Card className="container-bg border-border-secondary">
-              <CardHeader>
-                <CardTitle className="text-text-primary flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  Configurações de Segurança
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-text-secondary">Funcionalidades de segurança em desenvolvimento.</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTab === "data" && (
-            <Card className="container-bg border-border-secondary">
-              <CardHeader>
-                <CardTitle className="text-text-primary flex items-center gap-2">
-                  <Database className="w-5 h-5" />
-                  Gerenciamento de Dados
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button 
-                    onClick={handleExportData}
-                    variant="outline" 
-                    className="h-24 flex-col gap-2"
-                  >
-                    <Download className="w-6 h-6" />
-                    <div className="text-center">
-                      <div className="font-medium">Exportar Dados</div>
-                      <div className="text-sm text-text-secondary">Baixar todos os seus dados</div>
-                    </div>
-                  </Button>
-
-                  <Button 
-                    onClick={handleImportData}
-                    variant="outline" 
-                    className="h-24 flex-col gap-2"
-                  >
-                    <Upload className="w-6 h-6" />
-                    <div className="text-center">
-                      <div className="font-medium">Importar Dados</div>
-                      <div className="text-sm text-text-secondary">Carregar dados de arquivo</div>
-                    </div>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </main>
     </div>
