@@ -18,6 +18,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/clients" component={Clients} />
           <Route path="/projects" component={Projects} />
+          <Route path="/projects/:projectId" component={Projects} />
           <Route component={NotFound} />
         </Switch>
       </div>

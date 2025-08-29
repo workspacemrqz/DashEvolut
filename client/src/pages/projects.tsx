@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useParams, useLocation } from "wouter";
 import Header from "@/components/layout/header";
 import ProjectTable from "@/components/projects/project-table";
 import ProjectForm from "@/components/projects/project-form";
@@ -21,12 +22,32 @@ export default function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
+  const params = useParams<{ projectId?: string }>();
+  const projectId = params?.projectId;
+  const [, navigate] = useLocation();
   
   const { data: projects, isLoading } = useQuery<ProjectWithClient[]>({
     queryKey: ["/api/projects"],
   });
 
-  const { data: milestones } = useQuery({
+  // Fetch specific project if projectId is in URL
+  const { data: specificProject } = useQuery<ProjectWithClient>({
+    queryKey: [`/api/projects/${projectId}`],
+    enabled: !!projectId,
+  });
+
+  // Open project details modal when projectId is in URL
+  useEffect(() => {
+    if (projectId && specificProject && projects) {
+      const project = projects.find(p => p.id === projectId) || specificProject;
+      if (project) {
+        setSelectedProjectForEdit(project);
+        setShowProjectForm(true);
+      }
+    }
+  }, [projectId, specificProject, projects]);
+
+  const { data: milestones } = useQuery<any[]>({
     queryKey: ["/api/milestones"],
   });
 
@@ -55,7 +76,9 @@ export default function Projects() {
   }) || [];
 
   // Calculate KPIs
-  const avgProfitMargin = projects?.reduce((sum, p) => sum + (p.profitMargin || 0), 0) / (projects?.length || 1) || 0;
+  const avgProfitMargin = projects && projects.length > 0 
+    ? projects.reduce((sum, p) => sum + (p.profitMargin || 0), 0) / projects.length 
+    : 0;
   const totalWorkedHours = projects?.reduce((sum, p) => sum + (p.workedHours || 0), 0) || 0;
   const totalRevenue = projects?.reduce((sum, p) => sum + p.value, 0) || 0;
   
@@ -205,6 +228,10 @@ export default function Projects() {
             setShowProjectForm(open);
             if (!open) {
               setSelectedProjectForEdit(null);
+              // If we came from a direct project URL, navigate back to projects list
+              if (projectId) {
+                navigate('/projects');
+              }
             }
           }}
           project={selectedProjectForEdit}

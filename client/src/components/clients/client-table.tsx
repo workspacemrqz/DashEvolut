@@ -50,7 +50,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
   };
 
   const handleProjectClick = (projectId: string) => {
-    navigate(`/projects`);
+    navigate(`/projects/${projectId}`);
     setShowClientDetails(false);
   };
 
