@@ -236,23 +236,28 @@
   }
 
   .status-active {
-    @apply bg-green-500 text-white;
+    @apply bg-green-500;
+    color: #060606 !important;
   }
 
   .status-inactive {
-    @apply bg-red-500 text-white;
+    @apply bg-red-500;
+    color: #060606 !important;
   }
 
   .status-prospect {
-    @apply bg-yellow-500 text-white;
+    @apply bg-yellow-500;
+    color: #060606 !important;
   }
 
   .status-discovery {
-    @apply bg-purple-500/20 text-purple-400;
+    @apply bg-purple-500/20;
+    color: #060606 !important;
   }
 
   .status-development {
-    @apply bg-blue-500/20 text-blue-400;
+    @apply bg-blue-500/20;
+    color: #060606 !important;
   }
 
   /* Ensure white text on blue/black backgrounds */
@@ -286,10 +291,12 @@
   }
 
   .status-delivery {
-    @apply bg-green-500/20 text-green-400;
+    @apply bg-green-500/20;
+    color: #060606 !important;
   }
 
   .status-post-sale {
-    @apply bg-gray-500/20 text-gray-400;
+    @apply bg-gray-500/20;
+    color: #060606 !important;
   }
 }
