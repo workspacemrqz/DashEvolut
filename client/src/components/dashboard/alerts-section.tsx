@@ -207,9 +207,6 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
                     </p>
                   </div>
                 </div>
-                <div onClick={(e) => e.stopPropagation()}>
-                  {getActionButton(alert)}
-                </div>
               </div>
             );
           })}
