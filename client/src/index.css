@@ -349,4 +349,14 @@
   .btn-secondary[data-testid="button-cancel"] {
     color: #060606 !important;
   }
+
+  /* Start/Iniciar button text and icon color override */
+  button[data-testid="button-start"] {
+    color: #060606 !important;
+  }
+
+  /* Apply to icons within Iniciar buttons */
+  button[data-testid="button-start"] svg {
+    color: #060606 !important;
+  }
 }

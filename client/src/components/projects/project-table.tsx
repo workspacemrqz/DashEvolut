@@ -272,6 +272,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                   onClick={handleStartStopTracking}
                   variant={isTracking ? "destructive" : "default"}
                   className="flex items-center gap-2"
+                  data-testid={isTracking ? "button-pause" : "button-start"}
                 >
                   {isTracking ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                   {isTracking ? "Pausar" : "Iniciar"}
