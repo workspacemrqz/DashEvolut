@@ -171,7 +171,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           <button
             onClick={handleMarkAllAsRead}
             disabled={markAllAsReadMutation.isPending}
-            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors"
+            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors text-[#f5f5f5]"
             data-testid="button-mark-all-read"
           >
             <CheckCheck className="w-3 h-3" />
@@ -179,7 +179,6 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           </button>
         )}
       </div>
-      
       {alerts.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-text-secondary">Nenhum alerta pendente</p>
