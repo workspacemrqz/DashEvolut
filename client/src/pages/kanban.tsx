@@ -365,108 +365,39 @@ export default function Kanban() {
     );
   };
 
-  const NavigationArrow = ({ 
-    direction, 
-    onClick, 
-    position 
-  }: { 
-    direction: 'left' | 'right'; 
-    onClick: () => void; 
-    position: 'left' | 'right';
-  }) => (
-    <Button
-      size="icon"
-      variant="ghost"
-      className={`absolute top-2 ${position === 'left' ? 'left-2' : 'right-2'} w-6 h-6 p-0 hover:bg-background/80 border border-border-secondary bg-background/50 backdrop-blur-sm transition-all duration-200 hover:scale-110`}
-      onClick={onClick}
-      data-testid={`arrow-${direction}-${position}`}
-    >
-      {direction === 'left' ? (
-        <ChevronLeft className="w-4 h-4 text-text-primary" />
-      ) : (
-        <ChevronRight className="w-4 h-4 text-text-primary" />
-      )}
-    </Button>
-  );
-
   const KanbanColumn = ({ 
     title, 
     color, 
     children, 
     onDrop, 
-    count,
-    statusId,
-    statuses,
-    type,
-    items
+    count
   }: { 
     title: string; 
     color: string; 
     children: React.ReactNode; 
     onDrop: (e: React.DragEvent) => void; 
     count: number;
-    statusId: string;
-    statuses: any[];
-    type: 'client' | 'project';
-    items: (Client | ProjectWithClient)[];
-  }) => {
-    const currentIndex = statuses.findIndex(s => s.id === statusId);
-    const isFirst = currentIndex === 0;
-    const isLast = currentIndex === statuses.length - 1;
-    const hasItems = items.length > 0;
-
-    const handleArrowClick = (direction: 'left' | 'right') => {
-      if (!hasItems) return;
-      
-      // Move the first item in the column to the target status
-      const firstItem = items[0];
-      if (type === 'client') {
-        moveClientToStatus(firstItem.id, statusId, direction);
-      } else {
-        moveProjectToStatus(firstItem.id, statusId, direction);
-      }
-    };
-
-    return (
-      <div 
-        className="flex-shrink-0 w-72 lg:flex-1 lg:w-auto min-h-80 lg:min-h-96 relative"
-        onDrop={onDrop}
-        onDragOver={handleDragOver}
-        data-testid={`kanban-column-${title.toLowerCase()}`}
-      >
-        <div className="h-1 rounded-t-lg bg-[#3571e6]" />
-        <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-3 lg:p-4 min-h-80 lg:min-h-96 relative">
-          
-          {/* Navigation Arrows */}
-          {!isFirst && hasItems && (
-            <NavigationArrow 
-              direction="left" 
-              position="left"
-              onClick={() => handleArrowClick('left')}
-            />
-          )}
-          
-          {!isLast && hasItems && (
-            <NavigationArrow 
-              direction="right" 
-              position="right"
-              onClick={() => handleArrowClick('right')}
-            />
-          )}
-
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <h3 className="font-semibold text-text-primary text-sm lg:text-base">{title}</h3>
-            <Badge variant="outline" className="text-xs">
-              {count}
-            </Badge>
-          </div>
-          <div className="space-y-2 lg:space-y-3">
-            {children}
-          </div>
+  }) => (
+    <div 
+      className="flex-shrink-0 w-72 lg:flex-1 lg:w-auto min-h-80 lg:min-h-96"
+      onDrop={onDrop}
+      onDragOver={handleDragOver}
+      data-testid={`kanban-column-${title.toLowerCase()}`}
+    >
+      <div className="h-1 rounded-t-lg bg-[#3571e6]" />
+      <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-3 lg:p-4 min-h-80 lg:min-h-96">
+        <div className="flex items-center justify-between mb-3 lg:mb-4">
+          <h3 className="font-semibold text-text-primary text-sm lg:text-base">{title}</h3>
+          <Badge variant="outline" className="text-xs">
+            {count}
+          </Badge>
+        </div>
+        <div className="space-y-2 lg:space-y-3">
+          {children}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 
   return (
     <div className="flex-1 flex flex-col bg-bg-primary">
@@ -505,10 +436,6 @@ export default function Kanban() {
                     color={status.color}
                     count={clientsInStatus.length}
                     onDrop={(e) => handleClientDrop(e, status.id)}
-                    statusId={status.id}
-                    statuses={clientStatuses}
-                    type="client"
-                    items={clientsInStatus}
                   >
                     {clientsInStatus.map((client) => (
                       <ClientCard key={client.id} client={client} />
@@ -530,10 +457,6 @@ export default function Kanban() {
                     color={status.color}
                     count={projectsInStatus.length}
                     onDrop={(e) => handleProjectDrop(e, status.id)}
-                    statusId={status.id}
-                    statuses={projectStatuses}
-                    type="project"
-                    items={projectsInStatus}
                   >
                     {projectsInStatus.map((project) => (
                       <ProjectCard key={project.id} project={project} />
