@@ -2,136 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* === SISTEMA DE CORES SIMPLIFICADO === */
-  
-  /* Base do sistema - cores fundamentais */
-  --background: #090909;
-  --foreground: #ffffff;
-  --radius: 0.4rem;
-  
-  /* Texto - hierarquia única */
-  --text-primary: #ffffff;
-  --text-secondary: #ababab;
-  --text-muted: #666666;
-  
-  /* Containers e superfícies */
-  --bg-primary: #090909;
-  --bg-container: #101011;
-  --bg-card: #161616;
-  
-  /* Bordas - contextos únicos */
-  --border-primary: #387DF3;
-  --border-secondary: #2b2b2b;
-  --border-subtle: #1a1a1a;
-  
-  /* Cores de ação - uma cor por propósito */
-  --color-action: #387DF3;      /* Ações principais */
-  --color-accent: #f5f5f5;      /* Acentos secundários */
-  --color-muted: #404040;       /* Estados desabilitados */
-  
-  /* Feedback contextual - cores únicas */
-  --color-success: #10b981;     /* Sucesso */
-  --color-warning: #f59e0b;     /* Avisos */
-  --color-error: #ef4444;       /* Erros */
-  --color-info: #387DF3;        /* Informações */
-  
-  /* Estados de projeto - cores específicas */
-  --color-discovery: #9333ea;   /* Projetos em discovery */
-  --color-development: #387DF3; /* Projetos em desenvolvimento */
-  --color-delivery: #10b981;    /* Projetos em entrega */
-  --color-postsale: #f59e0b;    /* Projetos pós-venda */
-  
-  /* Compatibilidade com sistema existente */
-  --primary: #387DF3;
-  --primary-foreground: #ffffff;
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
-  --muted: #404040;
-  --muted-foreground: #ababab;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --card: #101011;
-  --card-foreground: #ffffff;
-  --border: #2b2b2b;
-  --input: #2b2b2b;
-  --ring: #387DF3;
-  --shadow: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
-  --spacing: 0.25rem;
-  --shadow-lg: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 4px 6px -1px hsl(9, 75%, 61% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 2px 4px -1px hsl(9, 75%, 61% / 0.00);
-  --shadow-sm: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 8px 10px -1px hsl(9, 75%, 61% / 0.00);
-  --shadow-xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
-  --shadow-2xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
-  --tracking-normal: 0em;
-  
-  /* Custom colors for Kanban page */
-  --kanban-badge-bg: #f5f5f5;
-  --kanban-badge-text: #060606;
-  
-  /* Dynamic color system variables */
-  --light-bg-color: #f5f5f5;
-  --white-bg-color: #ffffff;
-  --dark-bg-color-1: #0b1015;
-  --dark-bg-color-2: #060606;
-  --light-text-color: #060606;
-  --dark-text-color: #f5f5f5;
-}
-
-.dark {
-  /* Tema escuro - mantém o mesmo sistema simplificado */
-  --background: #090909;
-  --foreground: #ffffff;
-  --bg-primary: #090909;
-  --bg-container: #101011;
-  --bg-card: #161616;
-  --text-primary: #ffffff;
-  --text-secondary: #ababab;
-  --text-muted: #666666;
-  --border-primary: #387DF3;
-  --border-secondary: #2b2b2b;
-  --border-subtle: #1a1a1a;
-  --color-action: #387DF3;
-  --color-accent: #f5f5f5;
-  --color-muted: #404040;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #387DF3;
-  --color-discovery: #9333ea;
-  --color-development: #387DF3;
-  --color-delivery: #10b981;
-  --color-postsale: #f59e0b;
-  --primary: #387DF3;
-  --primary-foreground: #ffffff;
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
-  --muted: #404040;
-  --muted-foreground: #ababab;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --card: #101011;
-  --card-foreground: #ffffff;
-  --border: #2b2b2b;
-  --input: #2b2b2b;
-  --ring: #387DF3;
-}
-
 @layer base {
   * {
-    @apply border-border;
+    border-color: #2b2b2b;
   }
-  
+
   /* Remove all focus rings and outlines */
   *:focus,
   *:focus-visible,
   *:focus-within {
-    outline: none ;
-    box-shadow: none ;
+    outline: none;
+    box-shadow: none;
   }
-  
+
   /* Remove Tailwind focus styles */
   .focus\:outline-none:focus,
   .focus\:ring-2:focus,
@@ -147,12 +30,12 @@
   .focus\:ring-accent:focus,
   .focus\:ring-ring:focus,
   .focus-visible\:ring-ring:focus-visible {
-    outline: none ;
-    box-shadow: none ;
-    --tw-ring-shadow: none ;
-    --tw-ring-offset-shadow: none ;
+    outline: none;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+    --tw-ring-offset-shadow: none;
   }
-  
+
   /* Remove ring styles from all elements with ring classes */
   [class*="ring-offset"],
   [class*="focus:ring"],
@@ -160,19 +43,19 @@
   [class*="ring-2"],
   [class*="ring-1"],
   [class*="ring-ring"] {
-    --tw-ring-shadow: none ;
-    --tw-ring-offset-shadow: none ;
+    --tw-ring-shadow: none;
+    --tw-ring-offset-shadow: none;
   }
-  
+
   /* Specific overrides for shadcn components */
   [class*="ring-offset"]:focus,
   [class*="ring-offset"]:focus-visible {
-    outline: none ;
-    box-shadow: none ;
-    --tw-ring-shadow: none ;
-    --tw-ring-offset-shadow: none ;
+    outline: none;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+    --tw-ring-offset-shadow: none;
   }
-  
+
   /* Remove focus styles from specific elements */
   input:focus,
   textarea:focus,
@@ -186,449 +69,351 @@
   /* Shadcn specific */
   .peer:focus + *,
   .peer:focus-visible + * {
-    outline: none ;
-    box-shadow: none ;
-    --tw-ring-shadow: none ;
-    --tw-ring-offset-shadow: none ;
+    outline: none;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+    --tw-ring-offset-shadow: none;
   }
-  
-  /* Kanban page custom styles */
-  .kanban-badge {
-    background-color: var(--kanban-badge-bg) ;
-    color: var(--kanban-badge-text) ;
-  }
-  
-  .kanban-badge * {
-    color: var(--kanban-badge-text) ;
-  }
-  
-  .kanban-tab-active {
-    background-color: var(--kanban-badge-bg) ;
-    color: var(--kanban-badge-text) ;
-  }
-  
-  .kanban-tab-active * {
-    color: var(--kanban-badge-text) ;
-  }
-  
+
   /* Override any remaining box-shadow with ring */
   *[style*="box-shadow"] {
-    box-shadow: none ;
+    box-shadow: none;
   }
 
   body {
-    @apply font-sans antialiased;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: #090909;
+    color: #ffffff;
   }
 }
 
 @layer components {
   .gradient-bg {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    background: linear-gradient(to right, #387DF3, #3B82F6);
+    border: 1px solid #387DF3;
+    color: #ffffff;
   }
 
   .gradient-text {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(to right, #387DF3, #3B82F6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .container-bg {
-    background-color: var(--bg-container);
+    background-color: #101011;
   }
 
   .btn-primary {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    background: linear-gradient(to right, #387DF3, #3B82F6);
+    border: 1px solid #387DF3;
+    color: #ffffff;
   }
 
   .btn-secondary {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    color: #FFFFFF ;
+    background-color: #090909;
+    border: 1px solid #2b2b2b;
+    color: #ffffff;
   }
 
   .sidebar-active {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    background: linear-gradient(to right, #387DF3, #3B82F6);
+    border: 1px solid #387DF3;
+    color: #ffffff;
   }
 
   .kpi-card {
-    background-color: var(--bg-container);
-    border: 1px solid var(--border-secondary);
+    background-color: #101011;
+    border: 1px solid #2b2b2b;
   }
 
   .progress-bar {
-    background-color: var(--bg-primary);
+    background-color: #090909;
   }
 
   .progress-fill {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    color: #FFFFFF ;
+    background: linear-gradient(to right, #387DF3, #3B82F6);
+    color: #ffffff;
   }
 
   .status-badge {
-    @apply px-2 py-1 rounded-full text-xs font-semibold;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .status-active {
-    background-color: #f5f5f5 ;
-    color: #060606 ;
+    background-color: #10b981;
+    color: #ffffff;
   }
 
   .status-inactive {
-    background-color: var(--color-error);
-    color: #060606;
+    background-color: #ef4444;
+    color: #ffffff;
   }
 
   .status-prospect {
-    background-color: var(--color-warning);
-    color: #060606;
+    background-color: #f59e0b;
+    color: #000000;
   }
 
   .status-discovery {
-    background-color: var(--color-info);
-    opacity: 0.8;
-    color: #060606;
+    background-color: #9333ea;
+    color: #ffffff;
   }
 
   .status-development {
-    background-color: var(--color-info);
-    opacity: 0.6;
-    color: #060606;
+    background-color: #387DF3;
+    color: #ffffff;
+  }
+
+  .status-delivery {
+    background-color: #10b981;
+    color: #ffffff;
+  }
+
+  .status-post-sale {
+    background-color: #6b7280;
+    color: #ffffff;
+  }
+
+  .status-overdue {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+
+  .status-completed {
+    background-color: #10b981;
+    color: #ffffff;
+  }
+
+  .status-cancelled {
+    background-color: #6b7280;
+    color: #ffffff;
   }
 
   /* Subscription status badges */
   .status-subscription-active {
-    background-color: var(--color-success);
-    color: #060606;
+    background-color: #10b981;
+    color: #ffffff;
   }
 
   .status-subscription-paused {
-    background-color: var(--color-warning);
-    color: #060606;
+    background-color: #f59e0b;
+    color: #000000;
   }
 
   .status-subscription-cancelled {
-    background-color: var(--color-error);
-    color: #060606;
+    background-color: #ef4444;
+    color: #ffffff;
   }
 
-  /* Dropdown menu items text and icons color override */
+  /* Dropdown menu items */
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    color: #060606 ;
+    color: #000000;
   }
 
-  /* Edit subscription dialog text color override with high hierarchy */
-  .container-bg .gradient-text,
-  .container-bg .text-text-secondary,
-  .container-bg .text-text-primary,
+  /* Form elements */
   .container-bg label,
   .container-bg input,
   .container-bg textarea,
   .container-bg select,
   .container-bg button span {
-    color: #F5F5F5 ;
+    color: #ffffff;
   }
 
-  /* Filter button text and icon color override */
+  /* Filter button */
   .btn-secondary,
   .btn-secondary svg,
   .btn-secondary span {
-    color: #060606 ;
+    color: #ffffff;
   }
 
-  /* Date input field icons and calendar icons */
+  /* Date input calendar icon */
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0) ;
+    filter: invert(1) brightness(0);
   }
 
-  /* Ensure white text on info/black backgrounds */
-  .bg-info,
-  .bg-black,
-  [class*="bg-info"],
-  [class*="bg-black"] {
-    color: #FFFFFF;
-  }
-
-  /* Override Tailwind primary colors to be white text */
+  /* Text colors for specific backgrounds */
   .bg-primary,
   .text-primary-foreground,
-  .bg-bg-primary,
   [data-state=checked],
-  [class*="data-[state=checked]"],
-  [class*="bg-bg-primary"] {
-    color: #FFFFFF ;
+  [class*="data-[state=checked]"] {
+    color: #ffffff;
   }
-  
-  /* Specific overrides for button and badge variants */
+
+  /* Button variants */
   .bg-primary.text-primary-foreground,
   .border-transparent.bg-primary,
   button.bg-primary,
   [role="button"].bg-primary {
-    color: #FFFFFF ;
+    color: #ffffff;
   }
 
-  .status-delivery {
-    background-color: var(--color-success);
-    opacity: 0.8;
-    color: #060606;
-  }
-
-  .status-post-sale {
-    background-color: var(--color-neutral);
-    opacity: 0.8;
-    color: #060606;
-  }
-
-  .status-overdue {
-    background-color: var(--color-error);
-    opacity: 0.8;
-    color: #060606;
-  }
-
-  .status-completed {
-    background-color: var(--color-success);
-    opacity: 0.8;
-    color: #060606;
-  }
-
-  .status-cancelled {
-    background-color: var(--color-neutral);
-    opacity: 0.8;
-    color: #060606;
-  }
-
-  /* Filter button text color override - only for filter buttons */
+  /* Filter button specific overrides */
   [data-testid="button-filter"] {
-    color: #060606 ;
+    background-color: #f5f5f5;
+    color: #000000;
   }
 
-  /* Specific override for filter button icon */
   [data-testid="button-filter"] svg {
-    color: #060606 ;
+    color: #000000;
   }
 
-  /* Force status badge text colors with highest priority */
-  .status-badge.status-active,
-  .status-badge.status-inactive,
-  .status-badge.status-prospect,
-  .status-badge.status-discovery,
-  .status-badge.status-development,
-  .status-badge.status-delivery,
-  .status-badge.status-post-sale,
-  .status-badge.status-overdue,
-  .status-badge.status-completed,
-  .status-badge.status-cancelled {
-    color: #060606 ;
-  }
-
-  /* Additional specificity for any Badge component with status classes */
-  [class*="status-badge"][class*="status-"] {
-    color: #060606 ;
-  }
-
-  /* Cancel button text color override with high specificity */
+  /* Cancel button */
   button[data-testid="button-cancel"],
   .btn-secondary[data-testid="button-cancel"] {
-    color: #060606 ;
+    background-color: #f5f5f5;
+    color: #000000;
   }
 
-  /* Mobile responsiveness improvements */
+  /* Start/Iniciar button */
+  button[data-testid="button-start"] {
+    background-color: #10b981;
+    color: #ffffff;
+  }
+
+  button[data-testid="button-start"] svg {
+    color: #ffffff;
+  }
+
+  /* Worked hours label */
+  [data-testid="label-worked-hours"],
+  h3[data-testid="label-worked-hours"],
+  h4[data-testid="label-worked-hours"],
+  label[data-testid="label-worked-hours"] {
+    color: #e5e7eb;
+  }
+
+  /* Mobile responsiveness */
   @media (max-width: 768px) {
-    /* Reduce sidebar width when open on mobile */
     .sidebar {
       max-width: 280px;
     }
-    
-    /* Ensure modals don't overflow on small screens */
+
     [role="dialog"] {
       max-width: 95vw;
       max-height: 95vh;
     }
-    
-    /* Compact card spacing */
+
     .card {
       padding: 12px;
     }
-    
-    /* Better text wrapping for small screens */
+
     .truncate-mobile {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    
-    /* Stack form buttons vertically on mobile */
+
     .form-buttons {
       flex-direction: column;
       gap: 8px;
     }
-    
-    /* Ensure Kanban scroll works smoothly */
+
     .kanban-container {
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
     }
   }
 
-  /* Ensure "Horas Trabalhadas" has the same color as "Margem de Lucro" */
-  [data-testid="label-worked-hours"] {
-    color: hsl(0 0% 89.8%) ;
-  }
-
-  /* Start/Iniciar button text and icon color override */
-  button[data-testid="button-start"] {
-    color: #060606 ;
-  }
-
-  /* Apply to icons within Iniciar buttons */
-  button[data-testid="button-start"] svg {
-    color: #060606 ;
-  }
-
-  /* Horas Trabalhadas text color override with data-testid targeting */
-  [data-testid="label-worked-hours"],
-  h3[data-testid="label-worked-hours"],
-  h4[data-testid="label-worked-hours"],
-  label[data-testid="label-worked-hours"] {
-    color: #060606 ;
-  }
-
-  /* Dynamic color system classes */
-  .dynamic-light-bg {
-    background-color: var(--light-bg-color);
-  }
-
-  .dynamic-white-bg {
-    background-color: var(--white-bg-color);
-  }
-
-  .dynamic-dark-bg-1 {
-    background-color: var(--dark-bg-color-1);
-  }
-
-  .dynamic-dark-bg-2 {
-    background-color: var(--dark-bg-color-2);
-  }
-
-
-
-
-
-
-
-
-
-
-
-  /* Force specific styling for form elements in settings page */
-  .bg-background,
-  .bg-bg-primary {
-    background-color: var(--dark-bg-color-2) !important;
-    color: var(--dark-text-color) !important;
-  }
-
-  /* Override shadcn default colors for inputs when they have dark backgrounds */
+  /* Form elements with dark backgrounds */
   input.bg-background,
   input.bg-bg-primary,
   textarea.bg-background,
   textarea.bg-bg-primary,
   select.bg-background,
   select.bg-bg-primary {
-    background-color: var(--dark-bg-color-2) !important;
-    color: var(--dark-text-color) !important;
-    border-color: var(--border-secondary) !important;
+    background-color: #161616;
+    color: #ffffff;
+    border-color: #2b2b2b;
   }
 
-  /* Force text color for inputs with specific background classes */
-  input[class*="bg-bg-primary"],
-  textarea[class*="bg-bg-primary"],
-  select[class*="bg-bg-primary"] {
-    color: var(--dark-text-color) !important;
-  }
-
-  /* Override placeholder text color in dark inputs */
+  /* Placeholder text */
   input.bg-background::placeholder,
   input.bg-bg-primary::placeholder,
   textarea.bg-background::placeholder,
   textarea.bg-bg-primary::placeholder {
-    color: rgba(245, 245, 245, 0.6) !important;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  /* Ensure all text elements inside containers with dark backgrounds use light text */
+  /* Container backgrounds */
   .container-bg,
-  .container-bg *,
   .bg-bg-primary,
-  .bg-bg-primary *,
-  .bg-background,
-  .bg-background * {
-    color: var(--dark-text-color) !important;
+  .bg-background {
+    background-color: #101011;
+    color: #ffffff;
   }
 
-  /* Override for specific form elements */
+  /* Ensure all nested elements inherit proper colors */
+  .container-bg *,
+  .bg-bg-primary *,
+  .bg-background * {
+    color: #ffffff;
+  }
+
+  /* Input and form elements */
   .container-bg input,
   .container-bg textarea,
   .container-bg select,
   .bg-bg-primary input,
   .bg-bg-primary textarea,
   .bg-bg-primary select {
-    background-color: var(--dark-bg-color-2) !important;
-    color: var(--dark-text-color) !important;
-    border-color: var(--border-secondary) !important;
+    background-color: #161616;
+    color: #ffffff;
+    border-color: #2b2b2b;
   }
 
-  /* Ensure buttons inside dark containers get proper colors */
+  /* Primary buttons */
   .container-bg .btn-primary,
   .bg-bg-primary .btn-primary {
-    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
-    color: var(--dark-text-color) !important;
+    background: linear-gradient(to right, #387DF3, #3B82F6);
+    color: #ffffff;
   }
 
-  /* Specific overrides for input and textarea with bg-background class */
-  input.bg-background,
-  textarea.bg-background {
-    background-color: var(--dark-bg-color-2) !important;
-  }
-
-  /* Override shadcn text-foreground for proper contrast */
+  /* Text color overrides */
   .text-foreground {
-    color: var(--dark-text-color) !important;
+    color: #ffffff;
   }
 
-  /* Make sure all input text is visible on dark backgrounds */
-  input[class*="bg-"],
-  textarea[class*="bg-"],
-  select[class*="bg-"] {
-    color: var(--dark-text-color) !important;
+  /* Card backgrounds */
+  .card {
+    background-color: #161616;
+    border-color: #2b2b2b;
   }
 
-  /* Ensure text in primary colored elements uses dark text */
-  .bg-primary,
-  .bg-primary * {
-    color: var(--light-text-color) !important;
+  /* Border colors */
+  .border {
+    border-color: #2b2b2b;
   }
 
-  /* Fix button text colors based on background */
-  button.bg-primary,
-  button.bg-primary *,
-  .btn-primary,
-  .btn-primary * {
-    color: var(--dark-text-color) !important;
+  /* Input backgrounds */
+  .input {
+    background-color: #2b2b2b;
+    color: #ffffff;
   }
 
-  button.bg-secondary,
-  button.bg-secondary *,
-  .btn-secondary,
-  .btn-secondary * {
-    color: var(--light-text-color) !important;
+  /* Kanban specific styles */
+  .kanban-badge {
+    background-color: #f5f5f5;
+    color: #060606;
+  }
+
+  .kanban-badge * {
+    color: #060606;
+  }
+
+  .kanban-tab-active {
+    background-color: #f5f5f5;
+    color: #060606;
+  }
+
+  .kanban-tab-active * {
+    color: #060606;
   }
 }

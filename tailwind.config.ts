@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -6,65 +7,69 @@ export default {
   theme: {
     extend: {
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.5rem",
+        md: "0.375rem",
+        sm: "0.25rem",
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#090909",
+        foreground: "#ffffff",
         card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
+          DEFAULT: "#161616",
+          foreground: "#ffffff",
         },
         popover: {
-          DEFAULT: "var(--popover)",
-          foreground: "var(--popover-foreground)",
+          DEFAULT: "#161616",
+          foreground: "#ffffff",
         },
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: "#387DF3",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
+          DEFAULT: "#404040",
+          foreground: "#ffffff",
         },
         destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+          DEFAULT: "#ef4444",
+          foreground: "#ffffff",
         },
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
-        // Cores específicas por estado de projeto (sem hierarquia)
-        discovery: "var(--color-discovery)",
-        development: "var(--color-development)",
-        delivery: "var(--color-delivery)",
-        postsale: "var(--color-postsale)",
-        // Sistema simplificado - cores únicas por contexto
-        "bg-primary": "var(--bg-primary)",
-        "bg-container": "var(--bg-container)",
-        "bg-card": "var(--bg-card)",
-        "text-primary": "var(--text-primary)",
-        "text-secondary": "var(--text-secondary)",
-        "text-muted": "var(--text-muted)",
-        "border-primary": "var(--border-primary)",
-        "border-secondary": "var(--border-secondary)",
-        "border-subtle": "var(--border-subtle)",
+        border: "#2b2b2b",
+        input: "#2b2b2b",
+        ring: "#387DF3",
         
-        // Cores de feedback - uma por propósito
-        "success": "var(--color-success)",
-        "warning": "var(--color-warning)",
-        "error": "var(--color-error)",
-        "info": "var(--color-info)",
-        "action": "var(--color-action)",
-        "accent": "var(--color-accent)",
-        "muted": "var(--color-muted)",
+        // Cores específicas diretas
+        "bg-primary": "#090909",
+        "bg-container": "#101011",
+        "bg-card": "#161616",
+        "text-primary": "#ffffff",
+        "text-secondary": "#ababab",
+        "text-muted": "#666666",
+        "border-primary": "#387DF3",
+        "border-secondary": "#2b2b2b",
+        "border-subtle": "#1a1a1a",
+        
+        // Cores de ação diretas
+        "action": "#387DF3",
+        "accent": "#f5f5f5",
+        "muted": "#404040",
+        
+        // Cores de feedback diretas
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "error": "#ef4444",
+        "info": "#387DF3",
+        
+        // Cores de projeto diretas
+        "discovery": "#9333ea",
+        "development": "#387DF3",
+        "delivery": "#10b981",
+        "postsale": "#f59e0b",
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
-        mono: ["var(--font-mono)"],
+        sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        serif: ["Georgia", "serif"],
+        mono: ["Consolas", "Monaco", "monospace"],
       },
       keyframes: {
         "accordion-down": {
