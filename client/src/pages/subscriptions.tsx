@@ -64,7 +64,7 @@ export default function Subscriptions() {
                   data-testid="button-filter-subscriptions"
                 >
                   <Filter className="h-3 w-3 lg:h-4 lg:w-4" />
-                  <span className="hidden sm:inline">Filtrar</span>
+                  <span className="hidden sm:inline text-[#060606]">Filtrar</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="dropdown-content">
@@ -96,7 +96,6 @@ export default function Subscriptions() {
           </div>
         }
       />
-
       {/* Stats Cards */}
       <div className="px-4 lg:px-6 py-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -133,7 +132,6 @@ export default function Subscriptions() {
           </div>
         </div>
       </div>
-
       {/* Subscriptions Table */}
       <div className="flex-1 px-4 lg:px-6 pb-6">
         {!isLoading && filteredSubscriptions.length === 0 ? (
@@ -166,13 +164,11 @@ export default function Subscriptions() {
           />
         )}
       </div>
-
       {/* Forms */}
       <SubscriptionForm
         open={showSubscriptionForm}
         onOpenChange={setShowSubscriptionForm}
       />
-      
       <PaymentForm
         open={showPaymentForm}
         onOpenChange={setShowPaymentForm}
