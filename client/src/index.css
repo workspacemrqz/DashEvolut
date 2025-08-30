@@ -696,4 +696,106 @@
   .badge-dark * {
     color: var(--dark-text-color) !important;
   }
+
+  /* Force specific styling for form elements in settings page */
+  .bg-background,
+  .bg-bg-primary {
+    background-color: var(--dark-bg-color-2) !important;
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Override shadcn default colors for inputs when they have dark backgrounds */
+  input.bg-background,
+  input.bg-bg-primary,
+  textarea.bg-background,
+  textarea.bg-bg-primary,
+  select.bg-background,
+  select.bg-bg-primary {
+    background-color: var(--dark-bg-color-2) !important;
+    color: var(--dark-text-color) !important;
+    border-color: var(--border-secondary) !important;
+  }
+
+  /* Force text color for inputs with specific background classes */
+  input[class*="bg-bg-primary"],
+  textarea[class*="bg-bg-primary"],
+  select[class*="bg-bg-primary"] {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Override placeholder text color in dark inputs */
+  input.bg-background::placeholder,
+  input.bg-bg-primary::placeholder,
+  textarea.bg-background::placeholder,
+  textarea.bg-bg-primary::placeholder {
+    color: rgba(245, 245, 245, 0.6) !important;
+  }
+
+  /* Ensure all text elements inside containers with dark backgrounds use light text */
+  .container-bg,
+  .container-bg *,
+  .bg-bg-primary,
+  .bg-bg-primary *,
+  .bg-background,
+  .bg-background * {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Override for specific form elements */
+  .container-bg input,
+  .container-bg textarea,
+  .container-bg select,
+  .bg-bg-primary input,
+  .bg-bg-primary textarea,
+  .bg-bg-primary select {
+    background-color: var(--dark-bg-color-2) !important;
+    color: var(--dark-text-color) !important;
+    border-color: var(--border-secondary) !important;
+  }
+
+  /* Ensure buttons inside dark containers get proper colors */
+  .container-bg .btn-primary,
+  .bg-bg-primary .btn-primary {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Specific overrides for input and textarea with bg-background class */
+  input.bg-background,
+  textarea.bg-background {
+    background-color: var(--dark-bg-color-2) !important;
+  }
+
+  /* Override shadcn text-foreground for proper contrast */
+  .text-foreground {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Make sure all input text is visible on dark backgrounds */
+  input[class*="bg-"],
+  textarea[class*="bg-"],
+  select[class*="bg-"] {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Ensure text in primary colored elements uses dark text */
+  .bg-primary,
+  .bg-primary * {
+    color: var(--light-text-color) !important;
+  }
+
+  /* Fix button text colors based on background */
+  button.bg-primary,
+  button.bg-primary *,
+  .btn-primary,
+  .btn-primary * {
+    color: var(--dark-text-color) !important;
+  }
+
+  button.bg-secondary,
+  button.bg-secondary *,
+  .btn-secondary,
+  .btn-secondary * {
+    color: var(--light-text-color) !important;
+  }
 }
