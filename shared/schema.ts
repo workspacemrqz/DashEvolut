@@ -115,13 +115,55 @@ export const analytics = pgTable("analytics", {
 
 export const alerts = pgTable("alerts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  type: text("type", { enum: ["project_delayed", "payment_pending", "upsell_opportunity", "milestone_due"] }).notNull(),
+  type: text("type", { enum: ["project_delayed", "payment_pending", "upsell_opportunity", "milestone_due", "subscription_due", "subscription_overdue"] }).notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  entityId: varchar("entity_id").notNull(), // project_id or client_id
-  entityType: text("entity_type", { enum: ["project", "client"] }).notNull(),
+  entityId: varchar("entity_id").notNull(), // project_id, client_id, or subscription_id
+  entityType: text("entity_type", { enum: ["project", "client", "subscription"] }).notNull(),
   priority: text("priority", { enum: ["low", "medium", "high", "critical"] }).default("medium"),
   isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const subscriptions = pgTable("subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").references(() => clients.id).notNull(),
+  billingDay: integer("billing_day").notNull(), // 1-31
+  amount: real("amount").notNull(),
+  notes: text("notes"),
+  status: text("status", { enum: ["active", "paused", "cancelled"] }).notNull().default("active"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const subscriptionServices = pgTable("subscription_services", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subscriptionId: varchar("subscription_id").references(() => subscriptions.id).notNull(),
+  description: text("description").notNull(),
+  isCompleted: boolean("is_completed").default(false),
+  order: integer("order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const payments = pgTable("payments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subscriptionId: varchar("subscription_id").references(() => subscriptions.id).notNull(),
+  amount: real("amount").notNull(),
+  paymentDate: timestamp("payment_date").notNull(),
+  referenceMonth: integer("reference_month").notNull(), // 1-12
+  referenceYear: integer("reference_year").notNull(),
+  receiptFileId: varchar("receipt_file_id"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const paymentFiles = pgTable("payment_files", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(),
+  filePath: text("file_path").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -184,6 +226,27 @@ export const insertAlertSchema = createInsertSchema(alerts).omit({
   createdAt: true,
 });
 
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertSubscriptionServiceSchema = createInsertSchema(subscriptionServices).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertPaymentSchema = createInsertSchema(payments).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertPaymentFileSchema = createInsertSchema(paymentFiles).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -211,6 +274,18 @@ export type InsertAnalytics = z.infer<typeof insertAnalyticsSchema>;
 export type Alert = typeof alerts.$inferSelect;
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
 
+export type Subscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
+
+export type SubscriptionService = typeof subscriptionServices.$inferSelect;
+export type InsertSubscriptionService = z.infer<typeof insertSubscriptionServiceSchema>;
+
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = z.infer<typeof insertPaymentSchema>;
+
+export type PaymentFile = typeof paymentFiles.$inferSelect;
+export type InsertPaymentFile = z.infer<typeof insertPaymentFileSchema>;
+
 // Derived types for API responses
 export type ProjectWithClient = Project & {
   client: Client;
@@ -220,4 +295,22 @@ export type ClientWithStats = Client & {
   projectCount: number;
   totalValue: number;
   lastInteraction?: Interaction;
+};
+
+export type SubscriptionWithClient = Subscription & {
+  client: Client;
+  services: SubscriptionService[];
+  lastPayment?: Payment;
+  nextBillingDate: Date;
+};
+
+export type PaymentWithFile = Payment & {
+  file?: PaymentFile;
+};
+
+export type SubscriptionWithDetails = Subscription & {
+  client: Client;
+  services: SubscriptionService[];
+  payments: PaymentWithFile[];
+  nextBillingDate: Date;
 };

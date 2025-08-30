@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BarChart3, Users, FolderOpen, Settings, Kanban, Menu, X } from "lucide-react";
+import { BarChart3, Users, FolderOpen, Settings, Kanban, Menu, X, CreditCard } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 
@@ -7,6 +7,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
   { name: "Clientes", href: "/clients", icon: Users },
   { name: "Projetos", href: "/projects", icon: FolderOpen },
+  { name: "Assinaturas", href: "/subscriptions", icon: CreditCard },
   { name: "Kanban", href: "/kanban", icon: Kanban },
   { name: "Configurações", href: "/settings", icon: Settings },
 ];

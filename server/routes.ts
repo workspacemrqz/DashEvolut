@@ -1,5 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import { storage } from "./storage";
 import { 
   updateUserProfileSchema, 
@@ -7,10 +10,42 @@ import {
   insertClientSchema, 
   insertProjectSchema, 
   insertMilestoneSchema, 
-  insertInteractionSchema 
+  insertInteractionSchema,
+  insertSubscriptionSchema,
+  insertSubscriptionServiceSchema,
+  insertPaymentSchema,
+  insertPaymentFileSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup file upload storage
+  const uploadsDir = path.join(process.cwd(), 'uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+      },
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+      }
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'image/webp'];
+      if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    },
+    limits: {
+      fileSize: 10 * 1024 * 1024 // 10MB limit
+    }
+  });
   // User routes
   app.get("/api/user/profile", async (req, res) => {
     try {
@@ -313,6 +348,161 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(alert);
     } catch (error) {
       res.status(500).json({ message: "Failed to mark alert as read" });
+    }
+  });
+
+  // Subscription routes
+  app.get("/api/subscriptions", async (req, res) => {
+    try {
+      const subscriptions = await storage.getSubscriptions();
+      res.json(subscriptions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subscriptions" });
+    }
+  });
+
+  app.get("/api/subscriptions/:id", async (req, res) => {
+    try {
+      const subscription = await storage.getSubscription(req.params.id);
+      if (!subscription) {
+        return res.status(404).json({ message: "Subscription not found" });
+      }
+      res.json(subscription);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  app.post("/api/subscriptions", async (req, res) => {
+    try {
+      const validatedData = insertSubscriptionSchema.parse(req.body);
+      const subscription = await storage.createSubscription(validatedData);
+      res.status(201).json(subscription);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid subscription data" });
+    }
+  });
+
+  app.patch("/api/subscriptions/:id", async (req, res) => {
+    try {
+      const updates = insertSubscriptionSchema.partial().parse(req.body);
+      const subscription = await storage.updateSubscription(req.params.id, updates);
+      if (!subscription) {
+        return res.status(404).json({ message: "Subscription not found" });
+      }
+      res.json(subscription);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  // Subscription Services routes
+  app.get("/api/subscriptions/:id/services", async (req, res) => {
+    try {
+      const services = await storage.getSubscriptionServices(req.params.id);
+      res.json(services);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch services" });
+    }
+  });
+
+  app.post("/api/subscriptions/:id/services", async (req, res) => {
+    try {
+      const validatedData = insertSubscriptionServiceSchema.parse({
+        ...req.body,
+        subscriptionId: req.params.id
+      });
+      const service = await storage.createSubscriptionService(validatedData);
+      res.status(201).json(service);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid service data" });
+    }
+  });
+
+  app.patch("/api/subscription-services/:id", async (req, res) => {
+    try {
+      const updates = insertSubscriptionServiceSchema.partial().parse(req.body);
+      const service = await storage.updateSubscriptionService(req.params.id, updates);
+      if (!service) {
+        return res.status(404).json({ message: "Service not found" });
+      }
+      res.json(service);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  app.delete("/api/subscription-services/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteSubscriptionService(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Service not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete service" });
+    }
+  });
+
+  // Payment routes
+  app.get("/api/subscriptions/:id/payments", async (req, res) => {
+    try {
+      const payments = await storage.getPaymentsBySubscription(req.params.id);
+      res.json(payments);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch payments" });
+    }
+  });
+
+  app.post("/api/subscriptions/:id/payments", upload.single('receipt'), async (req, res) => {
+    try {
+      let fileId = null;
+      
+      if (req.file) {
+        const paymentFile = await storage.createPaymentFile({
+          filename: req.file.filename,
+          originalName: req.file.originalname,
+          mimeType: req.file.mimetype,
+          size: req.file.size,
+          filePath: req.file.path
+        });
+        fileId = paymentFile.id;
+      }
+
+      const validatedData = insertPaymentSchema.parse({
+        ...req.body,
+        subscriptionId: req.params.id,
+        receiptFileId: fileId,
+        amount: parseFloat(req.body.amount),
+        referenceMonth: parseInt(req.body.referenceMonth),
+        referenceYear: parseInt(req.body.referenceYear),
+        paymentDate: new Date(req.body.paymentDate)
+      });
+
+      const payment = await storage.createPayment(validatedData);
+      res.status(201).json(payment);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid payment data" });
+    }
+  });
+
+  // File download route
+  app.get("/api/files/:id", async (req, res) => {
+    try {
+      const file = await storage.getPaymentFile(req.params.id);
+      if (!file) {
+        return res.status(404).json({ message: "File not found" });
+      }
+      
+      if (!fs.existsSync(file.filePath)) {
+        return res.status(404).json({ message: "File not found on disk" });
+      }
+
+      res.setHeader('Content-Type', file.mimeType);
+      res.setHeader('Content-Disposition', `attachment; filename="${file.originalName}"`);
+      res.sendFile(path.resolve(file.filePath));
+    } catch (error) {
+      res.status(500).json({ message: "Failed to download file" });
     }
   });
 

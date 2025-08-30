@@ -7,7 +7,12 @@ import {
   type Interaction, type InsertInteraction,
   type Analytics, type InsertAnalytics,
   type Alert, type InsertAlert,
-  type ClientWithStats
+  type ClientWithStats,
+  type Subscription, type InsertSubscription,
+  type SubscriptionService, type InsertSubscriptionService,
+  type Payment, type InsertPayment,
+  type PaymentFile, type InsertPaymentFile,
+  type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -58,6 +63,28 @@ export interface IStorage {
   getUnreadAlerts(): Promise<Alert[]>;
   createAlert(alert: InsertAlert): Promise<Alert>;
   markAlertAsRead(id: string): Promise<Alert | undefined>;
+  
+  // Subscriptions
+  getSubscriptions(): Promise<SubscriptionWithClient[]>;
+  getSubscription(id: string): Promise<SubscriptionWithDetails | undefined>;
+  getSubscriptionsByClient(clientId: string): Promise<Subscription[]>;
+  createSubscription(subscription: InsertSubscription): Promise<Subscription>;
+  updateSubscription(id: string, subscription: Partial<InsertSubscription>): Promise<Subscription | undefined>;
+  
+  // Subscription Services
+  getSubscriptionServices(subscriptionId: string): Promise<SubscriptionService[]>;
+  createSubscriptionService(service: InsertSubscriptionService): Promise<SubscriptionService>;
+  updateSubscriptionService(id: string, service: Partial<InsertSubscriptionService>): Promise<SubscriptionService | undefined>;
+  deleteSubscriptionService(id: string): Promise<boolean>;
+  
+  // Payments
+  getPayments(): Promise<PaymentWithFile[]>;
+  getPaymentsBySubscription(subscriptionId: string): Promise<PaymentWithFile[]>;
+  createPayment(payment: InsertPayment): Promise<Payment>;
+  
+  // Payment Files
+  createPaymentFile(file: InsertPaymentFile): Promise<PaymentFile>;
+  getPaymentFile(id: string): Promise<PaymentFile | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -69,6 +96,10 @@ export class MemStorage implements IStorage {
   private interactions: Map<string, Interaction> = new Map();
   private analytics: Map<string, Analytics> = new Map();
   private alerts: Map<string, Alert> = new Map();
+  private subscriptions: Map<string, Subscription> = new Map();
+  private subscriptionServices: Map<string, SubscriptionService> = new Map();
+  private payments: Map<string, Payment> = new Map();
+  private paymentFiles: Map<string, PaymentFile> = new Map();
 
   constructor() {
     this.seedData();
@@ -278,6 +309,152 @@ export class MemStorage implements IStorage {
     this.alerts.set(alert1.id, alert1);
     this.alerts.set(alert2.id, alert2);
     this.alerts.set(alert3.id, alert3);
+
+    // Create sample subscriptions
+    const subscription1: Subscription = {
+      id: randomUUID(),
+      clientId: client1.id,
+      billingDay: 15,
+      amount: 2500,
+      notes: "Serviços de marketing digital mensal incluindo SEO e social media",
+      status: "active",
+      createdAt: new Date('2024-08-15'),
+      updatedAt: new Date('2024-12-10')
+    };
+
+    const subscription2: Subscription = {
+      id: randomUUID(),
+      clientId: client2.id,
+      billingDay: 1,
+      amount: 1800,
+      notes: "Manutenção mensal do sistema CRM",
+      status: "active",
+      createdAt: new Date('2024-09-01'),
+      updatedAt: new Date('2024-12-10')
+    };
+
+    const subscription3: Subscription = {
+      id: randomUUID(),
+      clientId: client3.id,
+      billingDay: 10,
+      amount: 3200,
+      notes: "Consultoria estratégica e suporte técnico",
+      status: "paused",
+      createdAt: new Date('2024-07-10'),
+      updatedAt: new Date('2024-11-20')
+    };
+
+    this.subscriptions.set(subscription1.id, subscription1);
+    this.subscriptions.set(subscription2.id, subscription2);
+    this.subscriptions.set(subscription3.id, subscription3);
+
+    // Create sample subscription services
+    const service1: SubscriptionService = {
+      id: randomUUID(),
+      subscriptionId: subscription1.id,
+      description: "Análise de palavras-chave mensais",
+      isCompleted: true,
+      order: 1,
+      createdAt: new Date()
+    };
+
+    const service2: SubscriptionService = {
+      id: randomUUID(),
+      subscriptionId: subscription1.id,
+      description: "Criação de conteúdo para redes sociais",
+      isCompleted: true,
+      order: 2,
+      createdAt: new Date()
+    };
+
+    const service3: SubscriptionService = {
+      id: randomUUID(),
+      subscriptionId: subscription1.id,
+      description: "Relatório mensal de performance",
+      isCompleted: false,
+      order: 3,
+      createdAt: new Date()
+    };
+
+    const service4: SubscriptionService = {
+      id: randomUUID(),
+      subscriptionId: subscription2.id,
+      description: "Backup e monitoramento do sistema",
+      isCompleted: true,
+      order: 1,
+      createdAt: new Date()
+    };
+
+    const service5: SubscriptionService = {
+      id: randomUUID(),
+      subscriptionId: subscription2.id,
+      description: "Atualizações de segurança",
+      isCompleted: false,
+      order: 2,
+      createdAt: new Date()
+    };
+
+    this.subscriptionServices.set(service1.id, service1);
+    this.subscriptionServices.set(service2.id, service2);
+    this.subscriptionServices.set(service3.id, service3);
+    this.subscriptionServices.set(service4.id, service4);
+    this.subscriptionServices.set(service5.id, service5);
+
+    // Create sample payments
+    const payment1: Payment = {
+      id: randomUUID(),
+      subscriptionId: subscription1.id,
+      amount: 2500,
+      paymentDate: new Date('2024-11-15'),
+      referenceMonth: 11,
+      referenceYear: 2024,
+      receiptFileId: null,
+      notes: "Pagamento via PIX",
+      createdAt: new Date('2024-11-15')
+    };
+
+    const payment2: Payment = {
+      id: randomUUID(),
+      subscriptionId: subscription2.id,
+      amount: 1800,
+      paymentDate: new Date('2024-12-01'),
+      referenceMonth: 12,
+      referenceYear: 2024,
+      receiptFileId: null,
+      notes: "Pagamento via boleto bancário",
+      createdAt: new Date('2024-12-01')
+    };
+
+    this.payments.set(payment1.id, payment1);
+    this.payments.set(payment2.id, payment2);
+
+    // Add subscription alerts
+    const subscriptionAlert1: Alert = {
+      id: randomUUID(),
+      type: "subscription_due",
+      title: "Cobrança de Assinatura - TechStart LTDA",
+      description: "Vencimento: 15/01/2025 | Valor: R$ 2.500,00",
+      entityId: subscription1.id,
+      entityType: "subscription",
+      priority: "medium",
+      isRead: false,
+      createdAt: new Date()
+    };
+
+    const subscriptionAlert2: Alert = {
+      id: randomUUID(),
+      type: "subscription_overdue",
+      title: "Assinatura em Atraso - Inovação Digital",
+      description: "Venceu em: 01/01/2025 | Valor: R$ 1.800,00",
+      entityId: subscription2.id,
+      entityType: "subscription",
+      priority: "high",
+      isRead: false,
+      createdAt: new Date()
+    };
+
+    this.alerts.set(subscriptionAlert1.id, subscriptionAlert1);
+    this.alerts.set(subscriptionAlert2.id, subscriptionAlert2);
   }
 
   // User methods
@@ -572,6 +749,179 @@ export class MemStorage implements IStorage {
     };
     this.alerts.set(id, updatedAlert);
     return updatedAlert;
+  }
+
+  // Subscription methods
+  async getSubscriptions(): Promise<SubscriptionWithClient[]> {
+    const subscriptions = Array.from(this.subscriptions.values());
+    const clients = Array.from(this.clients.values());
+    const services = Array.from(this.subscriptionServices.values());
+    const payments = Array.from(this.payments.values());
+
+    return subscriptions.map(subscription => {
+      const client = clients.find(c => c.id === subscription.clientId)!;
+      const subscriptionServices = services.filter(s => s.subscriptionId === subscription.id);
+      const subscriptionPayments = payments.filter(p => p.subscriptionId === subscription.id);
+      const lastPayment = subscriptionPayments.sort((a, b) => b.paymentDate.getTime() - a.paymentDate.getTime())[0];
+      
+      // Calculate next billing date
+      const now = new Date();
+      const nextBillingDate = new Date(now.getFullYear(), now.getMonth(), subscription.billingDay);
+      if (nextBillingDate < now) {
+        nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+      }
+
+      return {
+        ...subscription,
+        client,
+        services: subscriptionServices,
+        lastPayment,
+        nextBillingDate
+      };
+    });
+  }
+
+  async getSubscription(id: string): Promise<SubscriptionWithDetails | undefined> {
+    const subscription = this.subscriptions.get(id);
+    if (!subscription) return undefined;
+
+    const client = this.clients.get(subscription.clientId)!;
+    const services = Array.from(this.subscriptionServices.values()).filter(s => s.subscriptionId === id);
+    const subscriptionPayments = Array.from(this.payments.values()).filter(p => p.subscriptionId === id);
+    const paymentFiles = Array.from(this.paymentFiles.values());
+
+    const payments: PaymentWithFile[] = subscriptionPayments.map(payment => ({
+      ...payment,
+      file: payment.receiptFileId ? paymentFiles.find(f => f.id === payment.receiptFileId) : undefined
+    }));
+
+    // Calculate next billing date
+    const now = new Date();
+    const nextBillingDate = new Date(now.getFullYear(), now.getMonth(), subscription.billingDay);
+    if (nextBillingDate < now) {
+      nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+    }
+
+    return {
+      ...subscription,
+      client,
+      services,
+      payments,
+      nextBillingDate
+    };
+  }
+
+  async getSubscriptionsByClient(clientId: string): Promise<Subscription[]> {
+    return Array.from(this.subscriptions.values()).filter(s => s.clientId === clientId);
+  }
+
+  async createSubscription(insertSubscription: InsertSubscription): Promise<Subscription> {
+    const subscription: Subscription = {
+      ...insertSubscription,
+      id: randomUUID(),
+      notes: insertSubscription.notes ?? null,
+      status: insertSubscription.status ?? "active",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.subscriptions.set(subscription.id, subscription);
+    return subscription;
+  }
+
+  async updateSubscription(id: string, updates: Partial<InsertSubscription>): Promise<Subscription | undefined> {
+    const subscription = this.subscriptions.get(id);
+    if (!subscription) return undefined;
+
+    const updatedSubscription: Subscription = {
+      ...subscription,
+      ...updates,
+      updatedAt: new Date()
+    };
+    this.subscriptions.set(id, updatedSubscription);
+    return updatedSubscription;
+  }
+
+  // Subscription Services methods
+  async getSubscriptionServices(subscriptionId: string): Promise<SubscriptionService[]> {
+    return Array.from(this.subscriptionServices.values())
+      .filter(s => s.subscriptionId === subscriptionId)
+      .sort((a, b) => a.order - b.order);
+  }
+
+  async createSubscriptionService(insertService: InsertSubscriptionService): Promise<SubscriptionService> {
+    const service: SubscriptionService = {
+      ...insertService,
+      id: randomUUID(),
+      isCompleted: insertService.isCompleted ?? false,
+      order: insertService.order ?? 0,
+      createdAt: new Date()
+    };
+    this.subscriptionServices.set(service.id, service);
+    return service;
+  }
+
+  async updateSubscriptionService(id: string, updates: Partial<InsertSubscriptionService>): Promise<SubscriptionService | undefined> {
+    const service = this.subscriptionServices.get(id);
+    if (!service) return undefined;
+
+    const updatedService: SubscriptionService = {
+      ...service,
+      ...updates
+    };
+    this.subscriptionServices.set(id, updatedService);
+    return updatedService;
+  }
+
+  async deleteSubscriptionService(id: string): Promise<boolean> {
+    return this.subscriptionServices.delete(id);
+  }
+
+  // Payment methods
+  async getPayments(): Promise<PaymentWithFile[]> {
+    const payments = Array.from(this.payments.values());
+    const files = Array.from(this.paymentFiles.values());
+
+    return payments.map(payment => ({
+      ...payment,
+      file: payment.receiptFileId ? files.find(f => f.id === payment.receiptFileId) : undefined
+    }));
+  }
+
+  async getPaymentsBySubscription(subscriptionId: string): Promise<PaymentWithFile[]> {
+    const payments = Array.from(this.payments.values()).filter(p => p.subscriptionId === subscriptionId);
+    const files = Array.from(this.paymentFiles.values());
+
+    return payments.map(payment => ({
+      ...payment,
+      file: payment.receiptFileId ? files.find(f => f.id === payment.receiptFileId) : undefined
+    }));
+  }
+
+  async createPayment(insertPayment: InsertPayment): Promise<Payment> {
+    const payment: Payment = {
+      ...insertPayment,
+      id: randomUUID(),
+      receiptFileId: insertPayment.receiptFileId ?? null,
+      notes: insertPayment.notes ?? null,
+      createdAt: new Date()
+    };
+    this.payments.set(payment.id, payment);
+    return payment;
+  }
+
+  // Payment Files methods
+  async createPaymentFile(insertFile: InsertPaymentFile): Promise<PaymentFile> {
+    const file: PaymentFile = {
+      ...insertFile,
+      id: randomUUID(),
+      createdAt: new Date()
+    };
+    this.paymentFiles.set(file.id, file);
+    return file;
+  }
+
+  async getPaymentFile(id: string): Promise<PaymentFile | undefined> {
+    return this.paymentFiles.get(id);
   }
 }
 
