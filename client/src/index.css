@@ -40,7 +40,7 @@
   --font-mono: Menlo, monospace;
   --radius: 0.4rem;
 
-  /* Custom variables for business dashboard */
+  /* Simplified color system - single colors per context */
   --bg-primary: hsl(0 0% 2.35%);
   --bg-container: hsl(209 32% 6.27%);
   --text-primary: hsl(0 0% 100%);
@@ -49,6 +49,18 @@
   --gradient-end: hsl(225 75% 56%);
   --border-primary: hsl(203.89 88.28% 53.14%);
   --border-secondary: hsl(0 0% 18.82%);
+  
+  /* Contextual colors - single color per purpose */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  --color-neutral: #6b7280;
+  
+  /* Interactive colors */
+  --color-action: hsl(203.89 88.28% 53.14%);
+  --color-accent: #f5f5f5;
+  --color-muted: #404040;
   --shadow: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
   --spacing: 0.25rem;
   --shadow-lg: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 4px 6px -1px hsl(9, 75%, 61% / 0.00);
@@ -272,39 +284,41 @@
   }
 
   .status-inactive {
-    @apply bg-red-500;
-    color: #060606 ;
+    background-color: var(--color-error);
+    color: #060606;
   }
 
   .status-prospect {
-    @apply bg-yellow-500;
-    color: #060606 ;
+    background-color: var(--color-warning);
+    color: #060606;
   }
 
   .status-discovery {
-    @apply bg-purple-500/20;
-    color: #060606 ;
+    background-color: var(--color-info);
+    opacity: 0.8;
+    color: #060606;
   }
 
   .status-development {
-    @apply bg-blue-500/20;
-    color: #060606 ;
+    background-color: var(--color-info);
+    opacity: 0.6;
+    color: #060606;
   }
 
   /* Subscription status badges */
   .status-subscription-active {
-    background-color: #f5f5f5 ;
-    color: #060606 ;
+    background-color: var(--color-success);
+    color: #060606;
   }
 
   .status-subscription-paused {
-    @apply bg-yellow-500;
-    color: #060606 ;
+    background-color: var(--color-warning);
+    color: #060606;
   }
 
   .status-subscription-cancelled {
-    @apply bg-red-500;
-    color: #060606 ;
+    background-color: var(--color-error);
+    color: #060606;
   }
 
   /* Dropdown menu items text and icons color override */
@@ -338,16 +352,12 @@
     filter: invert(1) brightness(0) ;
   }
 
-  /* Ensure white text on blue/black backgrounds */
-  .bg-blue-500,
-  .bg-blue-600,
-  .bg-blue-700,
-  .bg-blue-800,
-  .bg-blue-900,
+  /* Ensure white text on info/black backgrounds */
+  .bg-info,
   .bg-black,
-  [class*="bg-blue-"],
+  [class*="bg-info"],
   [class*="bg-black"] {
-    color: #FFFFFF ;
+    color: #FFFFFF;
   }
 
   /* Override Tailwind primary colors to be white text */
@@ -369,28 +379,33 @@
   }
 
   .status-delivery {
-    @apply bg-green-500/20;
-    color: #060606 ;
+    background-color: var(--color-success);
+    opacity: 0.8;
+    color: #060606;
   }
 
   .status-post-sale {
-    @apply bg-gray-500/20;
-    color: #060606 ;
+    background-color: var(--color-neutral);
+    opacity: 0.8;
+    color: #060606;
   }
 
   .status-overdue {
-    @apply bg-red-500/20;
-    color: #060606 ;
+    background-color: var(--color-error);
+    opacity: 0.8;
+    color: #060606;
   }
 
   .status-completed {
-    @apply bg-green-500/20;
-    color: #060606 ;
+    background-color: var(--color-success);
+    opacity: 0.8;
+    color: #060606;
   }
 
   .status-cancelled {
-    @apply bg-gray-500/20;
-    color: #060606 ;
+    background-color: var(--color-neutral);
+    opacity: 0.8;
+    color: #060606;
   }
 
   /* Filter button text color override - only for filter buttons */

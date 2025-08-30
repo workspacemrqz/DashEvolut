@@ -70,6 +70,15 @@ export default {
         "gradient-end": "var(--gradient-end)",
         "border-primary": "var(--border-primary)",
         "border-secondary": "var(--border-secondary)",
+        
+        // Simplified contextual colors - one color per purpose
+        "success": "var(--color-success)",
+        "warning": "var(--color-warning)",
+        "error": "var(--color-error)",
+        "info": "var(--color-info)",
+        "neutral": "var(--color-neutral)",
+        "action": "var(--color-action)",
+        
         // Dynamic color system
         "light-bg": "var(--light-bg-color)",
         "white-bg": "var(--white-bg-color)",

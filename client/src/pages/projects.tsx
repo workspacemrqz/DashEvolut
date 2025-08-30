@@ -149,7 +149,7 @@ export default function Projects() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-4 lg:mb-6">
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Margem de Lucro</h3>
-            <div className="text-2xl font-bold text-green-500 mb-1" data-testid="kpi-profit-margin">
+            <div className="text-2xl font-bold text-success mb-1" data-testid="kpi-profit-margin">
               {avgProfitMargin.toFixed(1)}%
             </div>
             <p className="text-sm text-text-secondary">Média geral</p>
@@ -165,7 +165,7 @@ export default function Projects() {
           
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Previsão vs Real</h3>
-            <div className="text-2xl font-bold text-yellow-500 mb-1" data-testid="kpi-forecast-accuracy">
+            <div className="text-2xl font-bold text-warning mb-1" data-testid="kpi-forecast-accuracy">
               {forecastAccuracy}%
             </div>
             <p className="text-sm text-text-secondary">Precisão</p>

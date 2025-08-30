@@ -246,8 +246,8 @@ export default function Kanban() {
           )}
           {client.ltv && client.ltv > 0 && (
             <div className="flex items-center text-xs">
-              <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
-              <span className="text-green-500">
+              <DollarSign className="w-3 h-3 mr-1 text-success flex-shrink-0" />
+              <span className="text-success">
                 <span className="lg:hidden">R$ {Math.round(client.ltv / 1000)}k</span>
                 <span className="hidden lg:inline">R$ {client.ltv.toLocaleString('pt-BR')}</span>
               </span>
@@ -332,8 +332,8 @@ export default function Kanban() {
             <span className="truncate">{project.client?.name}</span>
           </div>
           <div className="flex items-center text-xs">
-            <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
-            <span className="text-green-500">
+            <DollarSign className="w-3 h-3 mr-1 text-success flex-shrink-0" />
+            <span className="text-success">
               <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
               <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
             </span>

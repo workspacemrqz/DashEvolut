@@ -66,13 +66,13 @@ export default function SubscriptionCard({
   return (
     <div 
       className={`relative p-6 bg-bg-secondary border border-border-secondary rounded-lg ${
-        isOverdue ? 'border-red-500 bg-red-50 dark:bg-red-950' : ''
+        isOverdue ? 'border-error bg-error/10' : ''
       }`}
       data-testid={testId}
     >
       {isOverdue && (
         <div className="absolute top-2 right-2">
-          <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+          <Badge className="bg-error/20 text-error">
             Vencida
           </Badge>
         </div>
@@ -127,7 +127,7 @@ export default function SubscriptionCard({
             )}
             <DropdownMenuItem 
               onClick={() => handleStatusChange("cancelled")}
-              className="text-red-600 dark:text-red-400"
+              className="text-error"
             >
               <X className="h-4 w-4 mr-2" />
               Cancelar
@@ -154,7 +154,7 @@ export default function SubscriptionCard({
         <div className="flex items-center justify-between">
           <span className="text-sm text-text-secondary">Próximo Vencimento</span>
           <span 
-            className={`text-sm font-medium ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
+            className={`text-sm font-medium ${isOverdue ? 'text-error' : 'text-text-primary'}`}
             data-testid={`text-next-billing-${subscription.id}`}
           >
             {format(subscription.nextBillingDate, "dd/MM/yyyy", { locale: ptBR })}
@@ -187,7 +187,7 @@ export default function SubscriptionCard({
             <div className="space-y-1">
               {subscription.services.slice(0, 3).map((service) => (
                 <div key={service.id} className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${service.isCompleted ? 'bg-green-500' : 'bg-gray-300'}`} />
+                  <div className={`w-2 h-2 rounded-full ${service.isCompleted ? 'bg-success' : 'bg-neutral'}`} />
                   <span className="text-xs text-text-secondary truncate">
                     {service.description}
                   </span>
