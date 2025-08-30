@@ -199,7 +199,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
                 <Clock className="w-4 h-4 text-text-secondary mr-2" />
-                <h4 className="font-semibold text-text-primary" data-testid="label-worked-hours">Horas Trabalhadas</h4>
+                <h4 className="font-semibold text-text-primary" style={{color: '#F5F5F5 !important'}} data-testid="label-worked-hours">Horas Trabalhadas</h4>
               </div>
               <p className="text-xl font-bold text-text-primary" data-testid="worked-hours">
                 {project.workedHours || 0}h

@@ -371,7 +371,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                 name="workedHours"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-text-primary" data-testid="label-worked-hours">Horas Trabalhadas</FormLabel>
+                    <FormLabel className="text-text-primary" style={{color: '#F5F5F5 !important'}} data-testid="label-worked-hours">Horas Trabalhadas</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
