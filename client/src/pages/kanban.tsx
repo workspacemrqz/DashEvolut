@@ -193,12 +193,12 @@ export default function Kanban() {
         onDragStart={() => handleClientDragStart(client)}
         data-testid={`client-card-${client.id}`}
       >
-        {/* Individual card navigation arrows - visible on hover */}
+        {/* Individual card navigation arrows - always visible */}
         {canMoveLeft && (
           <Button
             size="icon"
             variant="ghost"
-            className="absolute top-1 left-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            className="absolute top-1 left-1 w-5 h-5 p-0 bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
             onClick={(e) => {
               e.stopPropagation();
               moveClientToStatus(client.id, client.status, 'left');
@@ -213,7 +213,7 @@ export default function Kanban() {
           <Button
             size="icon"
             variant="ghost"
-            className="absolute top-1 right-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            className="absolute top-1 right-1 w-5 h-5 p-0 bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
             onClick={(e) => {
               e.stopPropagation();
               moveClientToStatus(client.id, client.status, 'right');
@@ -289,12 +289,12 @@ export default function Kanban() {
         onDragStart={() => handleProjectDragStart(project)}
         data-testid={`project-card-${project.id}`}
       >
-        {/* Individual card navigation arrows - visible on hover */}
+        {/* Individual card navigation arrows - always visible */}
         {canMoveLeft && (
           <Button
             size="icon"
             variant="ghost"
-            className="absolute top-1 left-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            className="absolute top-1 left-1 w-5 h-5 p-0 bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
             onClick={(e) => {
               e.stopPropagation();
               moveProjectToStatus(project.id, project.status, 'left');
@@ -309,7 +309,7 @@ export default function Kanban() {
           <Button
             size="icon"
             variant="ghost"
-            className="absolute top-1 right-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            className="absolute top-1 right-1 w-5 h-5 p-0 bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
             onClick={(e) => {
               e.stopPropagation();
               moveProjectToStatus(project.id, project.status, 'right');
