@@ -296,7 +296,7 @@ export default function SubscriptionTable({
                     </div>
                     <div>
                       <span className="text-text-secondary">Status:</span>
-                      <Badge className={statusMap[selectedSubscription.status].className}>
+                      <Badge className={`status-badge ${statusMap[selectedSubscription.status].className}`}>
                         {statusMap[selectedSubscription.status].label}
                       </Badge>
                     </div>
