@@ -144,7 +144,6 @@ export default function Projects() {
           </div>
         }
       />
-
       <main className="flex-1 p-3 lg:p-6 overflow-auto">
         {/* Project KPIs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-4 lg:mb-6">
@@ -193,11 +192,7 @@ export default function Projects() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                filter === tab.key 
-                  ? "btn-primary" 
-                  : "btn-secondary"
-              }`}
+              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-[#f5f5f5]"
               data-testid={`filter-${tab.key}`}
             >
               {tab.label}
