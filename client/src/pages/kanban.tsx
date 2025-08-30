@@ -4,7 +4,8 @@ import Header from "@/components/layout/header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, FolderOpen, Building, Mail, Phone, Calendar, DollarSign } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, FolderOpen, Building, Mail, Phone, Calendar, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
 import { Client, Project, ProjectWithClient } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -126,6 +127,42 @@ export default function Kanban() {
     e.preventDefault();
   };
 
+  // Arrow navigation functions for clients
+  const moveClientToStatus = (clientId: string, currentStatus: string, direction: 'left' | 'right') => {
+    const currentIndex = clientStatuses.findIndex(s => s.id === currentStatus);
+    let targetIndex;
+    
+    if (direction === 'left') {
+      targetIndex = currentIndex - 1;
+    } else {
+      targetIndex = currentIndex + 1;
+    }
+    
+    // Check if target index is valid
+    if (targetIndex >= 0 && targetIndex < clientStatuses.length) {
+      const targetStatus = clientStatuses[targetIndex].id;
+      updateClientStatus.mutate({ clientId, status: targetStatus });
+    }
+  };
+
+  // Arrow navigation functions for projects
+  const moveProjectToStatus = (projectId: string, currentStatus: string, direction: 'left' | 'right') => {
+    const currentIndex = projectStatuses.findIndex(s => s.id === currentStatus);
+    let targetIndex;
+    
+    if (direction === 'left') {
+      targetIndex = currentIndex - 1;
+    } else {
+      targetIndex = currentIndex + 1;
+    }
+    
+    // Check if target index is valid
+    if (targetIndex >= 0 && targetIndex < projectStatuses.length) {
+      const targetStatus = projectStatuses[targetIndex].id;
+      updateProjectStatus.mutate({ projectId, status: targetStatus });
+    }
+  };
+
   const getClientsByStatus = (status: string): Client[] => {
     const filteredClients = clients?.filter(client => client.status === status) || [];
     return filteredClients.sort((a, b) => {
@@ -144,114 +181,212 @@ export default function Kanban() {
     });
   };
 
-  const ClientCard = ({ client }: { client: Client }) => (
-    <Card 
-      className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
-      draggable
-      onDragStart={() => handleClientDragStart(client)}
-      data-testid={`client-card-${client.id}`}
-    >
-      <CardHeader className="pb-2 p-3 lg:p-6">
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{client.name}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
-        <div className="flex items-center text-xs text-text-secondary">
-          <Building className="w-3 h-3 mr-1 flex-shrink-0" />
-          <span className="truncate">{client.company}</span>
-        </div>
-        <div className="flex items-center text-xs text-text-secondary">
-          <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
-          <span className="truncate">{client.email}</span>
-        </div>
-        {client.phone && (
-          <div className="flex items-center text-xs text-text-secondary hidden lg:flex">
-            <Phone className="w-3 h-3 mr-1" />
-            {client.phone}
-          </div>
+  const ClientCard = ({ client }: { client: Client }) => {
+    const currentIndex = clientStatuses.findIndex(s => s.id === client.status);
+    const canMoveLeft = currentIndex > 0;
+    const canMoveRight = currentIndex < clientStatuses.length - 1;
+
+    return (
+      <Card 
+        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors relative group"
+        draggable
+        onDragStart={() => handleClientDragStart(client)}
+        data-testid={`client-card-${client.id}`}
+      >
+        {/* Individual card navigation arrows - visible on hover */}
+        {canMoveLeft && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-1 left-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              moveClientToStatus(client.id, client.status, 'left');
+            }}
+            data-testid={`client-arrow-left-${client.id}`}
+          >
+            <ChevronLeft className="w-3 h-3 text-text-primary" />
+          </Button>
         )}
-        {client.ltv && client.ltv > 0 && (
+        
+        {canMoveRight && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-1 right-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              moveClientToStatus(client.id, client.status, 'right');
+            }}
+            data-testid={`client-arrow-right-${client.id}`}
+          >
+            <ChevronRight className="w-3 h-3 text-text-primary" />
+          </Button>
+        )}
+
+        <CardHeader className="pb-2 p-3 lg:p-6">
+          <div className="flex items-start justify-between">
+            <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{client.name}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
+          <div className="flex items-center text-xs text-text-secondary">
+            <Building className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="truncate">{client.company}</span>
+          </div>
+          <div className="flex items-center text-xs text-text-secondary">
+            <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="truncate">{client.email}</span>
+          </div>
+          {client.phone && (
+            <div className="flex items-center text-xs text-text-secondary hidden lg:flex">
+              <Phone className="w-3 h-3 mr-1" />
+              {client.phone}
+            </div>
+          )}
+          {client.ltv && client.ltv > 0 && (
+            <div className="flex items-center text-xs">
+              <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
+              <span className="text-green-500">
+                <span className="lg:hidden">R$ {Math.round(client.ltv / 1000)}k</span>
+                <span className="hidden lg:inline">R$ {client.ltv.toLocaleString('pt-BR')}</span>
+              </span>
+            </div>
+          )}
+          <div className="flex justify-between items-center flex-wrap gap-1">
+            <Badge className="status-badge status-active text-xs truncate">
+              {client.sector}
+            </Badge>
+            {client.upsellPotential && (
+              <Badge className="status-badge status-active text-xs hidden lg:block">
+                {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
+              </Badge>
+            )}
+          </div>
+          <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
+            <span className="text-dark-text">Atualização: </span>
+            <span style={{color: '#2D81EA'}}>
+              {client.updatedAt ? 
+                new Date(client.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(client.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
+                new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(client.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+              }
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const ProjectCard = ({ project }: { project: ProjectWithClient }) => {
+    const currentIndex = projectStatuses.findIndex(s => s.id === project.status);
+    const canMoveLeft = currentIndex > 0;
+    const canMoveRight = currentIndex < projectStatuses.length - 1;
+
+    return (
+      <Card 
+        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors relative group"
+        draggable
+        onDragStart={() => handleProjectDragStart(project)}
+        data-testid={`project-card-${project.id}`}
+      >
+        {/* Individual card navigation arrows - visible on hover */}
+        {canMoveLeft && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-1 left-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              moveProjectToStatus(project.id, project.status, 'left');
+            }}
+            data-testid={`project-arrow-left-${project.id}`}
+          >
+            <ChevronLeft className="w-3 h-3 text-text-primary" />
+          </Button>
+        )}
+        
+        {canMoveRight && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-1 right-1 w-5 h-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm border border-border-secondary z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              moveProjectToStatus(project.id, project.status, 'right');
+            }}
+            data-testid={`project-arrow-right-${project.id}`}
+          >
+            <ChevronRight className="w-3 h-3 text-text-primary" />
+          </Button>
+        )}
+
+        <CardHeader className="pb-2 p-3 lg:p-6">
+          <div className="flex items-start justify-between">
+            <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{project.name}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
+          <p className="text-xs text-text-secondary line-clamp-2 leading-tight">{project.description}</p>
+          <div className="flex items-center text-xs text-text-secondary">
+            <Users className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="truncate">{project.client?.name}</span>
+          </div>
           <div className="flex items-center text-xs">
             <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
             <span className="text-green-500">
-              <span className="lg:hidden">R$ {Math.round(client.ltv / 1000)}k</span>
-              <span className="hidden lg:inline">R$ {client.ltv.toLocaleString('pt-BR')}</span>
+              <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
+              <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
             </span>
           </div>
-        )}
-        <div className="flex justify-between items-center flex-wrap gap-1">
-          <Badge className="status-badge status-active text-xs truncate">
-            {client.sector}
-          </Badge>
-          {client.upsellPotential && (
-            <Badge className="status-badge status-active text-xs hidden lg:block">
-              {client.upsellPotential === 'high' ? 'Alto' : client.upsellPotential === 'medium' ? 'Médio' : 'Baixo'} Upsell
-            </Badge>
-          )}
-        </div>
-        <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
-          <span className="text-dark-text">Atualização: </span>
-          <span style={{color: '#2D81EA'}}>
-            {client.updatedAt ? 
-              new Date(client.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(client.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
-              new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(client.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-            }
-          </span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const ProjectCard = ({ project }: { project: ProjectWithClient }) => (
-    <Card 
-      className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors"
-      draggable
-      onDragStart={() => handleProjectDragStart(project)}
-      data-testid={`project-card-${project.id}`}
-    >
-      <CardHeader className="pb-2 p-3 lg:p-6">
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-xs lg:text-sm font-medium text-text-primary leading-tight">{project.name}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0 space-y-1 lg:space-y-2 p-3 lg:p-6">
-        <p className="text-xs text-text-secondary line-clamp-2 leading-tight">{project.description}</p>
-        <div className="flex items-center text-xs text-text-secondary">
-          <Users className="w-3 h-3 mr-1 flex-shrink-0" />
-          <span className="truncate">{project.client?.name}</span>
-        </div>
-        <div className="flex items-center text-xs">
-          <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
-          <span className="text-green-500">
-            <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
-            <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
-          </span>
-        </div>
-        <div className="flex items-center text-xs text-text-secondary">
-          <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
-          <span className="truncate">{new Date(project.dueDate).toLocaleDateString('pt-BR')}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="w-full bg-muted rounded-full h-2">
-            <div 
-              className="bg-primary h-2 rounded-full transition-all" 
-              style={{ width: `${project.progress}%` }}
-            />
+          <div className="flex items-center text-xs text-text-secondary">
+            <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="truncate">{new Date(project.dueDate).toLocaleDateString('pt-BR')}</span>
           </div>
-          <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
-        </div>
-        <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
-          <span className="text-dark-text">Atualização: </span>
-          <span style={{color: '#2D81EA'}}>
-            {project.updatedAt ? 
-              new Date(project.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(project.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
-              new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(project.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-            }
-          </span>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="flex justify-between items-center">
+            <div className="w-full bg-muted rounded-full h-2">
+              <div 
+                className="bg-primary h-2 rounded-full transition-all" 
+                style={{ width: `${project.progress}%` }}
+              />
+            </div>
+            <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
+          </div>
+          <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
+            <span className="text-dark-text">Atualização: </span>
+            <span style={{color: '#2D81EA'}}>
+              {project.updatedAt ? 
+                new Date(project.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(project.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
+                new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(project.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+              }
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const NavigationArrow = ({ 
+    direction, 
+    onClick, 
+    position 
+  }: { 
+    direction: 'left' | 'right'; 
+    onClick: () => void; 
+    position: 'left' | 'right';
+  }) => (
+    <Button
+      size="icon"
+      variant="ghost"
+      className={`absolute top-2 ${position === 'left' ? 'left-2' : 'right-2'} w-6 h-6 p-0 hover:bg-background/80 border border-border-secondary bg-background/50 backdrop-blur-sm transition-all duration-200 hover:scale-110`}
+      onClick={onClick}
+      data-testid={`arrow-${direction}-${position}`}
+    >
+      {direction === 'left' ? (
+        <ChevronLeft className="w-4 h-4 text-text-primary" />
+      ) : (
+        <ChevronRight className="w-4 h-4 text-text-primary" />
+      )}
+    </Button>
   );
 
   const KanbanColumn = ({ 
@@ -259,34 +394,79 @@ export default function Kanban() {
     color, 
     children, 
     onDrop, 
-    count 
+    count,
+    statusId,
+    statuses,
+    type,
+    items
   }: { 
     title: string; 
     color: string; 
     children: React.ReactNode; 
     onDrop: (e: React.DragEvent) => void; 
     count: number;
-  }) => (
-    <div 
-      className="flex-shrink-0 w-72 lg:flex-1 lg:w-auto min-h-80 lg:min-h-96"
-      onDrop={onDrop}
-      onDragOver={handleDragOver}
-      data-testid={`kanban-column-${title.toLowerCase()}`}
-    >
-      <div className="h-1 rounded-t-lg bg-[#3571e6]" />
-      <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-3 lg:p-4 min-h-80 lg:min-h-96">
-        <div className="flex items-center justify-between mb-3 lg:mb-4">
-          <h3 className="font-semibold text-text-primary text-sm lg:text-base">{title}</h3>
-          <Badge variant="outline" className="text-xs">
-            {count}
-          </Badge>
-        </div>
-        <div className="space-y-2 lg:space-y-3">
-          {children}
+    statusId: string;
+    statuses: any[];
+    type: 'client' | 'project';
+    items: (Client | ProjectWithClient)[];
+  }) => {
+    const currentIndex = statuses.findIndex(s => s.id === statusId);
+    const isFirst = currentIndex === 0;
+    const isLast = currentIndex === statuses.length - 1;
+    const hasItems = items.length > 0;
+
+    const handleArrowClick = (direction: 'left' | 'right') => {
+      if (!hasItems) return;
+      
+      // Move the first item in the column to the target status
+      const firstItem = items[0];
+      if (type === 'client') {
+        moveClientToStatus(firstItem.id, statusId, direction);
+      } else {
+        moveProjectToStatus(firstItem.id, statusId, direction);
+      }
+    };
+
+    return (
+      <div 
+        className="flex-shrink-0 w-72 lg:flex-1 lg:w-auto min-h-80 lg:min-h-96 relative"
+        onDrop={onDrop}
+        onDragOver={handleDragOver}
+        data-testid={`kanban-column-${title.toLowerCase()}`}
+      >
+        <div className="h-1 rounded-t-lg bg-[#3571e6]" />
+        <div className="bg-card border border-border-secondary border-t-0 rounded-b-lg p-3 lg:p-4 min-h-80 lg:min-h-96 relative">
+          
+          {/* Navigation Arrows */}
+          {!isFirst && hasItems && (
+            <NavigationArrow 
+              direction="left" 
+              position="left"
+              onClick={() => handleArrowClick('left')}
+            />
+          )}
+          
+          {!isLast && hasItems && (
+            <NavigationArrow 
+              direction="right" 
+              position="right"
+              onClick={() => handleArrowClick('right')}
+            />
+          )}
+
+          <div className="flex items-center justify-between mb-3 lg:mb-4">
+            <h3 className="font-semibold text-text-primary text-sm lg:text-base">{title}</h3>
+            <Badge variant="outline" className="text-xs">
+              {count}
+            </Badge>
+          </div>
+          <div className="space-y-2 lg:space-y-3">
+            {children}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-bg-primary">
@@ -325,6 +505,10 @@ export default function Kanban() {
                     color={status.color}
                     count={clientsInStatus.length}
                     onDrop={(e) => handleClientDrop(e, status.id)}
+                    statusId={status.id}
+                    statuses={clientStatuses}
+                    type="client"
+                    items={clientsInStatus}
                   >
                     {clientsInStatus.map((client) => (
                       <ClientCard key={client.id} client={client} />
@@ -346,6 +530,10 @@ export default function Kanban() {
                     color={status.color}
                     count={projectsInStatus.length}
                     onDrop={(e) => handleProjectDrop(e, status.id)}
+                    statusId={status.id}
+                    statuses={projectStatuses}
+                    type="project"
+                    items={projectsInStatus}
                   >
                     {projectsInStatus.map((project) => (
                       <ProjectCard key={project.id} project={project} />
