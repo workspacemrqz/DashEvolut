@@ -105,7 +105,7 @@ export default function Clients() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mb-4 lg:mb-6">
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-lg font-semibold mb-3 text-text-primary">Clientes Ativos</h3>
-            <div className="text-3xl font-bold text-green-500 mb-2" data-testid="stat-active-clients">
+            <div className="text-3xl font-bold text-chart-2 mb-2" data-testid="stat-active-clients">
               {activeClients}
             </div>
             <p className="text-text-secondary">Contratos vigentes</p>
@@ -113,7 +113,7 @@ export default function Clients() {
           
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-lg font-semibold mb-3 text-text-primary">Prospects</h3>
-            <div className="text-3xl font-bold text-yellow-500 mb-2" data-testid="stat-prospects">
+            <div className="text-3xl font-bold text-chart-3 mb-2" data-testid="stat-prospects">
               {prospects}
             </div>
             <p className="text-text-secondary">Em negociação</p>
@@ -121,7 +121,7 @@ export default function Clients() {
           
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-lg font-semibold mb-3 text-text-primary">NPS Médio</h3>
-            <div className="text-3xl font-bold text-blue-500 mb-2" data-testid="stat-avg-nps">
+            <div className="text-3xl font-bold text-chart-1 mb-2" data-testid="stat-avg-nps">
               {avgNps.toFixed(1)}
             </div>
             <p className="text-text-secondary">Satisfação geral</p>
@@ -139,7 +139,7 @@ export default function Clients() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-[#f5f5f5]"
+              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-text-primary"
               data-testid={`filter-${tab.key}`}
             >
               {tab.label}

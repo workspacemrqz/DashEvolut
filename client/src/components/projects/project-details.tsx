@@ -117,10 +117,10 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
-                <DollarSign className="w-4 h-4 text-green-500 mr-2" />
+                <DollarSign className="w-4 h-4 text-chart-2 mr-2" />
                 <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
               </div>
-              <p className="text-2xl font-bold text-green-500" data-testid="project-value">
+              <p className="text-2xl font-bold text-chart-2" data-testid="project-value">
                 R$ {project.value.toLocaleString('pt-BR')}
               </p>
               {project.profitMargin && (
@@ -132,16 +132,16 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
-                <TrendingUp className="w-4 h-4 text-blue-500 mr-2" />
+                <TrendingUp className="w-4 h-4 text-chart-1 mr-2" />
                 <h4 className="font-semibold text-text-primary">Progresso</h4>
               </div>
               <div className="space-y-2">
-                <p className="text-2xl font-bold text-blue-500" data-testid="project-progress">
+                <p className="text-2xl font-bold text-chart-1" data-testid="project-progress">
                   {project.progress}%
                 </p>
                 <div className="w-full bg-border-secondary rounded-full h-2">
                   <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all" 
+                    className="bg-chart-1 h-2 rounded-full transition-all" 
                     style={{ width: `${project.progress}%` }}
                   ></div>
                 </div>
@@ -166,7 +166,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
                 <Calendar className="w-4 h-4 text-text-secondary mr-2" />
                 <h4 className="font-semibold text-text-primary">Data de Entrega</h4>
               </div>
-              <p className={`font-medium ${isOverdue() ? 'text-red-500' : 'text-text-primary'}`} data-testid="project-due-date">
+              <p className={`font-medium ${isOverdue() ? 'text-destructive' : 'text-text-primary'}`} data-testid="project-due-date">
                 {new Date(project.dueDate).toLocaleDateString('pt-BR')}
               </p>
               {!isOverdue() && daysUntilDue() >= 0 && (
@@ -177,7 +177,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
                 </p>
               )}
               {isOverdue() && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {Math.abs(daysUntilDue())} dias atrasado
                 </p>
               )}
@@ -199,7 +199,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
                 <Clock className="w-4 h-4 text-text-secondary mr-2" />
-                <h4 className="font-semibold text-text-primary" style={{color: '#F5F5F5 '}} data-testid="label-worked-hours">Horas Trabalhadas</h4>
+                <h4 className="font-semibold text-text-primary" data-testid="label-worked-hours">Horas Trabalhadas</h4>
               </div>
               <p className="text-xl font-bold text-text-primary" data-testid="worked-hours">
                 {project.workedHours || 0}h
@@ -214,8 +214,8 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
           {/* Project Type */}
           {project.isRecurring && (
-            <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
-              <p className="text-blue-500 font-medium">
+            <div className="p-4 rounded-lg bg-chart-1/10 border border-chart-1/30">
+              <p className="text-chart-1 font-medium">
                 🔄 Projeto Recorrente
               </p>
               <p className="text-sm text-text-secondary mt-1">

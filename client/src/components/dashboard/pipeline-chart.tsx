@@ -15,10 +15,10 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
   // Generate pipeline data from projects
   const generatePipelineData = () => {
     const statusMapping = {
-      discovery: { name: "Discovery", color: "#9333ea" },
-      development: { name: "Desenvolvimento", color: "#387DF3" },
-      delivery: { name: "Entrega", color: "#22c55e" },
-      post_sale: { name: "Pós-venda", color: "#f59e0b" },
+      discovery: { name: "Discovery", color: "hsl(var(--chart-5))" },
+      development: { name: "Desenvolvimento", color: "hsl(var(--chart-1))" },
+      delivery: { name: "Entrega", color: "hsl(var(--chart-2))" },
+      post_sale: { name: "Pós-venda", color: "hsl(var(--chart-3))" },
     };
 
     const counts = projects?.reduce((acc, project) => {
