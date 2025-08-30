@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { insertSubscriptionSchema, type InsertSubscription, type Client } from "@shared/schema";
+import { useEffect } from "react";
+import { insertSubscriptionSchema, type InsertSubscription, type Client, type SubscriptionWithClient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -33,6 +34,7 @@ import {
 interface SubscriptionFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  subscription?: SubscriptionWithClient | null;
 }
 
 const formSchema = insertSubscriptionSchema.extend({
@@ -46,7 +48,7 @@ const formSchema = insertSubscriptionSchema.extend({
   ),
 });
 
-export default function SubscriptionForm({ open, onOpenChange }: SubscriptionFormProps) {
+export default function SubscriptionForm({ open, onOpenChange, subscription }: SubscriptionFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -58,45 +60,72 @@ export default function SubscriptionForm({ open, onOpenChange }: SubscriptionFor
   const form = useForm<InsertSubscription>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      clientId: "",
-      billingDay: 1,
-      amount: 0,
-      notes: "",
-      status: "active",
+      clientId: subscription?.clientId || "",
+      billingDay: subscription?.billingDay || 1,
+      amount: subscription?.amount || 0,
+      notes: subscription?.notes || "",
+      status: subscription?.status || "active",
     },
   });
 
-  const createSubscriptionMutation = useMutation({
-    mutationFn: (data: InsertSubscription) => apiRequest("POST", "/api/subscriptions", data),
+  const subscriptionMutation = useMutation({
+    mutationFn: (data: InsertSubscription) => {
+      if (subscription) {
+        return apiRequest("PATCH", `/api/subscriptions/${subscription.id}`, data);
+      } else {
+        return apiRequest("POST", "/api/subscriptions", data);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
       toast({
-        title: "Assinatura criada com sucesso!",
-        description: "A nova assinatura foi adicionada ao sistema.",
+        title: subscription ? "Assinatura atualizada com sucesso!" : "Assinatura criada com sucesso!",
+        description: subscription ? "As alterações foram salvas com sucesso." : "A nova assinatura foi adicionada ao sistema.",
       });
       form.reset();
       onOpenChange(false);
     },
     onError: () => {
       toast({
-        title: "Erro ao criar assinatura",
-        description: "Ocorreu um erro ao adicionar a assinatura. Tente novamente.",
+        title: subscription ? "Erro ao atualizar assinatura" : "Erro ao criar assinatura",
+        description: "Ocorreu um erro. Tente novamente.",
         variant: "destructive",
       });
     },
   });
 
+  // Reset form values when subscription changes
+  useEffect(() => {
+    if (subscription) {
+      form.reset({
+        clientId: subscription.clientId,
+        billingDay: subscription.billingDay,
+        amount: subscription.amount,
+        notes: subscription.notes || "",
+        status: subscription.status,
+      });
+    } else {
+      form.reset({
+        clientId: "",
+        billingDay: 1,
+        amount: 0,
+        notes: "",
+        status: "active",
+      });
+    }
+  }, [subscription, form]);
+
   const onSubmit = (data: InsertSubscription) => {
-    createSubscriptionMutation.mutate(data);
+    subscriptionMutation.mutate(data);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] container-bg border-border-secondary">
         <DialogHeader>
-          <DialogTitle className="gradient-text">Nova Assinatura</DialogTitle>
+          <DialogTitle className="gradient-text">{subscription ? "Editar Assinatura" : "Nova Assinatura"}</DialogTitle>
           <DialogDescription className="text-text-secondary">
-            Crie uma nova assinatura recorrente para um cliente existente.
+            {subscription ? "Edite os dados da assinatura existente." : "Crie uma nova assinatura recorrente para um cliente existente."}
           </DialogDescription>
         </DialogHeader>
 
@@ -213,11 +242,11 @@ export default function SubscriptionForm({ open, onOpenChange }: SubscriptionFor
               </Button>
               <Button
                 type="submit"
-                disabled={createSubscriptionMutation.isPending}
+                disabled={subscriptionMutation.isPending}
                 className="btn-primary"
                 data-testid="button-submit-subscription"
               >
-                {createSubscriptionMutation.isPending ? "Criando..." : "Criar Assinatura"}
+                {subscriptionMutation.isPending ? (subscription ? "Salvando..." : "Criando...") : (subscription ? "Salvar Alterações" : "Criar Assinatura")}
               </Button>
             </div>
           </form>

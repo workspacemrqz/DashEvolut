@@ -23,6 +23,7 @@ import { format, isPast } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useState } from "react";
 import ServiceChecklist from "./service-checklist";
+import SubscriptionForm from "./subscription-form";
 
 interface SubscriptionTableProps {
   subscriptions: SubscriptionWithClient[];
@@ -48,6 +49,8 @@ export default function SubscriptionTable({
   const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionWithClient | null>(null);
   const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(false);
   const [showServiceChecklist, setShowServiceChecklist] = useState(false);
+  const [showEditSubscription, setShowEditSubscription] = useState(false);
+  const [subscriptionToEdit, setSubscriptionToEdit] = useState<SubscriptionWithClient | null>(null);
 
   // Buscar detalhes da assinatura selecionada
   const { data: subscriptionDetails } = useQuery({
@@ -92,6 +95,11 @@ export default function SubscriptionTable({
   const handleManageServices = (subscription: SubscriptionWithClient) => {
     setSelectedSubscription(subscription);
     setShowServiceChecklist(true);
+  };
+
+  const handleEditSubscription = (subscription: SubscriptionWithClient) => {
+    setSubscriptionToEdit(subscription);
+    setShowEditSubscription(true);
   };
 
   if (isLoading) {
@@ -221,7 +229,7 @@ export default function SubscriptionTable({
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-left justify-start hover:bg-transparent">
+                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start hover:bg-transparent">
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
@@ -445,6 +453,13 @@ export default function SubscriptionTable({
           onOpenChange={setShowServiceChecklist}
         />
       )}
+
+      {/* Edit Subscription Dialog */}
+      <SubscriptionForm
+        open={showEditSubscription}
+        onOpenChange={setShowEditSubscription}
+        subscription={subscriptionToEdit}
+      />
     </div>
   );
 }
