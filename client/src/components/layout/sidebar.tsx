@@ -98,7 +98,7 @@ export default function Sidebar() {
                     className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                       isActive 
                         ? "sidebar-active text-text-primary" 
-                        : "text-text-secondary hover:text-text-primary"
+                        : "text-text-secondary"
                     }`}
                     data-testid={`nav-${item.name.toLowerCase()}`}
                   >
@@ -153,7 +153,7 @@ export default function Sidebar() {
                 className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                   isActive 
                     ? "sidebar-active text-text-primary" 
-                    : "text-text-secondary hover:text-text-primary"
+                    : "text-text-secondary"
                 }`}
                 data-testid={`nav-${item.name.toLowerCase()}`}
               >

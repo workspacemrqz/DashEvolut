@@ -156,7 +156,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 </td>
                 <td className="p-2 lg:p-4">
                   <Badge 
-                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary hover:bg-primary/80 status-badge status-development text-[#060606]"
+                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary status-badge status-development text-[#060606]"
                     data-testid={`project-status-${project.id}`}
                   >
                     <span className="lg:hidden">{statusMap[project.status].label.slice(0, 4)}</span>
@@ -205,21 +205,21 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                   <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewProject(project)}
-                      className="text-blue-500 hover:text-blue-400 p-1"
+                      className="text-blue-500 p-1"
                       data-testid={`action-view-${project.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEditProject(project)}
-                      className="text-green-500 hover:text-green-400 p-1 hidden sm:block"
+                      className="text-green-500 p-1 hidden sm:block"
                       data-testid={`action-edit-${project.id}`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleTimeTracker(project)}
-                      className="text-yellow-500 hover:text-yellow-400 p-1 hidden sm:block"
+                      className="text-yellow-500 p-1 hidden sm:block"
                       data-testid={`action-time-${project.id}`}
                     >
                       <Clock className="w-4 h-4" />

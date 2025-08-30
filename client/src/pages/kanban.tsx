@@ -188,7 +188,7 @@ export default function Kanban() {
 
     return (
       <Card 
-        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors relative group"
+        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card relative"
         draggable
         onDragStart={() => handleClientDragStart(client)}
         data-testid={`client-card-${client.id}`}
@@ -284,7 +284,7 @@ export default function Kanban() {
 
     return (
       <Card 
-        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card hover:bg-card/80 transition-colors relative group"
+        className="mb-2 lg:mb-3 cursor-grab active:cursor-grabbing border-border-secondary bg-card relative"
         draggable
         onDragStart={() => handleProjectDragStart(project)}
         data-testid={`project-card-${project.id}`}

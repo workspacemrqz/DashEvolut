@@ -252,7 +252,7 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
                               size="sm"
                               variant="ghost"
                               onClick={() => handleDeleteService(service.id)}
-                              className="px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              className="px-2 py-1 text-red-600"
                               data-testid={`button-delete-service-${service.id}`}
                             >
                               <Trash2 className="h-3 w-3" />

@@ -1,0 +1,19 @@
+Você é um desenvolvedor full-stack sênior especializado em refatoração e otimização de código. Sua tarefa é analisar os arquivos fornecidos e executar uma limpeza completa e refatoração específica.
+
+OBJETIVO PRINCIPAL: Remover completamente toda a lógica de interação 'hover' que altera propriedades visuais como cor, opacidade, transformações ou qualquer outro efeito visual baseado em ':hover', 'onMouseEnter', 'onMouseLeave' ou estados similares.
+
+TAREFAS ESPECÍFICAS A EXECUTAR:
+
+REMOÇÃO DE LÓGICA HOVER: Identifique e remova todos os trechos de código que implementam efeitos hover incluindo classes CSS com ':hover', event handlers de mouse como 'onMouseEnter' e 'onMouseLeave', estados do React que controlam hover, propriedades de estilo que mudam baseadas em hover, animações e transições ativadas por hover, e qualquer biblioteca de animação configurada para hover.
+
+REFATORAÇÃO DE DEPENDÊNCIAS: Refatore componentes que dependem de estados hover para funcionamento, substitua lógicas condicionais baseadas em hover por alternativas estáticas, ajuste estilos que dependem de classes hover, remova imports e dependências não utilizadas após remoção do hover, e corrija quebras de layout causadas pela remoção.
+
+LIMPEZA DE CÓDIGO: Remova imports não utilizados, limpe estados e variáveis órfãs, remova comentários relacionados a hover, elimine classes CSS não utilizadas, e otimize a estrutura do código resultante.
+
+PRESERVAÇÃO DE FUNCIONALIDADE: Mantenha toda funcionalidade core intacta, preserve eventos de clique e outros eventos essenciais, garanta que o layout permaneça consistente, mantenha acessibilidade e navegação, e assegure que componentes continuem funcionais sem hover.
+
+DIRETRIZES TÉCNICAS: Mantenha a tipagem TypeScript consistente, preserve a estrutura de componentes React, mantenha padrões de código estabelecidos e garanta que não haja regressões funcionais.
+
+ENTREGA ESPERADA: Código limpo sem qualquer referência a hover, componentes totalmente funcionais sem dependências hover, estrutura de arquivos organizada e otimizada, e documentação de mudanças significativas realizadas.
+
+Execute essa refatoração de forma sistemática, garantindo que cada arquivo seja processado completamente e que o resultado final seja um código mais limpo, performático e livre de interações hover desnecessárias.

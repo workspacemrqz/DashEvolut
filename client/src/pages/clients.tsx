@@ -67,24 +67,24 @@ export default function Clients() {
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
                 <DropdownMenuLabel className="text-text-primary">Filtrar por setor</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("technology")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("technology")} className="text-text-secondary">
                   Tecnologia
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("marketing")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("marketing")} className="text-text-secondary">
                   Marketing
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("consultoria")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("consultoria")} className="text-text-secondary">
                   Consultoria
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="text-text-primary">Filtrar por fonte</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setFilter("indicacao")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("indicacao")} className="text-text-secondary">
                   Indicação
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("google")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("google")} className="text-text-secondary">
                   Google Ads
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("linkedin")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("linkedin")} className="text-text-secondary">
                   LinkedIn
                 </DropdownMenuItem>
               </DropdownMenuContent>

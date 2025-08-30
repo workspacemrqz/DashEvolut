@@ -114,21 +114,21 @@ export default function Projects() {
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
                 <DropdownMenuLabel className="text-text-primary">Filtrar por valor</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("high-value")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("high-value")} className="text-text-secondary ">
                   Alto valor (&gt;R$ 20k)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("medium-value")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("medium-value")} className="text-text-secondary ">
                   Médio valor (R$ 10k-20k)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("low-value")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("low-value")} className="text-text-secondary ">
                   Baixo valor (&lt;R$ 10k)
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="text-text-primary">Filtrar por urgência</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setFilter("urgent")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("urgent")} className="text-text-secondary ">
                   Urgente (vence em 7 dias)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("overdue")} className="text-text-secondary hover:text-text-primary">
+                <DropdownMenuItem onClick={() => setFilter("overdue")} className="text-text-secondary ">
                   Atrasado
                 </DropdownMenuItem>
               </DropdownMenuContent>

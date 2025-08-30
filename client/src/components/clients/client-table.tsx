@@ -169,21 +169,21 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                   <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewClient(client)}
-                      className="text-blue-500 hover:text-blue-400 p-1"
+                      className="text-blue-500 p-1"
                       data-testid={`action-view-${client.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleWhatsAppContact(client)}
-                      className="text-green-500 hover:text-green-400 p-1 hidden sm:block"
+                      className="text-green-500 p-1 hidden sm:block"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEmailContact(client)}
-                      className="text-blue-500 hover:text-blue-400 p-1 hidden sm:block"
+                      className="text-blue-500 p-1 hidden sm:block"
                       data-testid={`action-email-${client.id}`}
                     >
                       <Mail className="w-4 h-4" />
@@ -272,7 +272,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                       <div
                         key={project.id}
                         onClick={() => handleProjectClick(project.id)}
-                        className="flex items-center justify-between p-3 rounded-lg bg-bg-secondary border border-border-secondary hover:border-border-primary cursor-pointer transition-all"
+                        className="flex items-center justify-between p-3 rounded-lg bg-bg-secondary border border-border-secondary cursor-pointer"
                         data-testid={`client-project-${project.id}`}
                       >
                         <div className="flex-1">

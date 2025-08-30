@@ -171,7 +171,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           <button
             onClick={handleMarkAllAsRead}
             disabled={markAllAsReadMutation.isPending}
-            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors text-dark-text"
+            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 text-dark-text"
             data-testid="button-mark-all-read"
           >
             <CheckCheck className="w-3 h-3" />
@@ -192,7 +192,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
               <div 
                 key={alert.id}
                 onClick={() => handleAlertClick(alert)}
-                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all hover:opacity-80 ${alertColors[alert.type]}`}
+                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer ${alertColors[alert.type]}`}
                 data-testid={`alert-${alert.id}`}
               >
                 <div className="flex items-center">

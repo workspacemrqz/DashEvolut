@@ -65,7 +65,7 @@ export default function SubscriptionCard({
 
   return (
     <div 
-      className={`relative p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:shadow-lg transition-shadow ${
+      className={`relative p-6 bg-bg-secondary border border-border-secondary rounded-lg ${
         isOverdue ? 'border-red-500 bg-red-50 dark:bg-red-950' : ''
       }`}
       data-testid={testId}
