@@ -3,59 +3,52 @@
 @tailwind utilities;
 
 :root {
-  /* === SISTEMA DE CORES SIMPLIFICADO === */
-  
-  /* Base do sistema - cores fundamentais */
   --background: #090909;
-  --foreground: #ffffff;
-  --radius: 0.4rem;
-  
-  /* Texto - hierarquia única */
-  --text-primary: #ffffff;
-  --text-secondary: #ababab;
-  --text-muted: #666666;
-  
-  /* Containers e superfícies */
-  --bg-primary: #090909;
-  --bg-container: #101011;
-  --bg-card: #161616;
-  
-  /* Bordas - contextos únicos */
-  --border-primary: #387DF3;
-  --border-secondary: #2b2b2b;
-  --border-subtle: #1a1a1a;
-  
-  /* Cores de ação - uma cor por propósito */
-  --color-action: #387DF3;      /* Ações principais */
-  --color-accent: #f5f5f5;      /* Acentos secundários */
-  --color-muted: #404040;       /* Estados desabilitados */
-  
-  /* Feedback contextual - cores únicas */
-  --color-success: #10b981;     /* Sucesso */
-  --color-warning: #f59e0b;     /* Avisos */
-  --color-error: #ef4444;       /* Erros */
-  --color-info: #387DF3;        /* Informações */
-  
-  /* Estados de projeto - cores específicas */
-  --color-discovery: #9333ea;   /* Projetos em discovery */
-  --color-development: #387DF3; /* Projetos em desenvolvimento */
-  --color-delivery: #10b981;    /* Projetos em entrega */
-  --color-postsale: #f59e0b;    /* Projetos pós-venda */
-  
-  /* Compatibilidade com sistema existente */
-  --primary: #387DF3;
-  --primary-foreground: #ffffff;
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
+  --foreground: #ebebeb;
+  --card: #101011;
+  --card-foreground: hsl(0, 0%, 100%);
+  --popover: hsl(45, 25%, 97%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --primary: #f5f5f5;
+  --primary-foreground: #0d0d0d;
+  --secondary: #ebebeb;
+  --secondary-foreground: #0d0d0d;
   --muted: #404040;
   --muted-foreground: #ababab;
-  --destructive: #ef4444;
+  --accent: hsl(0, 0%, 92.16%);
+  --accent-foreground: hsl(0, 0%, 0%);
+  --destructive: hsl(356.3033, 90.5579%, 54.3137%);
   --destructive-foreground: #ffffff;
-  --card: #101011;
-  --card-foreground: #ffffff;
   --border: #2b2b2b;
   --input: #2b2b2b;
-  --ring: #387DF3;
+  --ring: hsl(221.74, 13.14%, 34.31%);
+  --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
+  --chart-2: hsl(159.7826, 100%, 36.0784%);
+  --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+  --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+  --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+  --sidebar: hsl(45, 25%, 97%);
+  --sidebar-foreground: hsl(20, 14%, 17%);
+  --sidebar-primary: hsl(9, 75%, 61%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(25, 45%, 80%);
+  --sidebar-accent-foreground: hsl(20, 14%, 17%);
+  --sidebar-border: hsl(45, 15%, 80%);
+  --sidebar-ring: hsl(9, 75%, 61%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Inter', sans-serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.4rem;
+
+  /* Custom variables for business dashboard */
+  --bg-primary: hsl(0 0% 2.35%);
+  --bg-container: hsl(209 32% 6.27%);
+  --text-primary: hsl(0 0% 100%);
+  --text-secondary: hsl(0 0% 89.8%);
+  --gradient-start: hsl(203.89 88.28% 53.14%);
+  --gradient-end: hsl(225 75% 56%);
+  --border-primary: hsl(203.89 88.28% 53.14%);
+  --border-secondary: hsl(0 0% 18.82%);
   --shadow: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
   --spacing: 0.25rem;
   --shadow-lg: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 4px 6px -1px hsl(9, 75%, 61% / 0.00);
@@ -81,42 +74,38 @@
 }
 
 .dark {
-  /* Tema escuro - mantém o mesmo sistema simplificado */
-  --background: #090909;
-  --foreground: #ffffff;
-  --bg-primary: #090909;
-  --bg-container: #101011;
-  --bg-card: #161616;
-  --text-primary: #ffffff;
-  --text-secondary: #ababab;
-  --text-muted: #666666;
-  --border-primary: #387DF3;
-  --border-secondary: #2b2b2b;
-  --border-subtle: #1a1a1a;
-  --color-action: #387DF3;
-  --color-accent: #f5f5f5;
-  --color-muted: #404040;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #387DF3;
-  --color-discovery: #9333ea;
-  --color-development: #387DF3;
-  --color-delivery: #10b981;
-  --color-postsale: #f59e0b;
-  --primary: #387DF3;
-  --primary-foreground: #ffffff;
-  --secondary: #404040;
-  --secondary-foreground: #ffffff;
-  --muted: #404040;
-  --muted-foreground: #ababab;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --card: #101011;
-  --card-foreground: #ffffff;
-  --border: #2b2b2b;
-  --input: #2b2b2b;
-  --ring: #387DF3;
+  --background: hsl(20, 14%, 4%);
+  --foreground: hsl(45, 25%, 91%);
+  --card: hsl(20, 14%, 8%);
+  --card-foreground: hsl(45, 25%, 85%);
+  --popover: hsl(20, 14%, 4%);
+  --popover-foreground: hsl(45, 25%, 91%);
+  --primary: hsl(9, 75%, 61%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(30, 15%, 52%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(20, 14%, 15%);
+  --muted-foreground: hsl(45, 15%, 46%);
+  --accent: hsl(25, 45%, 20%);
+  --accent-foreground: hsl(45, 25%, 85%);
+  --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(20, 14%, 15%);
+  --input: hsl(20, 14%, 18%);
+  --ring: hsl(9, 75%, 61%);
+  --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
+  --chart-2: hsl(159.7826, 100%, 36.0784%);
+  --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+  --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+  --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+  --sidebar: hsl(20, 14%, 8%);
+  --sidebar-ring: hsl(9, 75%, 61%);
+  --sidebar-accent: hsl(25, 45%, 20%);
+  --sidebar-border: hsl(20, 14%, 15%);
+  --sidebar-primary: hsl(9, 75%, 61%);
+  --sidebar-foreground: hsl(45, 25%, 85%);
+  --sidebar-accent-foreground: hsl(45, 25%, 85%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
 }
 
 @layer base {
@@ -283,41 +272,39 @@
   }
 
   .status-inactive {
-    background-color: var(--color-error);
-    color: #060606;
+    @apply bg-red-500;
+    color: #060606 ;
   }
 
   .status-prospect {
-    background-color: var(--color-warning);
-    color: #060606;
+    @apply bg-yellow-500;
+    color: #060606 ;
   }
 
   .status-discovery {
-    background-color: var(--color-info);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-purple-500/20;
+    color: #060606 ;
   }
 
   .status-development {
-    background-color: var(--color-info);
-    opacity: 0.6;
-    color: #060606;
+    @apply bg-blue-500/20;
+    color: #060606 ;
   }
 
   /* Subscription status badges */
   .status-subscription-active {
-    background-color: var(--color-success);
-    color: #060606;
+    background-color: #f5f5f5 ;
+    color: #060606 ;
   }
 
   .status-subscription-paused {
-    background-color: var(--color-warning);
-    color: #060606;
+    @apply bg-yellow-500;
+    color: #060606 ;
   }
 
   .status-subscription-cancelled {
-    background-color: var(--color-error);
-    color: #060606;
+    @apply bg-red-500;
+    color: #060606 ;
   }
 
   /* Dropdown menu items text and icons color override */
@@ -351,12 +338,16 @@
     filter: invert(1) brightness(0) ;
   }
 
-  /* Ensure white text on info/black backgrounds */
-  .bg-info,
+  /* Ensure white text on blue/black backgrounds */
+  .bg-blue-500,
+  .bg-blue-600,
+  .bg-blue-700,
+  .bg-blue-800,
+  .bg-blue-900,
   .bg-black,
-  [class*="bg-info"],
+  [class*="bg-blue-"],
   [class*="bg-black"] {
-    color: #FFFFFF;
+    color: #FFFFFF ;
   }
 
   /* Override Tailwind primary colors to be white text */
@@ -378,33 +369,28 @@
   }
 
   .status-delivery {
-    background-color: var(--color-success);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-green-500/20;
+    color: #060606 ;
   }
 
   .status-post-sale {
-    background-color: var(--color-neutral);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-gray-500/20;
+    color: #060606 ;
   }
 
   .status-overdue {
-    background-color: var(--color-error);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-red-500/20;
+    color: #060606 ;
   }
 
   .status-completed {
-    background-color: var(--color-success);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-green-500/20;
+    color: #060606 ;
   }
 
   .status-cancelled {
-    background-color: var(--color-neutral);
-    opacity: 0.8;
-    color: #060606;
+    @apply bg-gray-500/20;
+    color: #060606 ;
   }
 
   /* Filter button text color override - only for filter buttons */
@@ -520,15 +506,196 @@
     background-color: var(--dark-bg-color-2);
   }
 
+  /* Auto color application based on background */
+  .dynamic-light-bg,
+  .dynamic-light-bg *,
+  .dynamic-white-bg,
+  .dynamic-white-bg *,
+  [style*="background-color: #f5f5f5"],
+  [style*="background-color: #f5f5f5"] *,
+  [style*="background-color: #F5F5F5"],
+  [style*="background-color: #F5F5F5"] *,
+  [style*="background-color: white"],
+  [style*="background-color: white"] *,
+  [style*="background-color: #ffffff"],
+  [style*="background-color: #ffffff"] *,
+  [style*="background-color: #FFFFFF"],
+  [style*="background-color: #FFFFFF"] *,
+  [style*="background: #f5f5f5"],
+  [style*="background: #f5f5f5"] *,
+  [style*="background: #F5F5F5"],
+  [style*="background: #F5F5F5"] *,
+  [style*="background: white"],
+  [style*="background: white"] *,
+  [style*="background: #ffffff"],
+  [style*="background: #ffffff"] *,
+  [style*="background: #FFFFFF"],
+  [style*="background: #FFFFFF"] * {
+    color: var(--light-text-color) !important;
+  }
 
+  .dynamic-dark-bg-1,
+  .dynamic-dark-bg-1 *,
+  .dynamic-dark-bg-2,
+  .dynamic-dark-bg-2 *,
+  [style*="background-color: #0b1015"],
+  [style*="background-color: #0b1015"] *,
+  [style*="background-color: #0B1015"],
+  [style*="background-color: #0B1015"] *,
+  [style*="background-color: #060606"],
+  [style*="background-color: #060606"] *,
+  [style*="background: #0b1015"],
+  [style*="background: #0b1015"] *,
+  [style*="background: #0B1015"],
+  [style*="background: #0B1015"] *,
+  [style*="background: #060606"],
+  [style*="background: #060606"] * {
+    color: var(--dark-text-color) !important;
+  }
 
+  /* Classes for elements with specific background colors */
+  .bg-f5f5f5,
+  .bg-f5f5f5 *,
+  .bg-white,
+  .bg-white *,
+  .bg-ffffff,
+  .bg-ffffff * {
+    color: var(--light-text-color) !important;
+  }
 
+  .bg-0b1015,
+  .bg-0b1015 *,
+  .bg-060606,
+  .bg-060606 * {
+    color: var(--dark-text-color) !important;
+  }
 
+  /* Utility classes for manual application */
+  .text-dynamic-light {
+    color: var(--light-text-color) !important;
+  }
 
+  .text-dynamic-dark {
+    color: var(--dark-text-color) !important;
+  }
 
+  /* Apply to buttons with light backgrounds */
+  button[style*="background-color: #f5f5f5"],
+  button[style*="background-color: #f5f5f5"] *,
+  button[style*="background-color: #F5F5F5"],
+  button[style*="background-color: #F5F5F5"] *,
+  button[style*="background-color: white"],
+  button[style*="background-color: white"] *,
+  button[style*="background-color: #ffffff"],
+  button[style*="background-color: #ffffff"] *,
+  button[style*="background-color: #FFFFFF"],
+  button[style*="background-color: #FFFFFF"] *,
+  .btn-light,
+  .btn-light *,
+  .button-light,
+  .button-light * {
+    color: var(--light-text-color) !important;
+  }
 
+  /* Apply to buttons with dark backgrounds */
+  button[style*="background-color: #0b1015"],
+  button[style*="background-color: #0b1015"] *,
+  button[style*="background-color: #0B1015"],
+  button[style*="background-color: #0B1015"] *,
+  button[style*="background-color: #060606"],
+  button[style*="background-color: #060606"] *,
+  .btn-dark,
+  .btn-dark *,
+  .button-dark,
+  .button-dark * {
+    color: var(--dark-text-color) !important;
+  }
 
+  /* Apply to input fields with light backgrounds */
+  input[style*="background-color: #f5f5f5"],
+  input[style*="background-color: #F5F5F5"],
+  input[style*="background-color: white"],
+  input[style*="background-color: #ffffff"],
+  input[style*="background-color: #FFFFFF"],
+  textarea[style*="background-color: #f5f5f5"],
+  textarea[style*="background-color: #F5F5F5"],
+  textarea[style*="background-color: white"],
+  textarea[style*="background-color: #ffffff"],
+  textarea[style*="background-color: #FFFFFF"],
+  select[style*="background-color: #f5f5f5"],
+  select[style*="background-color: #F5F5F5"],
+  select[style*="background-color: white"],
+  select[style*="background-color: #ffffff"],
+  select[style*="background-color: #FFFFFF"],
+  .input-light,
+  .textarea-light,
+  .select-light {
+    color: var(--light-text-color) !important;
+  }
 
+  /* Apply to input fields with dark backgrounds */
+  input[style*="background-color: #0b1015"],
+  input[style*="background-color: #0B1015"],
+  input[style*="background-color: #060606"],
+  textarea[style*="background-color: #0b1015"],
+  textarea[style*="background-color: #0B1015"],
+  textarea[style*="background-color: #060606"],
+  select[style*="background-color: #0b1015"],
+  select[style*="background-color: #0B1015"],
+  select[style*="background-color: #060606"],
+  .input-dark,
+  .textarea-dark,
+  .select-dark {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Apply to tags and badges with light backgrounds */
+  .tag[style*="background-color: #f5f5f5"],
+  .tag[style*="background-color: #f5f5f5"] *,
+  .tag[style*="background-color: #F5F5F5"],
+  .tag[style*="background-color: #F5F5F5"] *,
+  .tag[style*="background-color: white"],
+  .tag[style*="background-color: white"] *,
+  .tag[style*="background-color: #ffffff"],
+  .tag[style*="background-color: #ffffff"] *,
+  .tag[style*="background-color: #FFFFFF"],
+  .tag[style*="background-color: #FFFFFF"] *,
+  .badge[style*="background-color: #f5f5f5"],
+  .badge[style*="background-color: #f5f5f5"] *,
+  .badge[style*="background-color: #F5F5F5"],
+  .badge[style*="background-color: #F5F5F5"] *,
+  .badge[style*="background-color: white"],
+  .badge[style*="background-color: white"] *,
+  .badge[style*="background-color: #ffffff"],
+  .badge[style*="background-color: #ffffff"] *,
+  .badge[style*="background-color: #FFFFFF"],
+  .badge[style*="background-color: #FFFFFF"] *,
+  .tag-light,
+  .tag-light *,
+  .badge-light,
+  .badge-light * {
+    color: var(--light-text-color) !important;
+  }
+
+  /* Apply to tags and badges with dark backgrounds */
+  .tag[style*="background-color: #0b1015"],
+  .tag[style*="background-color: #0b1015"] *,
+  .tag[style*="background-color: #0B1015"],
+  .tag[style*="background-color: #0B1015"] *,
+  .tag[style*="background-color: #060606"],
+  .tag[style*="background-color: #060606"] *,
+  .badge[style*="background-color: #0b1015"],
+  .badge[style*="background-color: #0b1015"] *,
+  .badge[style*="background-color: #0B1015"],
+  .badge[style*="background-color: #0B1015"] *,
+  .badge[style*="background-color: #060606"],
+  .badge[style*="background-color: #060606"] *,
+  .tag-dark,
+  .tag-dark *,
+  .badge-dark,
+  .badge-dark * {
+    color: var(--dark-text-color) !important;
+  }
 
   /* Force specific styling for form elements in settings page */
   .bg-background,

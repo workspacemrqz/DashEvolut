@@ -15,26 +15,20 @@ const alertIcons = {
   payment_pending: Clock,
   upsell_opportunity: Star,
   milestone_due: AlertTriangle,
-  subscription_due: CreditCard,
-  subscription_overdue: CircleAlert,
 };
 
 const alertColors = {
-  project_delayed: "border-error/30 bg-error/10",
-  payment_pending: "border-warning/30 bg-warning/10",
-  upsell_opportunity: "border-info/30 bg-info/10",
-  milestone_due: "border-warning/30 bg-warning/10",
-  subscription_due: "border-success/30 bg-success/10",
-  subscription_overdue: "border-error/30 bg-error/10",
+  project_delayed: "border-red-500/30 bg-red-500/10",
+  payment_pending: "border-yellow-500/30 bg-yellow-500/10",
+  upsell_opportunity: "border-blue-500/30 bg-blue-500/10",
+  milestone_due: "border-orange-500/30 bg-orange-500/10",
 };
 
 const iconColors = {
-  project_delayed: "text-error",
-  payment_pending: "text-warning",
-  upsell_opportunity: "text-info",
-  milestone_due: "text-warning",
-  subscription_due: "text-success",
-  subscription_overdue: "text-error",
+  project_delayed: "text-red-500",
+  payment_pending: "text-yellow-500",
+  upsell_opportunity: "text-blue-500",
+  milestone_due: "text-orange-500",
 };
 
 export default function AlertsSection({ alerts, "data-testid": testId }: AlertsSectionProps) {
@@ -95,21 +89,6 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           description: "Aproveite a oportunidade de upsell identificada.",
         });
         break;
-      case "milestone_due":
-        setLocation("/projects");
-        toast({
-          title: "Redirecionando para projetos",
-          description: "Verifique o milestone com prazo próximo.",
-        });
-        break;
-      case "subscription_due":
-      case "subscription_overdue":
-        setLocation("/subscriptions");
-        toast({
-          title: "Redirecionando para assinaturas",
-          description: "Gerencie a assinatura pendente.",
-        });
-        break;
       default:
         toast({
           title: "Alerta processado",
@@ -168,29 +147,6 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
             Contatar
           </button>
         );
-      case "milestone_due":
-        return (
-          <button 
-            className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
-            onClick={() => handleAction(alert)}
-            data-testid={`action-${alert.id}`}
-          >
-            <Eye className="w-3 h-3" />
-            Verificar
-          </button>
-        );
-      case "subscription_due":
-      case "subscription_overdue":
-        return (
-          <button 
-            className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
-            onClick={() => handleAction(alert)}
-            data-testid={`action-${alert.id}`}
-          >
-            <CreditCard className="w-3 h-3" />
-            Gerenciar
-          </button>
-        );
       default:
         return (
           <button 
@@ -208,7 +164,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
     <div className="container-bg rounded-xl p-6 border border-border-secondary" data-testid={testId}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text-primary flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2 text-warning" />
+          <AlertTriangle className="w-5 h-5 mr-2 text-yellow-500" />
           Alertas Automáticos
         </h3>
         {alerts.length > 0 && (

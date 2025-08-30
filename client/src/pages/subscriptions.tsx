@@ -123,7 +123,7 @@ export default function Subscriptions() {
           
           <div className="stats-card">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-8 w-8 text-error" />
+              <AlertCircle className="h-8 w-8 text-red-500" />
               <div>
                 <p className="text-text-secondary text-sm">Em Atraso</p>
                 <p className="text-2xl font-bold text-text-primary">{overdueSubscriptions}</p>
@@ -136,7 +136,7 @@ export default function Subscriptions() {
       <div className="flex-1 px-4 lg:px-6 pb-6">
         {!isLoading && filteredSubscriptions.length === 0 ? (
           <div className="text-center py-12">
-            <DollarSign className="h-16 w-16 text-neutral mx-auto mb-4" />
+            <DollarSign className="h-16 w-16 text-text-secondary mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-text-primary mb-2">
               {filter === "all" ? "Nenhuma assinatura encontrada" : `Nenhuma assinatura ${filter} encontrada`}
             </h3>
