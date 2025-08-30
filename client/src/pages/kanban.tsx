@@ -34,17 +34,17 @@ export default function Kanban() {
 
   // Client status configuration
   const clientStatuses = [
-    { id: "prospect", name: "Prospects", color: "bg-chart-3" },
-    { id: "active", name: "Ativos", color: "bg-chart-1" },
+    { id: "prospect", name: "Prospects", color: "bg-warning" },
+    { id: "active", name: "Ativos", color: "bg-success" },
     { id: "inactive", name: "Inativos", color: "bg-muted" }
   ];
 
   // Project status configuration
   const projectStatuses = [
-    { id: "discovery", name: "Discovery", color: "bg-chart-5" },
-    { id: "development", name: "Desenvolvimento", color: "bg-chart-1" },
-    { id: "delivery", name: "Entrega", color: "bg-chart-2" },
-    { id: "post_sale", name: "Pós-venda", color: "bg-chart-3" }
+    { id: "discovery", name: "Discovery", color: "bg-discovery" },
+    { id: "development", name: "Desenvolvimento", color: "bg-development" },
+    { id: "delivery", name: "Entrega", color: "bg-delivery" },
+    { id: "post_sale", name: "Pós-venda", color: "bg-postsale" }
   ];
 
   const updateClientStatus = useMutation({

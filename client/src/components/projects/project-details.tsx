@@ -117,10 +117,10 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
-                <DollarSign className="w-4 h-4 text-green-500 mr-2" />
+                <DollarSign className="w-4 h-4 text-success mr-2" />
                 <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
               </div>
-              <p className="text-2xl font-bold text-green-500" data-testid="project-value">
+              <p className="text-2xl font-bold text-success" data-testid="project-value">
                 R$ {project.value.toLocaleString('pt-BR')}
               </p>
               {project.profitMargin && (
@@ -132,16 +132,16 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
               <div className="flex items-center mb-2">
-                <TrendingUp className="w-4 h-4 text-blue-500 mr-2" />
+                <TrendingUp className="w-4 h-4 text-action mr-2" />
                 <h4 className="font-semibold text-text-primary">Progresso</h4>
               </div>
               <div className="space-y-2">
-                <p className="text-2xl font-bold text-blue-500" data-testid="project-progress">
+                <p className="text-2xl font-bold text-action" data-testid="project-progress">
                   {project.progress}%
                 </p>
                 <div className="w-full bg-border-secondary rounded-full h-2">
                   <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all" 
+                    className="bg-action h-2 rounded-full transition-all" 
                     style={{ width: `${project.progress}%` }}
                   ></div>
                 </div>

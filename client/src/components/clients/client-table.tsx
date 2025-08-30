@@ -27,9 +27,9 @@ const statusMap = {
 };
 
 const upsellMap = {
-  low: { label: "Baixo", color: "text-gray-500" },
-  medium: { label: "Médio", color: "text-yellow-500" },
-  high: { label: "Alto", color: "text-green-500" },
+  low: { label: "Baixo", color: "text-muted" },
+  medium: { label: "Médio", color: "text-warning" },
+  high: { label: "Alto", color: "text-success" },
 };
 
 export default function ClientTable({ clients, isLoading, "data-testid": testId }: ClientTableProps) {
@@ -143,7 +143,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                   {client.nps ? (
                     <div className="flex items-center">
                       <span 
-                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-green-500' : client.nps >= 6 ? 'text-yellow-500' : 'text-red-500'}`}
+                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-success' : client.nps >= 6 ? 'text-warning' : 'text-error'}`}
                         data-testid={`client-nps-${client.id}`}
                       >
                         {client.nps.toFixed(1)}
@@ -169,21 +169,21 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                   <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewClient(client)}
-                      className="text-blue-500 p-1"
+                      className="text-action p-1"
                       data-testid={`action-view-${client.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleWhatsAppContact(client)}
-                      className="text-green-500 p-1 hidden sm:block"
+                      className="text-success p-1 hidden sm:block"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEmailContact(client)}
-                      className="text-blue-500 p-1 hidden sm:block"
+                      className="text-action p-1 hidden sm:block"
                       data-testid={`action-email-${client.id}`}
                     >
                       <Mail className="w-4 h-4" />

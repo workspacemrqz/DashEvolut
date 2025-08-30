@@ -13,11 +13,11 @@ export default function KpiCard({ title, value, change, icon, trend, "data-testi
   const getTrendColor = () => {
     switch (trend) {
       case "up":
-        return "text-green-500";
+        return "text-success";
       case "down":
-        return "text-green-500"; // Down can be good (like churn rate)
+        return "text-success"; // Down can be good (like churn rate)
       case "warning":
-        return "text-yellow-500";
+        return "text-warning";
       default:
         return "text-text-secondary";
     }
