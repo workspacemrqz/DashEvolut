@@ -70,6 +70,17 @@ export default {
         "gradient-end": "var(--gradient-end)",
         "border-primary": "var(--border-primary)",
         "border-secondary": "var(--border-secondary)",
+        // Dynamic color system
+        "light-bg": "var(--light-bg-color)",
+        "white-bg": "var(--white-bg-color)",
+        "dark-bg-1": "var(--dark-bg-color-1)",
+        "dark-bg-2": "var(--dark-bg-color-2)",
+        "light-text": "var(--light-text-color)",
+        "dark-text": "var(--dark-text-color)",
+        "f5f5f5": "#f5f5f5",
+        "ffffff": "#ffffff",
+        "0b1015": "#0b1015",
+        "060606": "#060606",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],

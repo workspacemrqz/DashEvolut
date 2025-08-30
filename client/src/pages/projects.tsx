@@ -108,7 +108,7 @@ export default function Projects() {
                   data-testid="button-filter"
                 >
                   <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline text-[#060606]">Filtros</span>
+                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
@@ -156,7 +156,7 @@ export default function Projects() {
           </div>
           
           <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-sm font-medium mb-2 text-[#f5f5f5]" data-testid="label-worked-hours">Horas Trabalhadas</h3>
+            <h3 className="text-sm font-medium mb-2 text-dark-text" data-testid="label-worked-hours">Horas Trabalhadas</h3>
             <div className="text-2xl font-bold text-text-primary" data-testid="kpi-worked-hours">
               {totalWorkedHours.toLocaleString()}h
             </div>
@@ -192,7 +192,7 @@ export default function Projects() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-[#f5f5f5]"
+              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-dark-text"
               data-testid={`filter-${tab.key}`}
             >
               {tab.label}

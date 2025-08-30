@@ -221,33 +221,33 @@ export default function SubscriptionTable({
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="dropdown-content">
-                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           {subscription.status === "active" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                               <Pause className="h-4 w-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "paused" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "cancelled" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-[#060606]">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-dynamic-light">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
@@ -255,7 +255,7 @@ export default function SubscriptionTable({
                           {subscription.status !== "cancelled" && (
                             <DropdownMenuItem 
                               onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                              className="text-left justify-start hover:bg-transparent text-[#060606]"
+                              className="text-left justify-start hover:bg-transparent text-dynamic-light"
                             >
                               <X className="h-4 w-4 mr-2" />
                               Cancelar

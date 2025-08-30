@@ -61,7 +61,7 @@ export default function Clients() {
                   data-testid="button-filter"
                 >
                   <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline text-[#060606]">Filtros</span>
+                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
@@ -139,7 +139,7 @@ export default function Clients() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-[#f5f5f5]"
+              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-dark-text"
               data-testid={`filter-${tab.key}`}
             >
               {tab.label}

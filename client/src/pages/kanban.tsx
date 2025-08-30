@@ -191,7 +191,7 @@ export default function Kanban() {
           )}
         </div>
         <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
-          <span style={{color: '#FFFFFF'}}>Atualização: </span>
+          <span className="text-dark-text">Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {client.updatedAt ? 
               new Date(client.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(client.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
@@ -242,7 +242,7 @@ export default function Kanban() {
           <span className="text-xs text-text-secondary ml-2">{project.progress}%</span>
         </div>
         <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
-          <span style={{color: '#FFFFFF'}}>Atualização: </span>
+          <span className="text-dark-text">Atualização: </span>
           <span style={{color: '#2D81EA'}}>
             {project.updatedAt ? 
               new Date(project.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(project.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
@@ -300,14 +300,14 @@ export default function Kanban() {
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
             <TabsTrigger 
               value="clients" 
-              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606] text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm"
             >
               <Users className="w-4 h-4 mr-1 lg:mr-2" />
               Clientes
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
-              className="data-[state=active]:!bg-[#f5f5f5] data-[state=active]:!text-[#060606] [&[data-state=active]>svg]:!text-[#060606] text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm"
             >
               <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" />
               Projetos

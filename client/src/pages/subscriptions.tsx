@@ -64,7 +64,7 @@ export default function Subscriptions() {
                   data-testid="button-filter-subscriptions"
                 >
                   <Filter className="h-3 w-3 lg:h-4 lg:w-4" />
-                  <span className="hidden sm:inline text-[#060606]">Filtrar</span>
+                  <span className="hidden sm:inline text-dynamic-light">Filtrar</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="dropdown-content">

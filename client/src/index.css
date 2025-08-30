@@ -63,6 +63,14 @@
   /* Custom colors for Kanban page */
   --kanban-badge-bg: #f5f5f5;
   --kanban-badge-text: #060606;
+  
+  /* Dynamic color system variables */
+  --light-bg-color: #f5f5f5;
+  --white-bg-color: #ffffff;
+  --dark-bg-color-1: #0b1015;
+  --dark-bg-color-2: #060606;
+  --light-text-color: #060606;
+  --dark-text-color: #f5f5f5;
 }
 
 .dark {
@@ -479,5 +487,213 @@
   h4[data-testid="label-worked-hours"],
   label[data-testid="label-worked-hours"] {
     color: #060606 ;
+  }
+
+  /* Dynamic color system classes */
+  .dynamic-light-bg {
+    background-color: var(--light-bg-color);
+  }
+
+  .dynamic-white-bg {
+    background-color: var(--white-bg-color);
+  }
+
+  .dynamic-dark-bg-1 {
+    background-color: var(--dark-bg-color-1);
+  }
+
+  .dynamic-dark-bg-2 {
+    background-color: var(--dark-bg-color-2);
+  }
+
+  /* Auto color application based on background */
+  .dynamic-light-bg,
+  .dynamic-light-bg *,
+  .dynamic-white-bg,
+  .dynamic-white-bg *,
+  [style*="background-color: #f5f5f5"],
+  [style*="background-color: #f5f5f5"] *,
+  [style*="background-color: #F5F5F5"],
+  [style*="background-color: #F5F5F5"] *,
+  [style*="background-color: white"],
+  [style*="background-color: white"] *,
+  [style*="background-color: #ffffff"],
+  [style*="background-color: #ffffff"] *,
+  [style*="background-color: #FFFFFF"],
+  [style*="background-color: #FFFFFF"] *,
+  [style*="background: #f5f5f5"],
+  [style*="background: #f5f5f5"] *,
+  [style*="background: #F5F5F5"],
+  [style*="background: #F5F5F5"] *,
+  [style*="background: white"],
+  [style*="background: white"] *,
+  [style*="background: #ffffff"],
+  [style*="background: #ffffff"] *,
+  [style*="background: #FFFFFF"],
+  [style*="background: #FFFFFF"] * {
+    color: var(--light-text-color) !important;
+  }
+
+  .dynamic-dark-bg-1,
+  .dynamic-dark-bg-1 *,
+  .dynamic-dark-bg-2,
+  .dynamic-dark-bg-2 *,
+  [style*="background-color: #0b1015"],
+  [style*="background-color: #0b1015"] *,
+  [style*="background-color: #0B1015"],
+  [style*="background-color: #0B1015"] *,
+  [style*="background-color: #060606"],
+  [style*="background-color: #060606"] *,
+  [style*="background: #0b1015"],
+  [style*="background: #0b1015"] *,
+  [style*="background: #0B1015"],
+  [style*="background: #0B1015"] *,
+  [style*="background: #060606"],
+  [style*="background: #060606"] * {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Classes for elements with specific background colors */
+  .bg-f5f5f5,
+  .bg-f5f5f5 *,
+  .bg-white,
+  .bg-white *,
+  .bg-ffffff,
+  .bg-ffffff * {
+    color: var(--light-text-color) !important;
+  }
+
+  .bg-0b1015,
+  .bg-0b1015 *,
+  .bg-060606,
+  .bg-060606 * {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Utility classes for manual application */
+  .text-dynamic-light {
+    color: var(--light-text-color) !important;
+  }
+
+  .text-dynamic-dark {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Apply to buttons with light backgrounds */
+  button[style*="background-color: #f5f5f5"],
+  button[style*="background-color: #f5f5f5"] *,
+  button[style*="background-color: #F5F5F5"],
+  button[style*="background-color: #F5F5F5"] *,
+  button[style*="background-color: white"],
+  button[style*="background-color: white"] *,
+  button[style*="background-color: #ffffff"],
+  button[style*="background-color: #ffffff"] *,
+  button[style*="background-color: #FFFFFF"],
+  button[style*="background-color: #FFFFFF"] *,
+  .btn-light,
+  .btn-light *,
+  .button-light,
+  .button-light * {
+    color: var(--light-text-color) !important;
+  }
+
+  /* Apply to buttons with dark backgrounds */
+  button[style*="background-color: #0b1015"],
+  button[style*="background-color: #0b1015"] *,
+  button[style*="background-color: #0B1015"],
+  button[style*="background-color: #0B1015"] *,
+  button[style*="background-color: #060606"],
+  button[style*="background-color: #060606"] *,
+  .btn-dark,
+  .btn-dark *,
+  .button-dark,
+  .button-dark * {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Apply to input fields with light backgrounds */
+  input[style*="background-color: #f5f5f5"],
+  input[style*="background-color: #F5F5F5"],
+  input[style*="background-color: white"],
+  input[style*="background-color: #ffffff"],
+  input[style*="background-color: #FFFFFF"],
+  textarea[style*="background-color: #f5f5f5"],
+  textarea[style*="background-color: #F5F5F5"],
+  textarea[style*="background-color: white"],
+  textarea[style*="background-color: #ffffff"],
+  textarea[style*="background-color: #FFFFFF"],
+  select[style*="background-color: #f5f5f5"],
+  select[style*="background-color: #F5F5F5"],
+  select[style*="background-color: white"],
+  select[style*="background-color: #ffffff"],
+  select[style*="background-color: #FFFFFF"],
+  .input-light,
+  .textarea-light,
+  .select-light {
+    color: var(--light-text-color) !important;
+  }
+
+  /* Apply to input fields with dark backgrounds */
+  input[style*="background-color: #0b1015"],
+  input[style*="background-color: #0B1015"],
+  input[style*="background-color: #060606"],
+  textarea[style*="background-color: #0b1015"],
+  textarea[style*="background-color: #0B1015"],
+  textarea[style*="background-color: #060606"],
+  select[style*="background-color: #0b1015"],
+  select[style*="background-color: #0B1015"],
+  select[style*="background-color: #060606"],
+  .input-dark,
+  .textarea-dark,
+  .select-dark {
+    color: var(--dark-text-color) !important;
+  }
+
+  /* Apply to tags and badges with light backgrounds */
+  .tag[style*="background-color: #f5f5f5"],
+  .tag[style*="background-color: #f5f5f5"] *,
+  .tag[style*="background-color: #F5F5F5"],
+  .tag[style*="background-color: #F5F5F5"] *,
+  .tag[style*="background-color: white"],
+  .tag[style*="background-color: white"] *,
+  .tag[style*="background-color: #ffffff"],
+  .tag[style*="background-color: #ffffff"] *,
+  .tag[style*="background-color: #FFFFFF"],
+  .tag[style*="background-color: #FFFFFF"] *,
+  .badge[style*="background-color: #f5f5f5"],
+  .badge[style*="background-color: #f5f5f5"] *,
+  .badge[style*="background-color: #F5F5F5"],
+  .badge[style*="background-color: #F5F5F5"] *,
+  .badge[style*="background-color: white"],
+  .badge[style*="background-color: white"] *,
+  .badge[style*="background-color: #ffffff"],
+  .badge[style*="background-color: #ffffff"] *,
+  .badge[style*="background-color: #FFFFFF"],
+  .badge[style*="background-color: #FFFFFF"] *,
+  .tag-light,
+  .tag-light *,
+  .badge-light,
+  .badge-light * {
+    color: var(--light-text-color) !important;
+  }
+
+  /* Apply to tags and badges with dark backgrounds */
+  .tag[style*="background-color: #0b1015"],
+  .tag[style*="background-color: #0b1015"] *,
+  .tag[style*="background-color: #0B1015"],
+  .tag[style*="background-color: #0B1015"] *,
+  .tag[style*="background-color: #060606"],
+  .tag[style*="background-color: #060606"] *,
+  .badge[style*="background-color: #0b1015"],
+  .badge[style*="background-color: #0b1015"] *,
+  .badge[style*="background-color: #0B1015"],
+  .badge[style*="background-color: #0B1015"] *,
+  .badge[style*="background-color: #060606"],
+  .badge[style*="background-color: #060606"] *,
+  .tag-dark,
+  .tag-dark *,
+  .badge-dark,
+  .badge-dark * {
+    color: var(--dark-text-color) !important;
   }
 }

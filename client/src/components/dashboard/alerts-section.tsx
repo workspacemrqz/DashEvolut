@@ -171,7 +171,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           <button
             onClick={handleMarkAllAsRead}
             disabled={markAllAsReadMutation.isPending}
-            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors text-[#f5f5f5]"
+            className="btn-secondary px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-bg-secondary transition-colors text-dark-text"
             data-testid="button-mark-all-read"
           >
             <CheckCheck className="w-3 h-3" />
