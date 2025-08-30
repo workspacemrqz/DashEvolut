@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import SubscriptionForm from "../components/subscriptions/subscription-form";
-import SubscriptionCard from "../components/subscriptions/subscription-card";
+import SubscriptionTable from "../components/subscriptions/subscription-table";
 import PaymentForm from "../components/subscriptions/payment-form";
 import { SubscriptionWithClient } from "@shared/schema";
 import { Plus, Filter, DollarSign, Calendar, AlertCircle } from "lucide-react";
@@ -134,15 +134,9 @@ export default function Subscriptions() {
         </div>
       </div>
 
-      {/* Subscriptions Grid */}
+      {/* Subscriptions Table */}
       <div className="flex-1 px-4 lg:px-6 pb-6">
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 bg-bg-secondary rounded-lg animate-pulse" />
-            ))}
-          </div>
-        ) : filteredSubscriptions.length === 0 ? (
+        {!isLoading && filteredSubscriptions.length === 0 ? (
           <div className="text-center py-12">
             <DollarSign className="h-16 w-16 text-text-secondary mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-text-primary mb-2">
@@ -164,16 +158,12 @@ export default function Subscriptions() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredSubscriptions.map((subscription) => (
-              <SubscriptionCard
-                key={subscription.id}
-                subscription={subscription}
-                onPaymentClick={handlePaymentClick}
-                data-testid={`card-subscription-${subscription.id}`}
-              />
-            ))}
-          </div>
+          <SubscriptionTable
+            subscriptions={filteredSubscriptions}
+            isLoading={isLoading}
+            onPaymentClick={handlePaymentClick}
+            data-testid="subscriptions-table"
+          />
         )}
       </div>
 
