@@ -156,7 +156,7 @@ export default function Projects() {
           </div>
           
           <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-sm font-medium mb-2 text-text-secondary" data-testid="label-worked-hours">Horas Trabalhadas</h3>
+            <h3 className="text-sm font-medium mb-2 text-[#f5f5f5]" data-testid="label-worked-hours">Horas Trabalhadas</h3>
             <div className="text-2xl font-bold text-text-primary" data-testid="kpi-worked-hours">
               {totalWorkedHours.toLocaleString()}h
             </div>
