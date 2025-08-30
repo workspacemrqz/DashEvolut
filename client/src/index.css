@@ -109,8 +109,8 @@
   *:focus,
   *:focus-visible,
   *:focus-within {
-    outline: none !important;
-    box-shadow: none !important;
+    outline: none ;
+    box-shadow: none ;
   }
   
   /* Remove Tailwind focus styles */
@@ -128,10 +128,10 @@
   .focus\:ring-accent:focus,
   .focus\:ring-ring:focus,
   .focus-visible\:ring-ring:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
+    outline: none ;
+    box-shadow: none ;
+    --tw-ring-shadow: none ;
+    --tw-ring-offset-shadow: none ;
   }
   
   /* Remove ring styles from all elements with ring classes */
@@ -141,17 +141,17 @@
   [class*="ring-2"],
   [class*="ring-1"],
   [class*="ring-ring"] {
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
+    --tw-ring-shadow: none ;
+    --tw-ring-offset-shadow: none ;
   }
   
   /* Specific overrides for shadcn components */
   [class*="ring-offset"]:focus,
   [class*="ring-offset"]:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
+    outline: none ;
+    box-shadow: none ;
+    --tw-ring-shadow: none ;
+    --tw-ring-offset-shadow: none ;
   }
   
   /* Remove focus styles from specific elements */
@@ -167,34 +167,34 @@
   /* Shadcn specific */
   .peer:focus + *,
   .peer:focus-visible + * {
-    outline: none !important;
-    box-shadow: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
+    outline: none ;
+    box-shadow: none ;
+    --tw-ring-shadow: none ;
+    --tw-ring-offset-shadow: none ;
   }
   
   /* Kanban page custom styles */
   .kanban-badge {
-    background-color: var(--kanban-badge-bg) !important;
-    color: var(--kanban-badge-text) !important;
+    background-color: var(--kanban-badge-bg) ;
+    color: var(--kanban-badge-text) ;
   }
   
   .kanban-badge * {
-    color: var(--kanban-badge-text) !important;
+    color: var(--kanban-badge-text) ;
   }
   
   .kanban-tab-active {
-    background-color: var(--kanban-badge-bg) !important;
-    color: var(--kanban-badge-text) !important;
+    background-color: var(--kanban-badge-bg) ;
+    color: var(--kanban-badge-text) ;
   }
   
   .kanban-tab-active * {
-    color: var(--kanban-badge-text) !important;
+    color: var(--kanban-badge-text) ;
   }
   
   /* Override any remaining box-shadow with ring */
   *[style*="box-shadow"] {
-    box-shadow: none !important;
+    box-shadow: none ;
   }
 
   body {
@@ -208,7 +208,7 @@
   .gradient-bg {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .gradient-text {
@@ -225,19 +225,19 @@
   .btn-primary {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .btn-secondary {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-secondary);
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .sidebar-active {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .kpi-card {
@@ -251,7 +251,7 @@
 
   .progress-fill {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .status-badge {
@@ -259,51 +259,51 @@
   }
 
   .status-active {
-    background-color: #f5f5f5 !important;
-    color: #060606 !important;
+    background-color: #f5f5f5 ;
+    color: #060606 ;
   }
 
   .status-inactive {
     @apply bg-red-500;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-prospect {
     @apply bg-yellow-500;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-discovery {
     @apply bg-purple-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-development {
     @apply bg-blue-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Subscription status badges */
   .status-subscription-active {
-    background-color: #f5f5f5 !important;
-    color: #060606 !important;
+    background-color: #f5f5f5 ;
+    color: #060606 ;
   }
 
   .status-subscription-paused {
     @apply bg-yellow-500;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-subscription-cancelled {
     @apply bg-red-500;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Dropdown menu items text and icons color override */
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    color: #F5F5F5 !important;
+    color: #F5F5F5 ;
   }
 
   /* Edit subscription dialog text color override with high hierarchy */
@@ -315,19 +315,19 @@
   .container-bg textarea,
   .container-bg select,
   .container-bg button span {
-    color: #F5F5F5 !important;
+    color: #F5F5F5 ;
   }
 
   /* Filter button text and icon color override */
   .btn-secondary,
   .btn-secondary svg,
   .btn-secondary span {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Date input field icons and calendar icons */
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0) !important;
+    filter: invert(1) brightness(0) ;
   }
 
   /* Ensure white text on blue/black backgrounds */
@@ -339,7 +339,7 @@
   .bg-black,
   [class*="bg-blue-"],
   [class*="bg-black"] {
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   /* Override Tailwind primary colors to be white text */
@@ -349,7 +349,7 @@
   [data-state=checked],
   [class*="data-[state=checked]"],
   [class*="bg-bg-primary"] {
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
   
   /* Specific overrides for button and badge variants */
@@ -357,42 +357,42 @@
   .border-transparent.bg-primary,
   button.bg-primary,
   [role="button"].bg-primary {
-    color: #FFFFFF !important;
+    color: #FFFFFF ;
   }
 
   .status-delivery {
     @apply bg-green-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-post-sale {
     @apply bg-gray-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-overdue {
     @apply bg-red-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-completed {
     @apply bg-green-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   .status-cancelled {
     @apply bg-gray-500/20;
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Filter button text color override - only for filter buttons */
   [data-testid="button-filter"] {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Specific override for filter button icon */
   [data-testid="button-filter"] svg {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Force status badge text colors with highest priority */
@@ -406,18 +406,18 @@
   .status-badge.status-overdue,
   .status-badge.status-completed,
   .status-badge.status-cancelled {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Additional specificity for any Badge component with status classes */
   [class*="status-badge"][class*="status-"] {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Cancel button text color override with high specificity */
   button[data-testid="button-cancel"],
   .btn-secondary[data-testid="button-cancel"] {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Mobile responsiveness improvements */
@@ -460,17 +460,17 @@
 
   /* Ensure "Horas Trabalhadas" has the same color as "Margem de Lucro" */
   [data-testid="label-worked-hours"] {
-    color: hsl(0 0% 89.8%) !important;
+    color: hsl(0 0% 89.8%) ;
   }
 
   /* Start/Iniciar button text and icon color override */
   button[data-testid="button-start"] {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Apply to icons within Iniciar buttons */
   button[data-testid="button-start"] svg {
-    color: #060606 !important;
+    color: #060606 ;
   }
 
   /* Horas Trabalhadas text color override with data-testid targeting */
@@ -478,6 +478,6 @@
   h3[data-testid="label-worked-hours"],
   h4[data-testid="label-worked-hours"],
   label[data-testid="label-worked-hours"] {
-    color: #060606 !important;
+    color: #060606 ;
   }
 }
