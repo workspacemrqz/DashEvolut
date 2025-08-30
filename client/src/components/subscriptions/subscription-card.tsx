@@ -24,9 +24,9 @@ interface SubscriptionCardProps {
 }
 
 const statusMap = {
-  active: { label: "Ativa", className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
-  paused: { label: "Pausada", className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" },
-  cancelled: { label: "Cancelada", className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
+  active: { label: "Ativa", className: "status-subscription-active" },
+  paused: { label: "Pausada", className: "status-subscription-paused" },
+  cancelled: { label: "Cancelada", className: "status-subscription-cancelled" },
 };
 
 export default function SubscriptionCard({ 

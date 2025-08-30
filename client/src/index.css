@@ -283,6 +283,22 @@
     color: #060606 !important;
   }
 
+  /* Subscription status badges */
+  .status-subscription-active {
+    background-color: #f5f5f5 !important;
+    color: #060606 !important;
+  }
+
+  .status-subscription-paused {
+    @apply bg-yellow-500;
+    color: #060606 !important;
+  }
+
+  .status-subscription-cancelled {
+    @apply bg-red-500;
+    color: #060606 !important;
+  }
+
   /* Ensure white text on blue/black backgrounds */
   .bg-blue-500,
   .bg-blue-600,
