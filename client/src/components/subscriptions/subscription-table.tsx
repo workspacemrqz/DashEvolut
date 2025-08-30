@@ -225,29 +225,29 @@ export default function SubscriptionTable({
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start hover:bg-transparent">
+                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start hover:bg-transparent text-[#060606]">
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start hover:bg-transparent">
+                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start hover:bg-transparent text-[#060606]">
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           {subscription.status === "active" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start hover:bg-transparent">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start hover:bg-transparent text-[#060606]">
                               <Pause className="h-4 w-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "paused" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-[#060606]">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "cancelled" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent text-[#060606]">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
@@ -255,7 +255,7 @@ export default function SubscriptionTable({
                           {subscription.status !== "cancelled" && (
                             <DropdownMenuItem 
                               onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                              className="text-left justify-start hover:bg-transparent"
+                              className="text-left justify-start hover:bg-transparent text-[#060606]"
                             >
                               <X className="h-4 w-4 mr-2" />
                               Cancelar

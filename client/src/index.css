@@ -303,7 +303,7 @@
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    color: #F5F5F5 ;
+    color: #060606 ;
   }
 
   /* Edit subscription dialog text color override with high hierarchy */
