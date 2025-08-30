@@ -213,33 +213,33 @@ export default function SubscriptionTable({
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="dropdown-content">
-                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="status-badge status-subscription-active text-left justify-start">
+                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start hover:bg-transparent">
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="status-badge status-subscription-active text-left justify-start">
+                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start hover:bg-transparent">
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="status-badge status-subscription-active text-left justify-start">
+                          <DropdownMenuItem className="text-left justify-start hover:bg-transparent">
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           {subscription.status === "active" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="status-badge status-subscription-paused text-left justify-start">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start hover:bg-transparent">
                               <Pause className="h-4 w-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "paused" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="status-badge status-subscription-active text-left justify-start">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "cancelled" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="status-badge status-subscription-active text-left justify-start">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start hover:bg-transparent">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
@@ -247,7 +247,7 @@ export default function SubscriptionTable({
                           {subscription.status !== "cancelled" && (
                             <DropdownMenuItem 
                               onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                              className="status-badge status-subscription-cancelled text-left justify-start"
+                              className="text-left justify-start hover:bg-transparent"
                             >
                               <X className="h-4 w-4 mr-2" />
                               Cancelar
