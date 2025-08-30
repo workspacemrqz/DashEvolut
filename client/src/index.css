@@ -299,6 +299,20 @@
     color: #060606 !important;
   }
 
+  /* Dropdown menu items text and icons color override */
+  .dropdown-content [role="menuitem"],
+  .dropdown-content [role="menuitem"] svg,
+  .dropdown-content [role="menuitem"] span {
+    color: #060606 !important;
+  }
+
+  /* Filter button text and icon color override */
+  .btn-secondary,
+  .btn-secondary svg,
+  .btn-secondary span {
+    color: #060606 !important;
+  }
+
   /* Ensure white text on blue/black backgrounds */
   .bg-blue-500,
   .bg-blue-600,
