@@ -61,7 +61,7 @@ export default function Clients() {
                   data-testid="button-filter"
                 >
                   <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline">Filtros</span>
+                  <span className="hidden sm:inline text-[#060606]">Filtros</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-bg-container border-border-secondary">
