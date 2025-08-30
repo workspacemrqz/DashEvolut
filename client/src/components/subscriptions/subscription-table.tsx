@@ -213,34 +213,34 @@ export default function SubscriptionTable({
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="dropdown-content">
-                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)}>
+                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="status-badge status-subscription-active text-left justify-start">
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleManageServices(subscription)}>
+                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="status-badge status-subscription-active text-left justify-start">
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem className="status-badge status-subscription-active text-left justify-start">
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           {subscription.status === "active" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")}>
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="status-badge status-subscription-paused text-left justify-start">
                               <Pause className="h-4 w-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "paused" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")}>
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="status-badge status-subscription-active text-left justify-start">
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem 
                             onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                            className="text-red-600 dark:text-red-400"
+                            className="status-badge status-subscription-cancelled text-left justify-start"
                           >
                             <X className="h-4 w-4 mr-2" />
                             Cancelar
@@ -323,7 +323,7 @@ export default function SubscriptionTable({
                     <Button
                       onClick={() => setShowServiceChecklist(true)}
                       variant="secondary"
-                      className="btn-secondary"
+                      className="status-badge status-subscription-active border-0"
                       data-testid="button-manage-services-details"
                     >
                       <CheckSquare className="h-4 w-4 mr-2" />
