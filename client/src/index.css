@@ -303,7 +303,19 @@
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    color: #060606 !important;
+    color: #F5F5F5 !important;
+  }
+
+  /* Edit subscription dialog text color override with high hierarchy */
+  .container-bg .gradient-text,
+  .container-bg .text-text-secondary,
+  .container-bg .text-text-primary,
+  .container-bg label,
+  .container-bg input,
+  .container-bg textarea,
+  .container-bg select,
+  .container-bg button span {
+    color: #F5F5F5 !important;
   }
 
   /* Filter button text and icon color override */
