@@ -295,6 +295,7 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
           <Button
             onClick={() => onOpenChange(false)}
             className="btn-secondary"
+            style={{color: '#060606 !important'}}
             data-testid="button-close-checklist"
           >
             Fechar

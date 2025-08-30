@@ -313,6 +313,11 @@
     color: #060606 !important;
   }
 
+  /* Date input field icons and calendar icons */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0) !important;
+  }
+
   /* Ensure white text on blue/black backgrounds */
   .bg-blue-500,
   .bg-blue-600,
