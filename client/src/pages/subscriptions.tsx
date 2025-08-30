@@ -101,34 +101,34 @@ export default function Subscriptions() {
       <div className="px-4 lg:px-6 py-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="stats-card">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <DollarSign className="h-8 w-8 text-accent-primary" />
               <div>
                 <p className="text-text-secondary text-sm">Assinaturas Ativas</p>
                 <p className="text-2xl font-bold text-text-primary">{activeSubscriptions}</p>
               </div>
-              <DollarSign className="h-8 w-8 text-accent-primary" />
             </div>
           </div>
           
           <div className="stats-card">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Calendar className="h-8 w-8 text-accent-primary" />
               <div>
                 <p className="text-text-secondary text-sm">Receita Mensal</p>
                 <p className="text-2xl font-bold text-text-primary">
                   R$ {totalMonthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
               </div>
-              <Calendar className="h-8 w-8 text-accent-primary" />
             </div>
           </div>
           
           <div className="stats-card">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-8 w-8 text-red-500" />
               <div>
                 <p className="text-text-secondary text-sm">Em Atraso</p>
                 <p className="text-2xl font-bold text-text-primary">{overdueSubscriptions}</p>
               </div>
-              <AlertCircle className="h-8 w-8 text-red-500" />
             </div>
           </div>
         </div>
