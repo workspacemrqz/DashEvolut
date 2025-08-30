@@ -221,7 +221,7 @@ export default function SubscriptionTable({
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="dropdown-content">
-                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start hover:bg-transparent">
+                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start hover:bg-transparent text-[#060606]">
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
