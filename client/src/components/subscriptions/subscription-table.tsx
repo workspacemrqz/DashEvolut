@@ -163,7 +163,7 @@ export default function SubscriptionTable({
                       {statusMap[subscription.status].label}
                     </Badge>
                     {isOverdue && (
-                      <Badge className="ml-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 text-xs">
+                      <Badge className="ml-2 status-badge status-subscription-cancelled text-xs">
                         Vencida
                       </Badge>
                     )}
