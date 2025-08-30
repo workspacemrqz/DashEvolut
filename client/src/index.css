@@ -272,22 +272,22 @@
   }
 
   .status-inactive {
-    background-color: hsl(var(--destructive));
+    @apply bg-red-500;
     color: #060606 ;
   }
 
   .status-prospect {
-    background-color: hsl(var(--chart-3));
+    @apply bg-yellow-500;
     color: #060606 ;
   }
 
   .status-discovery {
-    background-color: hsl(var(--chart-5) / 0.2);
+    @apply bg-purple-500/20;
     color: #060606 ;
   }
 
   .status-development {
-    background-color: hsl(var(--chart-1) / 0.2);
+    @apply bg-blue-500/20;
     color: #060606 ;
   }
 
@@ -298,12 +298,12 @@
   }
 
   .status-subscription-paused {
-    background-color: hsl(var(--chart-3));
+    @apply bg-yellow-500;
     color: #060606 ;
   }
 
   .status-subscription-cancelled {
-    background-color: hsl(var(--destructive));
+    @apply bg-red-500;
     color: #060606 ;
   }
 
@@ -369,27 +369,27 @@
   }
 
   .status-delivery {
-    background-color: hsl(var(--chart-2) / 0.2);
+    @apply bg-green-500/20;
     color: #060606 ;
   }
 
   .status-post-sale {
-    background-color: hsl(var(--muted) / 0.2);
+    @apply bg-gray-500/20;
     color: #060606 ;
   }
 
   .status-overdue {
-    background-color: hsl(var(--destructive) / 0.2);
+    @apply bg-red-500/20;
     color: #060606 ;
   }
 
   .status-completed {
-    background-color: hsl(var(--chart-2) / 0.2);
+    @apply bg-green-500/20;
     color: #060606 ;
   }
 
   .status-cancelled {
-    background-color: hsl(var(--muted) / 0.2);
+    @apply bg-gray-500/20;
     color: #060606 ;
   }
 

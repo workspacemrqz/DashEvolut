@@ -52,7 +52,7 @@ export default function RevenueChart({ "data-testid": testId }: RevenueChartProp
         <h3 className="text-lg font-semibold text-text-primary">Receita Mensal</h3>
         <div className="flex items-center space-x-2">
           <span className="text-sm text-text-secondary">Comparado ao mês anterior</span>
-          <span className={`text-sm ${Number(growthPercentage) >= 0 ? 'text-chart-2' : 'text-destructive'}`}>
+          <span className={`text-sm ${Number(growthPercentage) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
             {Number(growthPercentage) >= 0 ? '+' : ''}{growthPercentage}%
           </span>
         </div>

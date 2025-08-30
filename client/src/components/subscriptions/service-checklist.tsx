@@ -252,7 +252,7 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
                               size="sm"
                               variant="ghost"
                               onClick={() => handleDeleteService(service.id)}
-                              className="px-2 py-1 text-destructive"
+                              className="px-2 py-1 text-red-600"
                               data-testid={`button-delete-service-${service.id}`}
                             >
                               <Trash2 className="h-3 w-3" />
@@ -294,7 +294,8 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
         <div className="flex justify-end pt-4">
           <Button
             onClick={() => onOpenChange(false)}
-            className="btn-secondary text-text-primary"
+            className="btn-secondary"
+            style={{color: '#060606 '}}
             data-testid="button-close-checklist"
           >
             Fechar

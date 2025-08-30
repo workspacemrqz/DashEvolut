@@ -18,17 +18,17 @@ const alertIcons = {
 };
 
 const alertColors = {
-  project_delayed: "border-destructive bg-destructive/10",
-  payment_pending: "border-chart-3 bg-chart-3/10", 
-  upsell_opportunity: "border-chart-1 bg-chart-1/10",
-  milestone_due: "border-chart-3 bg-chart-3/10",
+  project_delayed: "border-red-500/30 bg-red-500/10",
+  payment_pending: "border-yellow-500/30 bg-yellow-500/10",
+  upsell_opportunity: "border-blue-500/30 bg-blue-500/10",
+  milestone_due: "border-orange-500/30 bg-orange-500/10",
 };
 
 const iconColors = {
-  project_delayed: "text-destructive",
-  payment_pending: "text-chart-3",
-  upsell_opportunity: "text-chart-1",
-  milestone_due: "text-chart-3",
+  project_delayed: "text-red-500",
+  payment_pending: "text-yellow-500",
+  upsell_opportunity: "text-blue-500",
+  milestone_due: "text-orange-500",
 };
 
 export default function AlertsSection({ alerts, "data-testid": testId }: AlertsSectionProps) {
@@ -164,7 +164,7 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
     <div className="container-bg rounded-xl p-6 border border-border-secondary" data-testid={testId}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text-primary flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2 text-chart-3" />
+          <AlertTriangle className="w-5 h-5 mr-2 text-yellow-500" />
           Alertas Automáticos
         </h3>
         {alerts.length > 0 && (

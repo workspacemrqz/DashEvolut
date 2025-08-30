@@ -44,22 +44,22 @@ export default function MilestonesSection({ milestones, "data-testid": testId }:
     const today = new Date();
     const daysUntilDue = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (milestone.isCompleted) return "border-chart-2/30 bg-chart-2/10";
-    if (daysUntilDue < 0) return "border-destructive/30 bg-destructive/10";
-    if (daysUntilDue <= 3) return "border-chart-3/30 bg-chart-3/10";
-    return "border-chart-1/30 bg-chart-1/10";
+    if (milestone.isCompleted) return "border-green-500/30 bg-green-500/10";
+    if (daysUntilDue < 0) return "border-red-500/30 bg-red-500/10";
+    if (daysUntilDue <= 3) return "border-yellow-500/30 bg-yellow-500/10";
+    return "border-blue-500/30 bg-blue-500/10";
   };
 
   const getMilestoneIcon = (milestone: Milestone) => {
-    if (milestone.isCompleted) return <CheckCircle className="w-3 h-3 text-chart-2" />;
+    if (milestone.isCompleted) return <CheckCircle className="w-3 h-3 text-green-500" />;
     
     const dueDate = new Date(milestone.dueDate);
     const today = new Date();
     const daysUntilDue = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (daysUntilDue < 0) return <AlertCircle className="w-3 h-3 text-destructive" />;
-    if (daysUntilDue <= 3) return <Clock className="w-3 h-3 text-chart-3" />;
-    return <Clock className="w-3 h-3 text-chart-1" />;
+    if (daysUntilDue < 0) return <AlertCircle className="w-3 h-3 text-red-500" />;
+    if (daysUntilDue <= 3) return <Clock className="w-3 h-3 text-yellow-500" />;
+    return <Clock className="w-3 h-3 text-blue-500" />;
   };
 
   const getActionButton = (milestone: Milestone) => {

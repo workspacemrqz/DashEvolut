@@ -183,7 +183,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 </td>
                 <td className="p-2 lg:p-4 hidden lg:table-cell">
                   <span 
-                    className={`font-semibold text-sm ${(project.profitMargin || 0) >= 60 ? 'text-chart-2' : (project.profitMargin || 0) >= 40 ? 'text-chart-3' : 'text-destructive'}`}
+                    className={`font-semibold text-sm ${(project.profitMargin || 0) >= 60 ? 'text-green-500' : (project.profitMargin || 0) >= 40 ? 'text-yellow-500' : 'text-red-500'}`}
                     data-testid={`project-margin-${project.id}`}
                   >
                     {(project.profitMargin || 0).toFixed(0)}%
@@ -195,7 +195,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                 </td>
                 <td className="p-2 lg:p-4 hidden md:table-cell">
                   <span 
-                    className={`text-xs lg:text-sm ${isOverdue(project.dueDate) ? 'text-destructive' : 'text-text-secondary'}`}
+                    className={`text-xs lg:text-sm ${isOverdue(project.dueDate) ? 'text-red-500' : 'text-text-secondary'}`}
                     data-testid={`project-due-date-${project.id}`}
                   >
                     {new Date(project.dueDate).toLocaleDateString('pt-BR')}
@@ -205,21 +205,21 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                   <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewProject(project)}
-                      className="text-chart-1 p-1"
+                      className="text-blue-500 p-1"
                       data-testid={`action-view-${project.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEditProject(project)}
-                      className="text-chart-2 p-1 hidden sm:block"
+                      className="text-green-500 p-1 hidden sm:block"
                       data-testid={`action-edit-${project.id}`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleTimeTracker(project)}
-                      className="text-chart-3 p-1 hidden sm:block"
+                      className="text-yellow-500 p-1 hidden sm:block"
                       data-testid={`action-time-${project.id}`}
                     >
                       <Clock className="w-4 h-4" />

@@ -144,7 +144,7 @@ export default function SubscriptionTable({
               return (
                 <tr 
                   key={subscription.id} 
-                  className={`border-b border-border-secondary ${isOverdue ? 'bg-destructive/10' : ''}`}
+                  className={`border-b border-border-secondary ${isOverdue ? 'bg-red-50 dark:bg-red-950' : ''}`}
                 >
                   <td className="p-2 lg:p-4">
                     <div className="flex items-center">
@@ -186,7 +186,7 @@ export default function SubscriptionTable({
                   </td>
                   <td className="p-2 lg:p-4 hidden lg:table-cell">
                     <span 
-                      className={`text-sm font-medium ${isOverdue ? 'text-destructive' : 'text-text-primary'}`}
+                      className={`text-sm font-medium ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
                       data-testid={`subscription-next-billing-${subscription.id}`}
                     >
                       {format(subscription.nextBillingDate, "dd/MM/yyyy", { locale: ptBR })}
@@ -205,7 +205,7 @@ export default function SubscriptionTable({
                     <div className="flex space-x-1 lg:space-x-2">
                       <button 
                         onClick={() => handleViewSubscription(subscription)}
-                        className="text-chart-1 p-1"
+                        className="text-blue-500 p-1"
                         data-testid={`action-view-subscription-${subscription.id}`}
                       >
                         <Eye className="w-4 h-4" />
@@ -306,7 +306,7 @@ export default function SubscriptionTable({
                     </div>
                     <div>
                       <span className="text-text-secondary">Próximo Vencimento:</span>
-                      <p className={`font-medium ${isPast(selectedSubscription.nextBillingDate) ? 'text-destructive' : 'text-text-primary'}`}>
+                      <p className={`font-medium ${isPast(selectedSubscription.nextBillingDate) ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}>
                         {format(selectedSubscription.nextBillingDate, "dd/MM/yyyy", { locale: ptBR })}
                       </p>
                     </div>
@@ -390,7 +390,7 @@ export default function SubscriptionTable({
                     <div className="space-y-2">
                       {selectedSubscription.services.map((service) => (
                         <div key={service.id} className="flex items-center space-x-3 p-2 bg-bg-tertiary rounded text-sm">
-                          <div className={`w-3 h-3 rounded-full flex-shrink-0 ${service.isCompleted ? 'bg-chart-2' : 'bg-muted'}`} />
+                          <div className={`w-3 h-3 rounded-full flex-shrink-0 ${service.isCompleted ? 'bg-green-500' : 'bg-gray-300'}`} />
                           <span className={`flex-1 ${service.isCompleted ? 'line-through text-text-secondary' : 'text-text-primary'}`}>
                             {service.description}
                           </span>

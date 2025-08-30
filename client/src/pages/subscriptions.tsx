@@ -123,7 +123,7 @@ export default function Subscriptions() {
           
           <div className="stats-card">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-8 w-8 text-destructive" />
+              <AlertCircle className="h-8 w-8 text-red-500" />
               <div>
                 <p className="text-text-secondary text-sm">Em Atraso</p>
                 <p className="text-2xl font-bold text-text-primary">{overdueSubscriptions}</p>

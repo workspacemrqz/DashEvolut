@@ -11,7 +11,7 @@ export default function Header({ title, subtitle, actions }: HeaderProps) {
     <header className="container-bg border-b border-border-secondary p-6 lg:p-6 pt-6 pb-6 pr-6 pl-16 lg:pl-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="min-w-0 flex-1 lg:flex-none">
-          <h2 className="text-xl lg:text-2xl font-bold break-words text-chart-1" data-testid="header-title">
+          <h2 className="text-xl lg:text-2xl font-bold break-words" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }} data-testid="header-title">
             {title}
           </h2>
           {subtitle && (
