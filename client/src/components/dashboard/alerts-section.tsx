@@ -15,6 +15,8 @@ const alertIcons = {
   payment_pending: Clock,
   upsell_opportunity: Star,
   milestone_due: AlertTriangle,
+  subscription_due: CreditCard,
+  subscription_overdue: CircleAlert,
 };
 
 const alertColors = {
@@ -22,6 +24,8 @@ const alertColors = {
   payment_pending: "border-yellow-500/30 bg-yellow-500/10",
   upsell_opportunity: "border-blue-500/30 bg-blue-500/10",
   milestone_due: "border-orange-500/30 bg-orange-500/10",
+  subscription_due: "border-green-500/30 bg-green-500/10",
+  subscription_overdue: "border-red-600/30 bg-red-600/10",
 };
 
 const iconColors = {
@@ -29,6 +33,8 @@ const iconColors = {
   payment_pending: "text-yellow-500",
   upsell_opportunity: "text-blue-500",
   milestone_due: "text-orange-500",
+  subscription_due: "text-green-500",
+  subscription_overdue: "text-red-600",
 };
 
 export default function AlertsSection({ alerts, "data-testid": testId }: AlertsSectionProps) {
@@ -89,6 +95,21 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           description: "Aproveite a oportunidade de upsell identificada.",
         });
         break;
+      case "milestone_due":
+        setLocation("/projects");
+        toast({
+          title: "Redirecionando para projetos",
+          description: "Verifique o milestone com prazo próximo.",
+        });
+        break;
+      case "subscription_due":
+      case "subscription_overdue":
+        setLocation("/subscriptions");
+        toast({
+          title: "Redirecionando para assinaturas",
+          description: "Gerencie a assinatura pendente.",
+        });
+        break;
       default:
         toast({
           title: "Alerta processado",
@@ -145,6 +166,29 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
           >
             <MessageCircle className="w-3 h-3" />
             Contatar
+          </button>
+        );
+      case "milestone_due":
+        return (
+          <button 
+            className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
+            onClick={() => handleAction(alert)}
+            data-testid={`action-${alert.id}`}
+          >
+            <Eye className="w-3 h-3" />
+            Verificar
+          </button>
+        );
+      case "subscription_due":
+      case "subscription_overdue":
+        return (
+          <button 
+            className="btn-primary px-3 py-1 rounded text-xs flex items-center gap-1"
+            onClick={() => handleAction(alert)}
+            data-testid={`action-${alert.id}`}
+          >
+            <CreditCard className="w-3 h-3" />
+            Gerenciar
           </button>
         );
       default:
