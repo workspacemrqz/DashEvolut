@@ -1,0 +1,23 @@
+Você é um desenvolvedor full-stack sênior especializado em padronização e otimização de sistemas de design. Sua tarefa é analisar os arquivos fornecidos e executar uma refatoração completa do sistema de cores, eliminando hierarquias e complexidades desnecessárias.
+
+OBJETIVO PRINCIPAL: Simplificar completamente o sistema de cores, utilizando apenas uma cor específica por elemento ou contexto, eliminando variações hierárquicas como 'primary-50', 'primary-100', 'primary-200' e similares.
+
+CONTEXTO DO PROBLEMA: O sistema atual possui múltiplas variações de uma mesma cor criando complexidade desnecessária e inconsistência visual. Necessário padronizar para que cada elemento utilize apenas uma cor definida, sem gradações ou hierarquias.
+
+TAREFAS ESPECÍFICAS A EXECUTAR:
+
+1. ANÁLISE DO SISTEMA ATUAL: Mapeie todas as variações de cores utilizadas nos arquivos incluindo sufixos como '-50', '-100', '-200', '-300' até '-900', identifique onde cada variação está sendo aplicada, documente padrões de uso atual, e analise dependências entre componentes e suas cores.
+
+2. DEFINIÇÃO DE CORES ÚNICAS: Para cada contexto de uso defina apenas uma cor específica do arquivo 'cores.css', elimine todas as variações hierárquicas, estabeleça mapeamento direto entre elemento e cor única, e garanta consistência visual em todo o sistema.
+
+3. REFATORAÇÃO SISTEMÁTICA: Substitua todas as referências de cores com hierarquia por cores únicas, atualize classes CSS removendo variações desnecessárias, modifique componentes React que utilizam múltiplas variações, ajuste propriedades de estilo em linha que referenciam hierarquias, e corrija imports e referencias de cores.
+
+4. PADRONIZAÇÃO DE CONTEXTOS: Defina cor única para elementos primários como botões principais e links importantes, estabeleça cor específica para elementos secundários como botões alternativos e textos auxiliares, determine cor para elementos de feedback como sucesso, erro, aviso e informação, e configure cor para elementos de interface como bordas, backgrounds e divisores.
+
+DIRETRIZES TÉCNICAS: Utilize exclusivamente cores definidas no arquivo 'cores.css', mantenha acessibilidade e contraste adequado, preserve funcionalidade de todos os componentes, garanta que não haja cores órfãs ou não utilizadas, mantenha consistência em estados como 'disabled', 'active' e 'focus', e assegure compatibilidade com temas existentes.
+
+VALIDAÇÕES NECESSÁRIAS: Confirme que cada elemento possui apenas uma cor atribuída, verifique se todas as cores utilizadas existem no arquivo 'cores.css', garanta que não existem mais referências hierárquicas, valide contraste e legibilidade em todos os contextos, e teste funcionalidade completa após refatoração.
+
+ENTREGA ESPERADA: Sistema de cores completamente simplificado sem hierarquias, arquivo 'cores.css' otimizado com apenas cores necessárias, componentes utilizando cores únicas e bem definidas, documentação clara do mapeamento cor por contexto, e código limpo sem referências a variações hierárquicas.
+
+Execute essa simplificação de forma metódica, garantindo que o resultado final seja um sistema visual mais limpo, consistente e fácil de manter, onde cada elemento possui exatamente uma cor bem definida.
