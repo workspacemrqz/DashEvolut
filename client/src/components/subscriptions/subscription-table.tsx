@@ -238,13 +238,21 @@ export default function SubscriptionTable({
                               Reativar
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem 
-                            onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                            className="status-badge status-subscription-cancelled text-left justify-start"
-                          >
-                            <X className="h-4 w-4 mr-2" />
-                            Cancelar
-                          </DropdownMenuItem>
+                          {subscription.status === "cancelled" && (
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="status-badge status-subscription-active text-left justify-start">
+                              <Play className="h-4 w-4 mr-2" />
+                              Reativar
+                            </DropdownMenuItem>
+                          )}
+                          {subscription.status !== "cancelled" && (
+                            <DropdownMenuItem 
+                              onClick={() => handleStatusChange(subscription.id, "cancelled")}
+                              className="status-badge status-subscription-cancelled text-left justify-start"
+                            >
+                              <X className="h-4 w-4 mr-2" />
+                              Cancelar
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
