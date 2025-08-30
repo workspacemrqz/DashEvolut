@@ -246,8 +246,8 @@ export default function Kanban() {
           )}
           {client.ltv && client.ltv > 0 && (
             <div className="flex items-center text-xs">
-              <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
-              <span className="text-green-500">
+              <DollarSign className="w-3 h-3 mr-1 text-chart-2 flex-shrink-0" />
+              <span className="text-chart-2">
                 <span className="lg:hidden">R$ {Math.round(client.ltv / 1000)}k</span>
                 <span className="hidden lg:inline">R$ {client.ltv.toLocaleString('pt-BR')}</span>
               </span>
@@ -265,7 +265,7 @@ export default function Kanban() {
           </div>
           <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
             <span className="text-dark-text">Atualização: </span>
-            <span style={{color: '#2D81EA'}}>
+            <span className="text-chart-1">
               {client.updatedAt ? 
                 new Date(client.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(client.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
                 new Date(client.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(client.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -332,8 +332,8 @@ export default function Kanban() {
             <span className="truncate">{project.client?.name}</span>
           </div>
           <div className="flex items-center text-xs">
-            <DollarSign className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" />
-            <span className="text-green-500">
+            <DollarSign className="w-3 h-3 mr-1 text-chart-2 flex-shrink-0" />
+            <span className="text-chart-2">
               <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
               <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
             </span>
@@ -353,7 +353,7 @@ export default function Kanban() {
           </div>
           <div className="text-xs mt-2 lg:mt-3 hidden lg:block">
             <span className="text-dark-text">Atualização: </span>
-            <span style={{color: '#2D81EA'}}>
+            <span className="text-chart-1">
               {project.updatedAt ? 
                 new Date(project.updatedAt).toLocaleDateString('pt-BR') + ' - ' + new Date(project.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 
                 new Date(project.createdAt || Date.now()).toLocaleDateString('pt-BR') + ' - ' + new Date(project.createdAt || Date.now()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })

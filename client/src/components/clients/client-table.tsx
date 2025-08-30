@@ -27,9 +27,9 @@ const statusMap = {
 };
 
 const upsellMap = {
-  low: { label: "Baixo", color: "text-gray-500" },
-  medium: { label: "Médio", color: "text-yellow-500" },
-  high: { label: "Alto", color: "text-green-500" },
+  low: { label: "Baixo", color: "text-muted-foreground" },
+  medium: { label: "Médio", color: "text-chart-3" },
+  high: { label: "Alto", color: "text-chart-2" },
 };
 
 export default function ClientTable({ clients, isLoading, "data-testid": testId }: ClientTableProps) {
@@ -143,7 +143,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                   {client.nps ? (
                     <div className="flex items-center">
                       <span 
-                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-green-500' : client.nps >= 6 ? 'text-yellow-500' : 'text-red-500'}`}
+                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-chart-2' : client.nps >= 6 ? 'text-chart-3' : 'text-destructive'}`}
                         data-testid={`client-nps-${client.id}`}
                       >
                         {client.nps.toFixed(1)}
@@ -169,21 +169,21 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                   <div className="flex space-x-1 lg:space-x-2">
                     <button 
                       onClick={() => handleViewClient(client)}
-                      className="text-blue-500 p-1"
+                      className="text-chart-1 p-1"
                       data-testid={`action-view-${client.id}`}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleWhatsAppContact(client)}
-                      className="text-green-500 p-1 hidden sm:block"
+                      className="text-chart-2 p-1 hidden sm:block"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEmailContact(client)}
-                      className="text-blue-500 p-1 hidden sm:block"
+                      className="text-chart-1 p-1 hidden sm:block"
                       data-testid={`action-email-${client.id}`}
                     >
                       <Mail className="w-4 h-4" />
@@ -239,7 +239,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
               <div className="grid grid-cols-3 gap-2 lg:gap-4 p-3 rounded-lg bg-bg-secondary border border-border-secondary">
                 <div className="text-center">
                   <h4 className="font-semibold text-text-primary text-xs lg:text-sm">NPS</h4>
-                  <p className={`text-lg lg:text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
+                  <p className={`text-lg lg:text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-chart-2' : selectedClient.nps >= 6 ? 'text-chart-3' : 'text-destructive' : 'text-text-secondary'}`}>
                     {selectedClient.nps?.toFixed(1) || "N/A"}
                   </p>
                 </div>
