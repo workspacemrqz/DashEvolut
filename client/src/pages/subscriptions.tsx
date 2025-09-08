@@ -28,6 +28,10 @@ export default function Subscriptions() {
     queryKey: ["/api/subscriptions"],
   });
 
+  // Debug log
+  console.log('🔍 [FRONTEND] Subscriptions data:', subscriptions);
+  console.log('🔍 [FRONTEND] Is loading:', isLoading);
+
   const filteredSubscriptions = subscriptions?.filter(subscription => {
     if (filter === "all") return true;
     return subscription.status === filter;
@@ -63,23 +67,23 @@ export default function Subscriptions() {
                   className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
                   data-testid="button-filter-subscriptions"
                 >
-                  <Filter className="h-3 w-3 lg:h-4 lg:w-4" />
-                  <span className="hidden sm:inline text-dynamic-light">Filtrar</span>
+                  <Filter className="w-4 h-4" />
+                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="dropdown-content">
-                <DropdownMenuLabel>Status da Assinatura</DropdownMenuLabel>
+              <DropdownMenuContent className="bg-bg-container border-border-secondary">
+                <DropdownMenuLabel className="text-text-primary">Status da Assinatura</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("all")}>
+                <DropdownMenuItem onClick={() => setFilter("all")} className="text-text-secondary">
                   Todas
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("active")}>
+                <DropdownMenuItem onClick={() => setFilter("active")} className="text-text-secondary">
                   Ativas
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("paused")}>
+                <DropdownMenuItem onClick={() => setFilter("paused")} className="text-text-secondary">
                   Pausadas
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("cancelled")}>
+                <DropdownMenuItem onClick={() => setFilter("cancelled")} className="text-text-secondary">
                   Canceladas
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -90,80 +94,96 @@ export default function Subscriptions() {
               className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
               data-testid="button-create-subscription"
             >
-              <Plus className="h-3 w-3 lg:h-4 lg:w-4" />
+              <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">Nova Assinatura</span>
             </Button>
           </div>
         }
       />
-      {/* Stats Cards */}
-      <div className="px-4 lg:px-6 py-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="stats-card">
-            <div className="flex items-center gap-3">
-              <DollarSign className="h-8 w-8 text-accent-primary" />
-              <div>
-                <p className="text-text-secondary text-sm">Assinaturas Ativas</p>
-                <p className="text-2xl font-bold text-text-primary">{activeSubscriptions}</p>
-              </div>
+      <main className="flex-1 p-3 lg:p-6 overflow-auto">
+        {/* Subscription KPIs */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mb-4 lg:mb-6">
+          <div className="kpi-card rounded-xl p-6">
+            <h3 className="text-sm font-medium mb-2 text-text-secondary">Assinaturas Ativas</h3>
+            <div className="text-2xl font-bold text-blue-500 mb-1" data-testid="kpi-active-subscriptions">
+              {activeSubscriptions}
             </div>
+            <p className="text-sm text-text-secondary">Em andamento</p>
           </div>
-          
-          <div className="stats-card">
-            <div className="flex items-center gap-3">
-              <Calendar className="h-8 w-8 text-accent-primary" />
-              <div>
-                <p className="text-text-secondary text-sm">Receita Mensal</p>
-                <p className="text-2xl font-bold text-text-primary">
-                  R$ {totalMonthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
+
+          <div className="kpi-card rounded-xl p-6">
+            <h3 className="text-sm font-medium mb-2 text-text-secondary">Receita Mensal</h3>
+            <div className="text-2xl font-bold text-text-primary" data-testid="kpi-monthly-revenue">
+              R$ {totalMonthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </div>
+            <p className="text-sm text-text-secondary">Total das assinaturas</p>
           </div>
-          
-          <div className="stats-card">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="h-8 w-8 text-red-500" />
-              <div>
-                <p className="text-text-secondary text-sm">Em Atraso</p>
-                <p className="text-2xl font-bold text-text-primary">{overdueSubscriptions}</p>
-              </div>
+
+          <div className="kpi-card rounded-xl p-6">
+            <h3 className="text-sm font-medium mb-2 text-text-secondary">Em Atraso</h3>
+            <div className="text-2xl font-bold text-red-500 mb-1" data-testid="kpi-overdue-subscriptions">
+              {overdueSubscriptions}
             </div>
+            <p className="text-sm text-text-secondary">Pagamentos pendentes</p>
           </div>
         </div>
-      </div>
-      {/* Subscriptions Table */}
-      <div className="flex-1 px-4 lg:px-6 pb-6">
-        {!isLoading && filteredSubscriptions.length === 0 ? (
-          <div className="text-center py-12">
-            <DollarSign className="h-16 w-16 text-text-secondary mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-text-primary mb-2">
-              {filter === "all" ? "Nenhuma assinatura encontrada" : `Nenhuma assinatura ${filter} encontrada`}
-            </h3>
-            <p className="text-text-secondary mb-6">
-              {filter === "all" 
-                ? "Comece criando sua primeira assinatura recorrente."
-                : "Ajuste os filtros ou crie uma nova assinatura."
-              }
-            </p>
-            <Button
-              onClick={() => setShowSubscriptionForm(true)}
-              className="btn-primary"
-              data-testid="button-create-first-subscription"
+
+        {/* Filter Tabs */}
+        <div className="flex space-x-2 lg:space-x-4 mb-4 lg:mb-6 overflow-x-auto pb-2">
+          {[
+            { key: "all", label: "Todas" },
+            { key: "active", label: "Ativas" },
+            { key: "paused", label: "Pausadas" },
+            { key: "cancelled", label: "Canceladas" }
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                filter === tab.key 
+                  ? 'btn-primary' 
+                  : 'btn-secondary text-dark-text'
+              }`}
+              data-testid={`filter-${tab.key}`}
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Nova Assinatura
-            </Button>
-          </div>
-        ) : (
-          <SubscriptionTable
-            subscriptions={filteredSubscriptions}
-            isLoading={isLoading}
-            onPaymentClick={handlePaymentClick}
-            data-testid="subscriptions-table"
-          />
-        )}
-      </div>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Subscriptions Table */}
+        <div className="mb-8">
+          {!isLoading && filteredSubscriptions.length === 0 ? (
+            <div className="container-bg rounded-xl border border-border-secondary p-12 text-center">
+              <DollarSign className="h-16 w-16 text-text-secondary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-text-primary mb-2">
+                {filter === "all" ? "Nenhuma assinatura encontrada" : `Nenhuma assinatura ${filter} encontrada`}
+              </h3>
+              <p className="text-text-secondary mb-6">
+                {filter === "all" 
+                  ? "Comece criando sua primeira assinatura recorrente."
+                  : "Ajuste os filtros ou crie uma nova assinatura."
+                }
+              </p>
+              <Button
+                onClick={() => setShowSubscriptionForm(true)}
+                className="btn-primary"
+                data-testid="button-create-first-subscription"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Assinatura
+              </Button>
+            </div>
+          ) : (
+            <SubscriptionTable
+              subscriptions={filteredSubscriptions}
+              isLoading={isLoading}
+              onPaymentClick={handlePaymentClick}
+              data-testid="subscriptions-table"
+            />
+          )}
+        </div>
+      </main>
       {/* Forms */}
       <SubscriptionForm
         open={showSubscriptionForm}

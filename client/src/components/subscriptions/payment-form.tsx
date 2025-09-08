@@ -171,7 +171,7 @@ export default function PaymentForm({ open, onOpenChange, subscriptionId }: Paym
           <DialogTitle className="gradient-text">Registrar Pagamento</DialogTitle>
           <DialogDescription className="text-text-secondary">
             {subscription 
-              ? `Registre um pagamento para ${subscription.client.name}`
+              ? `Registre um pagamento para ${subscription.client?.name || 'Cliente não encontrado'}`
               : "Registre um novo pagamento de assinatura"
             }
           </DialogDescription>

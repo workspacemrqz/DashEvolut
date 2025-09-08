@@ -1,10 +1,13 @@
+import { config } from 'dotenv';
+config();
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { notificationService } from "./notification-service";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -63,5 +66,9 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || '3000', 10);
   server.listen(port, () => {
     log(`serving on port ${port}`);
+    
+    // Iniciar serviço de notificações
+    log("🔔 Starting notification service...");
+    notificationService.startPeriodicCheck(30); // Verificar a cada 30 minutos
   });
 })();

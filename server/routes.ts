@@ -6,16 +6,18 @@ import fs from "fs";
 import { storage } from "./storage";
 import { 
   updateUserProfileSchema, 
-  updateUserSettingsSchema,
-  insertClientSchema, 
+  insertClientSchema,
+  updateClientSchema,
   insertProjectSchema, 
-  insertMilestoneSchema, 
   insertInteractionSchema,
   insertSubscriptionSchema,
   insertSubscriptionServiceSchema,
   insertPaymentSchema,
-  insertPaymentFileSchema
+  insertPaymentFileSchema,
+  insertNotificationRuleSchema,
+  updateNotificationRuleSchema
 } from "@shared/schema";
+import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup file upload storage
@@ -86,47 +88,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
 
-  // User Settings routes
-  app.get("/api/user/settings", async (req, res) => {
-    try {
-      // For now, we'll use the first user as the current user
-      const storageUsers = (storage as any).users as Map<string, any>;
-      const users = Array.from(storageUsers.values());
-      const currentUser = users[0];
-      if (!currentUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      const settings = await storage.getUserSettings(currentUser.id);
-      if (!settings) {
-        return res.status(404).json({ message: "User settings not found" });
-      }
-      res.json(settings);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch user settings" });
-    }
-  });
-
-  app.patch("/api/user/settings", async (req, res) => {
-    try {
-      const validatedData = updateUserSettingsSchema.parse(req.body);
-      // For now, we'll use the first user as the current user
-      const storageUsers = (storage as any).users as Map<string, any>;
-      const users = Array.from(storageUsers.values());
-      const currentUser = users[0];
-      if (!currentUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      const updatedSettings = await storage.updateUserSettings(currentUser.id, validatedData);
-      if (!updatedSettings) {
-        return res.status(404).json({ message: "User settings not found" });
-      }
-      res.json(updatedSettings);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid settings data" });
-    }
-  });
 
   // Analytics routes
   app.get("/api/analytics", async (req, res) => {
@@ -162,17 +123,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/clients", async (req, res) => {
     try {
+      console.log('Received request body:', JSON.stringify(req.body, null, 2));
       const validatedData = insertClientSchema.parse(req.body);
+      console.log('Validated data:', JSON.stringify(validatedData, null, 2));
       const client = await storage.createClient(validatedData);
+      console.log('Created client:', JSON.stringify(client, null, 2));
       res.status(201).json(client);
     } catch (error) {
-      res.status(400).json({ message: "Invalid client data" });
+      console.error('Error details:', error);
+      if (error.issues) {
+        console.error('Validation issues:', error.issues);
+      }
+      res.status(400).json({ message: "Invalid client data", error: error.message });
     }
   });
 
   app.patch("/api/clients/:id", async (req, res) => {
     try {
-      const updates = insertClientSchema.partial().parse(req.body);
+      const updates = updateClientSchema.parse(req.body);
       const client = await storage.updateClient(req.params.id, updates);
       if (!client) {
         return res.status(404).json({ message: "Client not found" });
@@ -180,6 +148,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(client);
     } catch (error) {
       res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  app.delete("/api/clients/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteClient(req.params.id);
+      if (!deleted) {
+        return res.status(400).json({ 
+          message: "Não foi possível remover o cliente. Cliente não encontrado ou erro durante a remoção." 
+        });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      res.status(500).json({ message: "Erro interno do servidor ao remover cliente" });
     }
   });
 
@@ -216,7 +199,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/projects", async (req, res) => {
     try {
-      const validatedData = insertProjectSchema.parse(req.body);
+      // Create a schema that accepts string dates and transforms them
+      const projectSchemaWithStringDates = insertProjectSchema.extend({
+        startDate: z.string().transform((val) => new Date(val)),
+        dueDate: z.string().transform((val) => new Date(val)),
+        clientId: z.string().min(1, "Cliente é obrigatório"),
+      });
+      const validatedData = projectSchemaWithStringDates.parse(req.body);
       const project = await storage.createProject(validatedData);
       res.status(201).json(project);
     } catch (error) {
@@ -237,47 +226,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Milestones routes
-  app.get("/api/milestones", async (req, res) => {
+  app.delete("/api/projects/:id", async (req, res) => {
     try {
-      const milestones = await storage.getMilestones();
-      res.json(milestones);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch milestones" });
-    }
-  });
-
-  app.get("/api/projects/:projectId/milestones", async (req, res) => {
-    try {
-      const milestones = await storage.getMilestonesByProject(req.params.projectId);
-      res.json(milestones);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch project milestones" });
-    }
-  });
-
-  app.post("/api/milestones", async (req, res) => {
-    try {
-      const validatedData = insertMilestoneSchema.parse(req.body);
-      const milestone = await storage.createMilestone(validatedData);
-      res.status(201).json(milestone);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid milestone data" });
-    }
-  });
-
-  app.patch("/api/milestones/:id", async (req, res) => {
-    try {
-      const updates = insertMilestoneSchema.partial().parse(req.body);
-      const milestone = await storage.updateMilestone(req.params.id, updates);
-      if (!milestone) {
-        return res.status(404).json({ message: "Milestone not found" });
+      const deleted = await storage.deleteProject(req.params.id);
+      if (!deleted) {
+        return res.status(400).json({ 
+          message: "Cannot delete project." 
+        });
       }
-      res.json(milestone);
+      res.status(204).send();
     } catch (error) {
-      res.status(400).json({ message: "Invalid update data" });
+      res.status(500).json({ message: "Failed to delete project" });
     }
   });
+
 
   // Interactions routes
   app.get("/api/interactions", async (req, res) => {
@@ -351,12 +313,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Notification Rules routes
+  app.get("/api/notification-rules", async (req, res) => {
+    try {
+      const rules = await storage.getNotificationRules();
+      res.json(rules);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch notification rules" });
+    }
+  });
+
+  app.get("/api/notification-rules/active", async (req, res) => {
+    try {
+      const rules = await storage.getActiveNotificationRules();
+      res.json(rules);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch active notification rules" });
+    }
+  });
+
+  app.get("/api/notification-rules/:id", async (req, res) => {
+    try {
+      const rule = await storage.getNotificationRule(req.params.id);
+      if (!rule) {
+        return res.status(404).json({ message: "Notification rule not found" });
+      }
+      res.json(rule);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch notification rule" });
+    }
+  });
+
+  app.post("/api/notification-rules", async (req, res) => {
+    try {
+      const validatedData = insertNotificationRuleSchema.parse(req.body);
+      const rule = await storage.createNotificationRule(validatedData);
+      res.status(201).json(rule);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid notification rule data" });
+    }
+  });
+
+  app.put("/api/notification-rules/:id", async (req, res) => {
+    try {
+      const validatedData = updateNotificationRuleSchema.parse(req.body);
+      const rule = await storage.updateNotificationRule(req.params.id, validatedData);
+      if (!rule) {
+        return res.status(404).json({ message: "Notification rule not found" });
+      }
+      res.json(rule);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid notification rule data" });
+    }
+  });
+
+  app.delete("/api/notification-rules/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteNotificationRule(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Notification rule not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete notification rule" });
+    }
+  });
+
   // Subscription routes
   app.get("/api/subscriptions", async (req, res) => {
     try {
-      const subscriptions = await storage.getSubscriptions();
+      console.log('🌐 [API] GET /api/subscriptions called');
+      const subscriptions = await storage.getSubscriptionsWithClients();
+      console.log('🌐 [API] Returning subscriptions:', subscriptions.length, 'items');
       res.json(subscriptions);
     } catch (error) {
+      console.error('🌐 [API] Error fetching subscriptions:', error);
       res.status(500).json({ message: "Failed to fetch subscriptions" });
     }
   });
@@ -393,6 +424,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(subscription);
     } catch (error) {
       res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  app.delete("/api/subscriptions/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteSubscription(req.params.id);
+      if (!deleted) {
+        return res.status(400).json({ 
+          message: "Cannot delete subscription. Subscription has associated services or payments." 
+        });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete subscription" });
     }
   });
 
@@ -503,6 +548,152 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.sendFile(path.resolve(file.filePath));
     } catch (error) {
       res.status(500).json({ message: "Failed to download file" });
+    }
+  });
+
+  // Proposals routes - Connect to PostgreSQL database for proposals
+  app.get("/api/proposals", async (req, res) => {
+    try {
+      const { Pool } = await import('pg');
+      
+      // Database connection for proposals
+      const pool = new Pool({
+        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+      });
+
+      const client = await pool.connect();
+      
+      try {
+        const result = await client.query(`
+          SELECT id, p1_titulo, senha, url 
+          FROM propostas 
+          ORDER BY id DESC
+        `);
+        
+        // Transform the data to include the full link with URL from database
+        const proposals = result.rows.map(row => ({
+          id: row.id,
+          titulo: row.p1_titulo,
+          codigo: row.senha,
+          link: `https://evolutiaoficial.com/proposta/${row.url}`
+        }));
+        
+        res.json(proposals);
+      } finally {
+        client.release();
+      }
+      
+      await pool.end();
+    } catch (error) {
+      console.error('Error fetching proposals:', error);
+      res.status(500).json({ message: "Failed to fetch proposals" });
+    }
+  });
+
+  // Get single proposal for editing
+  app.get("/api/proposals/:id", async (req, res) => {
+    try {
+      const { Pool } = await import('pg');
+      
+      const pool = new Pool({
+        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+      });
+
+      const client = await pool.connect();
+      
+      try {
+        const result = await client.query(`
+          SELECT * FROM propostas WHERE id = $1
+        `, [req.params.id]);
+        
+        if (result.rows.length === 0) {
+          return res.status(404).json({ message: "Proposal not found" });
+        }
+        
+        res.json(result.rows[0]);
+      } finally {
+        client.release();
+      }
+      
+      await pool.end();
+    } catch (error) {
+      console.error('Error fetching proposal:', error);
+      res.status(500).json({ message: "Failed to fetch proposal" });
+    }
+  });
+
+  // Update proposal
+  app.put("/api/proposals/:id", async (req, res) => {
+    try {
+      const { Pool } = await import('pg');
+      
+      const pool = new Pool({
+        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+      });
+
+      const client = await pool.connect();
+      
+      try {
+        const {
+          p1_titulo,
+          p1_subtitulo,
+          p1_tags,
+          p2_subtitulo,
+          p2_texto,
+          p2_objetivos,
+          p2_diferenciais,
+          p3_titulo_da_entrega,
+          p3_checklist,
+          p4_preco,
+          p4_entrega,
+          p4_detalhamento
+        } = req.body;
+
+        const result = await client.query(`
+          UPDATE propostas SET
+            p1_titulo = $1,
+            p1_subtitulo = $2,
+            p1_tags = $3,
+            p2_subtitulo = $4,
+            p2_texto = $5,
+            p2_objetivos = $6,
+            p2_diferenciais = $7,
+            p3_titulo_da_entrega = $8,
+            p3_checklist = $9,
+            p4_preco = $10,
+            p4_entrega = $11,
+            p4_detalhamento = $12
+          WHERE id = $13
+          RETURNING *
+        `, [
+          p1_titulo,
+          p1_subtitulo,
+          p1_tags,
+          p2_subtitulo,
+          p2_texto,
+          p2_objetivos,
+          p2_diferenciais,
+          p3_titulo_da_entrega,
+          p3_checklist,
+          p4_preco,
+          p4_entrega,
+          p4_detalhamento,
+          req.params.id
+        ]);
+        
+        if (result.rows.length === 0) {
+          return res.status(404).json({ message: "Proposal not found" });
+        }
+        
+        res.json(result.rows[0]);
+      } finally {
+        client.release();
+      }
+      
+      await pool.end();
+    } catch (error) {
+      console.error('Error updating proposal:', error);
+      res.status(500).json({ message: "Failed to update proposal" });
     }
   });
 

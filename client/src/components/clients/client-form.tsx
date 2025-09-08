@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { insertClientSchema, type InsertClient } from "@shared/schema";
+import { useEffect } from "react";
+import { insertClientSchema, updateClientSchema, type InsertClient, type UpdateClient, type ClientWithStats } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -20,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -32,31 +34,62 @@ import {
 interface ClientFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  clientToEdit?: ClientWithStats | null;
 }
 
 const formSchema = insertClientSchema.extend({
   phone: insertClientSchema.shape.phone.optional(),
 });
 
-export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
+const updateFormSchema = updateClientSchema.extend({
+  phone: updateClientSchema.shape.phone.optional(),
+});
+
+export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const isEditing = !!clientToEdit;
   const form = useForm<InsertClient>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(isEditing ? updateFormSchema : formSchema),
     defaultValues: {
       name: "",
       company: "",
       email: "",
       phone: "",
-      status: "prospect",
       source: "",
       sector: "",
       nps: undefined,
-      ltv: 0,
       upsellPotential: "medium",
     },
   });
+
+  // Reset form when clientToEdit changes
+  useEffect(() => {
+    if (clientToEdit) {
+      form.reset({
+        name: clientToEdit.name,
+        company: clientToEdit.company,
+        email: clientToEdit.email,
+        phone: clientToEdit.phone || "",
+        source: clientToEdit.source,
+        sector: clientToEdit.sector,
+        nps: clientToEdit.nps || undefined,
+        upsellPotential: clientToEdit.upsellPotential || "medium",
+      });
+    } else {
+      form.reset({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        source: "",
+        sector: "",
+        nps: undefined,
+        upsellPotential: "medium",
+      });
+    }
+  }, [clientToEdit, form]);
 
   const createClientMutation = useMutation({
     mutationFn: (data: InsertClient) => apiRequest("POST", "/api/clients", data),
@@ -78,17 +111,55 @@ export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
     },
   });
 
+  const updateClientMutation = useMutation({
+    mutationFn: (data: UpdateClient) => apiRequest("PATCH", `/api/clients/${clientToEdit?.id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      toast({
+        title: "Cliente atualizado com sucesso!",
+        description: "As informações do cliente foram atualizadas.",
+      });
+      form.reset();
+      onOpenChange(false);
+    },
+    onError: () => {
+      toast({
+        title: "Erro ao atualizar cliente",
+        description: "Ocorreu um erro ao atualizar o cliente. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmit = (data: InsertClient) => {
-    createClientMutation.mutate(data);
+    // Remove undefined and empty string values before sending, but keep required fields
+    const cleanData = Object.fromEntries(
+      Object.entries(data).filter(([key, value]) => {
+        // Always keep required fields even if empty
+        const requiredFields = ['name', 'company', 'email', 'source', 'sector'];
+        if (requiredFields.includes(key)) {
+          return true;
+        }
+        return value !== undefined && value !== "";
+      })
+    );
+    
+    if (isEditing) {
+      updateClientMutation.mutate(cleanData as UpdateClient);
+    } else {
+      createClientMutation.mutate(cleanData as InsertClient);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] container-bg border-border-secondary">
         <DialogHeader>
-          <DialogTitle className="gradient-text">Novo Cliente</DialogTitle>
+          <DialogTitle className="gradient-text">
+            {isEditing ? "Editar Cliente" : "Novo Cliente"}
+          </DialogTitle>
           <DialogDescription className="text-text-secondary">
-            Adicione um novo cliente ao sistema
+            {isEditing ? "Atualize as informações do cliente" : "Adicione um novo cliente ao sistema"}
           </DialogDescription>
         </DialogHeader>
 
@@ -162,11 +233,11 @@ export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
                   <FormItem>
                     <FormLabel className="text-text-primary">Telefone</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="(11) 99999-9999"
+                      <PhoneInput
                         className="bg-bg-primary border-border-secondary text-text-primary"
                         data-testid="input-phone"
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -226,32 +297,7 @@ export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger 
-                          className="bg-bg-primary border-border-secondary text-text-primary"
-                          data-testid="select-status"
-                        >
-                          <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-bg-container border-border-secondary">
-                        <SelectItem value="prospect">Prospect</SelectItem>
-                        <SelectItem value="active">Ativo</SelectItem>
-                        <SelectItem value="inactive">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="grid grid-cols-1 gap-4">
 
               <FormField
                 control={form.control}
@@ -278,27 +324,6 @@ export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="ltv"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">LTV Estimado (R$)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        className="bg-bg-primary border-border-secondary text-text-primary"
-                        data-testid="input-ltv"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             <div className="flex justify-end space-x-4 pt-4">
@@ -313,11 +338,14 @@ export default function ClientForm({ open, onOpenChange }: ClientFormProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={createClientMutation.isPending}
+                disabled={createClientMutation.isPending || updateClientMutation.isPending}
                 className="btn-primary"
                 data-testid="button-submit"
               >
-                {createClientMutation.isPending ? "Criando..." : "Criar Cliente"}
+                {isEditing 
+                  ? (updateClientMutation.isPending ? "Atualizando..." : "Atualizar Cliente")
+                  : (createClientMutation.isPending ? "Criando..." : "Criar Cliente")
+                }
               </Button>
             </div>
           </form>

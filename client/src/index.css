@@ -327,9 +327,9 @@
   }
 
   /* Filter button text and icon color override */
-  .btn-secondary,
-  .btn-secondary svg,
-  .btn-secondary span {
+  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
+  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg,
+  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) span {
     color: #060606 ;
   }
 
@@ -403,6 +403,57 @@
     color: #060606 ;
   }
 
+  /* Client filter buttons text color override - highest specificity */
+  button[data-testid="filter-all"],
+  button[data-testid="filter-active"],
+  button[data-testid="filter-prospect"],
+  button[data-testid="filter-inactive"],
+  button[data-testid="filter-all"] *,
+  button[data-testid="filter-active"] *,
+  button[data-testid="filter-prospect"] *,
+  button[data-testid="filter-inactive"] *,
+  .btn-secondary[data-testid="filter-all"],
+  .btn-secondary[data-testid="filter-active"],
+  .btn-secondary[data-testid="filter-prospect"],
+  .btn-secondary[data-testid="filter-inactive"],
+  .btn-secondary[data-testid="filter-all"] *,
+  .btn-secondary[data-testid="filter-active"] *,
+  .btn-secondary[data-testid="filter-prospect"] *,
+  .btn-secondary[data-testid="filter-inactive"] * {
+    color: #F5F5F5 !important;
+  }
+
+  /* Dashboard time filter select text color override */
+  select[data-testid="select-time-filter"],
+  select[data-testid="select-time-filter"] *,
+  select[data-testid="select-time-filter"] option,
+  .btn-secondary[data-testid="select-time-filter"],
+  .btn-secondary[data-testid="select-time-filter"] *,
+  .btn-secondary[data-testid="select-time-filter"] option,
+  /* Additional specificity for select elements */
+  select.btn-secondary[data-testid="select-time-filter"],
+  select.btn-secondary[data-testid="select-time-filter"] *,
+  select.btn-secondary[data-testid="select-time-filter"] option {
+    color: #FFFFFF !important;
+  }
+
+  /* Remove arrow from dashboard time filter select */
+  select[data-testid="select-time-filter"],
+  select.btn-secondary[data-testid="select-time-filter"] {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+  }
+
+  /* Dashboard mark all as read button text color override */
+  button[data-testid="button-mark-all-read"],
+  button[data-testid="button-mark-all-read"] *,
+  .btn-secondary[data-testid="button-mark-all-read"],
+  .btn-secondary[data-testid="button-mark-all-read"] * {
+    color: #FFFFFF !important;
+  }
+
   /* Force status badge text colors with highest priority */
   .status-badge.status-active,
   .status-badge.status-inactive,
@@ -466,28 +517,6 @@
     }
   }
 
-  /* Ensure "Horas Trabalhadas" has the same color as "Margem de Lucro" */
-  [data-testid="label-worked-hours"] {
-    color: hsl(0 0% 89.8%) ;
-  }
-
-  /* Start/Iniciar button text and icon color override */
-  button[data-testid="button-start"] {
-    color: #060606 ;
-  }
-
-  /* Apply to icons within Iniciar buttons */
-  button[data-testid="button-start"] svg {
-    color: #060606 ;
-  }
-
-  /* Horas Trabalhadas text color override with data-testid targeting */
-  [data-testid="label-worked-hours"],
-  h3[data-testid="label-worked-hours"],
-  h4[data-testid="label-worked-hours"],
-  label[data-testid="label-worked-hours"] {
-    color: #060606 ;
-  }
 
   /* Dynamic color system classes */
   .dynamic-light-bg {
@@ -794,8 +823,254 @@
 
   button.bg-secondary,
   button.bg-secondary *,
-  .btn-secondary,
-  .btn-secondary * {
+  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
+  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) * {
     color: var(--light-text-color) !important;
+  }
+
+  /* Specific overrides for proposal buttons - highest priority */
+  .container-bg .btn-primary,
+  .container-bg .btn-primary *,
+  .container-bg .btn-secondary,
+  .container-bg .btn-secondary *,
+  .container-bg button,
+  .container-bg button *,
+  .container-bg [role="button"],
+  .container-bg [role="button"] * {
+    color: #F5F5F5 !important;
+  }
+
+  /* Force icon colors in proposal buttons */
+  .container-bg .btn-primary svg,
+  .container-bg .btn-secondary svg,
+  .container-bg button svg,
+  .container-bg [role="button"] svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Specific overrides for proposal page buttons - highest priority */
+  .container-bg .btn-primary[style*="color: #F5F5F5"],
+  .container-bg .btn-primary[style*="color: #F5F5F5"] *,
+  .container-bg .btn-primary[style*="color: #F5F5F5"] svg,
+  .container-bg .btn-secondary[style*="color: #F5F5F5"],
+  .container-bg .btn-secondary[style*="color: #F5F5F5"] *,
+  .container-bg .btn-secondary[style*="color: #F5F5F5"] svg,
+  .container-bg button[style*="color: #F5F5F5"],
+  .container-bg button[style*="color: #F5F5F5"] *,
+  .container-bg button[style*="color: #F5F5F5"] svg,
+  .container-bg [role="button"][style*="color: #F5F5F5"],
+  .container-bg [role="button"][style*="color: #F5F5F5"] *,
+  .container-bg [role="button"][style*="color: #F5F5F5"] svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Override for proposal table buttons specifically */
+  .container-bg .btn-secondary:has([class*="RefreshCw"]),
+  .container-bg .btn-secondary:has([class*="RefreshCw"]) *,
+  .container-bg .btn-secondary:has([class*="RefreshCw"]) svg,
+  .container-bg .btn-secondary:has([class*="Edit"]),
+  .container-bg .btn-secondary:has([class*="Edit"]) *,
+  .container-bg .btn-secondary:has([class*="Edit"]) svg,
+  .container-bg .btn-primary:has([class*="ExternalLink"]),
+  .container-bg .btn-primary:has([class*="ExternalLink"]) *,
+  .container-bg .btn-primary:has([class*="ExternalLink"]) svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Override for proposal edit form buttons specifically */
+  .container-bg .btn-secondary:has-text("Cancelar"),
+  .container-bg .btn-secondary:has-text("Cancelar") *,
+  .container-bg .btn-secondary:has-text("Cancelar") svg,
+  .container-bg .btn-primary:has-text("Salvar"),
+  .container-bg .btn-primary:has-text("Salvar") *,
+  .container-bg .btn-primary:has-text("Salvar") svg,
+  .container-bg .btn-primary:has([class*="Save"]),
+  .container-bg .btn-primary:has([class*="Save"]) *,
+  .container-bg .btn-primary:has([class*="Save"]) svg,
+  .container-bg .btn-primary:has([class*="Loader2"]),
+  .container-bg .btn-primary:has([class*="Loader2"]) *,
+  .container-bg .btn-primary:has([class*="Loader2"]) svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Proposal buttons with specific classes - maximum priority */
+  .proposal-btn-update,
+  .proposal-btn-update *,
+  .proposal-btn-update svg,
+  .proposal-btn-edit,
+  .proposal-btn-edit *,
+  .proposal-btn-edit svg,
+  .proposal-btn-cancel,
+  .proposal-btn-cancel *,
+  .proposal-btn-cancel svg,
+  .proposal-btn-save,
+  .proposal-btn-save *,
+  .proposal-btn-save svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Ultra-specific overrides for proposal buttons - highest possible priority */
+  button.proposal-btn-update,
+  button.proposal-btn-update *,
+  button.proposal-btn-update svg,
+  button.proposal-btn-edit,
+  button.proposal-btn-edit *,
+  button.proposal-btn-edit svg,
+  button.proposal-btn-cancel,
+  button.proposal-btn-cancel *,
+  button.proposal-btn-cancel svg,
+  button.proposal-btn-save,
+  button.proposal-btn-save *,
+  button.proposal-btn-save svg,
+  .container-bg button.proposal-btn-update,
+  .container-bg button.proposal-btn-update *,
+  .container-bg button.proposal-btn-update svg,
+  .container-bg button.proposal-btn-edit,
+  .container-bg button.proposal-btn-edit *,
+  .container-bg button.proposal-btn-edit svg,
+  .container-bg button.proposal-btn-cancel,
+  .container-bg button.proposal-btn-cancel *,
+  .container-bg button.proposal-btn-cancel svg,
+  .container-bg button.proposal-btn-save,
+  .container-bg button.proposal-btn-save *,
+  .container-bg button.proposal-btn-save svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Override ALL conflicting rules for proposal buttons - MAXIMUM PRIORITY */
+  .container-bg .btn-secondary.proposal-btn-update,
+  .container-bg .btn-secondary.proposal-btn-update *,
+  .container-bg .btn-secondary.proposal-btn-update svg,
+  .container-bg .btn-secondary.proposal-btn-edit,
+  .container-bg .btn-secondary.proposal-btn-edit *,
+  .container-bg .btn-secondary.proposal-btn-edit svg,
+  .container-bg .btn-secondary.proposal-btn-cancel,
+  .container-bg .btn-secondary.proposal-btn-cancel *,
+  .container-bg .btn-secondary.proposal-btn-cancel svg,
+  .container-bg .btn-primary.proposal-btn-save,
+  .container-bg .btn-primary.proposal-btn-save *,
+  .container-bg .btn-primary.proposal-btn-save svg,
+  /* Override the specific conflicting rule */
+  .container-bg .btn-secondary.proposal-btn-update:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
+  .container-bg .btn-secondary.proposal-btn-update:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) *,
+  .container-bg .btn-secondary.proposal-btn-update:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg,
+  .container-bg .btn-secondary.proposal-btn-edit:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
+  .container-bg .btn-secondary.proposal-btn-edit:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) *,
+  .container-bg .btn-secondary.proposal-btn-edit:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg,
+  .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
+  .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) *,
+  .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* FINAL OVERRIDE - Use data attributes for maximum specificity */
+  [data-proposal-button="update"],
+  [data-proposal-button="update"] *,
+  [data-proposal-button="update"] svg,
+  [data-proposal-button="edit"],
+  [data-proposal-button="edit"] *,
+  [data-proposal-button="edit"] svg,
+  [data-proposal-button="cancel"],
+  [data-proposal-button="cancel"] *,
+  [data-proposal-button="cancel"] svg,
+  [data-proposal-button="save"],
+  [data-proposal-button="save"] *,
+  [data-proposal-button="save"] svg,
+  .container-bg [data-proposal-button="update"],
+  .container-bg [data-proposal-button="update"] *,
+  .container-bg [data-proposal-button="update"] svg,
+  .container-bg [data-proposal-button="edit"],
+  .container-bg [data-proposal-button="edit"] *,
+  .container-bg [data-proposal-button="edit"] svg,
+  .container-bg [data-proposal-button="cancel"],
+  .container-bg [data-proposal-button="cancel"] *,
+  .container-bg [data-proposal-button="cancel"] svg,
+  .container-bg [data-proposal-button="save"],
+  .container-bg [data-proposal-button="save"] *,
+  .container-bg [data-proposal-button="save"] svg {
+    color: #F5F5F5 !important;
+  }
+
+  /* Ensure form fields maintain white text color - highest priority */
+  .container-bg input,
+  .container-bg textarea,
+  .container-bg select,
+  .container-bg .TabsContent input,
+  .container-bg .TabsContent textarea,
+  .container-bg .TabsContent select,
+  .container-bg .TabsContent div,
+  .container-bg .TabsContent h1,
+  .container-bg .TabsContent h2,
+  .container-bg .TabsContent h3,
+  .container-bg .TabsContent h4,
+  .container-bg .TabsContent h5,
+  .container-bg .TabsContent h6,
+  .container-bg .TabsContent span {
+    color: #F5F5F5 !important;
+  }
+
+  /* Ensure form fields are not affected by tab styling */
+  .container-bg .TabsContent * {
+    color: #F5F5F5 !important;
+  }
+
+  /* Force active tab text color to #060606 in proposal edit form - only for tab buttons */
+  .container-bg [role="tab"][data-state="active"],
+  .container-bg [role="tab"][data-state="active"] *,
+  .container-bg [role="tab"][data-state="active"] svg,
+  .container-bg .TabsList [data-state="active"],
+  .container-bg .TabsList [data-state="active"] *,
+  .container-bg .TabsList [data-state="active"] svg {
+    color: #060606 !important;
+  }
+
+  /* Ensure form fields maintain white text color even when active/focused */
+  .container-bg input,
+  .container-bg textarea,
+  .container-bg select,
+  .container-bg input:focus,
+  .container-bg textarea:focus,
+  .container-bg select:focus,
+  .container-bg input:active,
+  .container-bg textarea:active,
+  .container-bg select:active,
+  .container-bg .TabsContent input,
+  .container-bg .TabsContent textarea,
+  .container-bg .TabsContent select,
+  .container-bg .TabsContent input:focus,
+  .container-bg .TabsContent textarea:focus,
+  .container-bg .TabsContent select:focus,
+  .container-bg .TabsContent input:active,
+  .container-bg .TabsContent textarea:active,
+  .container-bg .TabsContent select:active {
+    color: #F5F5F5 !important;
+  }
+
+  /* Apply gradient text to field labels in proposal edit form - maximum specificity */
+  .container-bg .TabsContent label,
+  .container-bg .TabsContent label[for],
+  .container-bg .TabsContent label[for="p1_titulo"],
+  .container-bg .TabsContent label[for="p1_subtitulo"],
+  .container-bg .TabsContent label[for="p1_tags"],
+  .container-bg .TabsContent label[for="p2_subtitulo"],
+  .container-bg .TabsContent label[for="p2_texto"],
+  .container-bg .TabsContent label[for="p2_objetivos"],
+  .container-bg .TabsContent label[for="p2_diferenciais"],
+  .container-bg .TabsContent label[for="p3_titulo_da_entrega"],
+  .container-bg .TabsContent label[for="p3_checklist"],
+  .container-bg .TabsContent label[for="p4_preco"],
+  .container-bg .TabsContent label[for="p4_entrega"],
+  .container-bg .TabsContent label[for="p4_detalhamento"] {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+  }
+
+  /* Set help text to light gray color - maximum specificity */
+  .container-bg .TabsContent p.text-xs,
+  .container-bg .TabsContent p.text-xs.text-text-secondary {
+    color: #ababab !important;
   }
 }

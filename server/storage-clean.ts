@@ -5,7 +5,6 @@ import {
   type Interaction, type InsertInteraction,
   type Analytics, type InsertAnalytics,
   type Alert, type InsertAlert,
-  type NotificationRule, type InsertNotificationRule, type UpdateNotificationRule,
   type ClientWithStats,
   type Subscription, type InsertSubscription,
   type SubscriptionService, type InsertSubscriptionService,
@@ -52,7 +51,7 @@ export interface IStorage {
   // Analytics
   getAnalytics(): Promise<Analytics[]>;
   getAnalyticsByDateRange(startDate: Date, endDate: Date): Promise<Analytics[]>;
-  getAnalyticsById(id: string): Promise<Analytics | undefined>;
+  getAnalytics(id: string): Promise<Analytics | undefined>;
   createAnalytics(analytics: InsertAnalytics): Promise<Analytics>;
   updateAnalytics(id: string, analytics: Partial<InsertAnalytics>): Promise<Analytics | undefined>;
   deleteAnalytics(id: string): Promise<boolean>;
@@ -64,22 +63,13 @@ export interface IStorage {
   createAlert(alert: InsertAlert): Promise<Alert>;
   updateAlert(id: string, alert: Partial<InsertAlert>): Promise<Alert | undefined>;
   deleteAlert(id: string): Promise<boolean>;
-  markAlertAsRead(id: string): Promise<Alert | undefined>;
-  
-  // Notification Rules
-  getNotificationRules(): Promise<NotificationRule[]>;
-  getActiveNotificationRules(): Promise<NotificationRule[]>;
-  getNotificationRule(id: string): Promise<NotificationRule | undefined>;
-  createNotificationRule(rule: InsertNotificationRule): Promise<NotificationRule>;
-  updateNotificationRule(id: string, rule: UpdateNotificationRule): Promise<NotificationRule | undefined>;
-  deleteNotificationRule(id: string): Promise<boolean>;
   
   // Subscriptions
   getSubscriptions(): Promise<Subscription[]>;
   getSubscriptionsWithClients(): Promise<SubscriptionWithClient[]>;
   getSubscription(id: string): Promise<Subscription | undefined>;
   getSubscriptionsByClient(clientId: string): Promise<Subscription[]>;
-  createSubscription(subscription: InsertSubscription): Promise<SubscriptionWithClient>;
+  createSubscription(subscription: InsertSubscription): Promise<Subscription>;
   updateSubscription(id: string, subscription: Partial<InsertSubscription>): Promise<Subscription | undefined>;
   deleteSubscription(id: string): Promise<boolean>;
   

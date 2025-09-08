@@ -57,10 +57,6 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
     clientId: project?.clientId || "",
     status: project?.status || "discovery",
     value: project?.value || 0,
-    estimatedHours: project?.estimatedHours || 0,
-    workedHours: project?.workedHours || 0,
-    profitMargin: project?.profitMargin || 0,
-    progress: project?.progress || 0,
     startDate: project?.startDate ? new Date(project.startDate) : new Date(),
     dueDate: project?.dueDate ? new Date(project.dueDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     isRecurring: project?.isRecurring || false,
@@ -77,7 +73,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   }, [project, form]);
 
   const createProjectMutation = useMutation({
-    mutationFn: (data: InsertProject) => apiRequest("/api/projects", "POST", data),
+    mutationFn: (data: InsertProject) => apiRequest("POST", "/api/projects", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       toast({
@@ -97,7 +93,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   });
 
   const updateProjectMutation = useMutation({
-    mutationFn: (data: InsertProject) => apiRequest(`/api/projects/${project!.id}`, "PATCH", data),
+    mutationFn: (data: InsertProject) => apiRequest("PATCH", `/api/projects/${project!.id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       toast({
@@ -163,7 +159,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-text-primary">Cliente</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger 
                           className="bg-bg-primary border-border-secondary text-text-primary"
@@ -206,14 +202,14 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
               )}
             />
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-text-primary">Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger 
                           className="bg-bg-primary border-border-secondary text-text-primary"
@@ -248,27 +244,6 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                         placeholder="15000"
                         className="bg-bg-primary border-border-secondary text-text-primary"
                         data-testid="input-value"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="estimatedHours"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">Horas Estimadas</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="120"
-                        className="bg-bg-primary border-border-secondary text-text-primary"
-                        data-testid="input-estimated-hours"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -321,72 +296,6 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="profitMargin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">Margem de Lucro (%)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="65"
-                        className="bg-bg-primary border-border-secondary text-text-primary"
-                        data-testid="input-profit-margin"
-                        value={field.value || 0}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="progress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">Progresso (%)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        className="bg-bg-primary border-border-secondary text-text-primary"
-                        data-testid="input-progress"
-                        value={field.value || 0}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="workedHours"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary" style={{color: '#F5F5F5 '}} data-testid="label-worked-hours">Horas Trabalhadas</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        className="bg-bg-primary border-border-secondary text-text-primary"
-                        data-testid="input-worked-hours"
-                        value={field.value || 0}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
 
             <div className="flex justify-end space-x-4 pt-4">
               <Button

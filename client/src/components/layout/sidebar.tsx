@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BarChart3, Users, FolderOpen, Settings, Kanban, Menu, X, CreditCard } from "lucide-react";
+import { BarChart3, Users, FolderOpen, Kanban, Menu, X, CreditCard, FileText } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 
@@ -8,8 +8,8 @@ const navigation = [
   { name: "Clientes", href: "/clients", icon: Users },
   { name: "Projetos", href: "/projects", icon: FolderOpen },
   { name: "Assinaturas", href: "/subscriptions", icon: CreditCard },
+  { name: "Propostas", href: "/proposals", icon: FileText },
   { name: "Kanban", href: "/kanban", icon: Kanban },
-  { name: "Configurações", href: "/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -110,21 +110,6 @@ export default function Sidebar() {
             })}
           </nav>
 
-          <div className="p-4 border-t border-border-secondary">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold">JS</span>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-text-primary" data-testid="user-name">
-                  João Silva
-                </p>
-                <p className="text-xs text-text-secondary" data-testid="user-role">
-                  Administrador
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </>
     );
@@ -165,21 +150,6 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border-secondary">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
-            <span className="text-sm font-semibold">JS</span>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-text-primary" data-testid="user-name">
-              João Silva
-            </p>
-            <p className="text-xs text-text-secondary" data-testid="user-role">
-              Administrador
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

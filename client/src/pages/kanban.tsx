@@ -35,8 +35,7 @@ export default function Kanban() {
   // Client status configuration
   const clientStatuses = [
     { id: "prospect", name: "Prospects", color: "bg-chart-3" },
-    { id: "active", name: "Ativos", color: "bg-chart-1" },
-    { id: "inactive", name: "Inativos", color: "bg-muted" }
+    { id: "active", name: "Ativos", color: "bg-chart-1" }
   ];
 
   // Project status configuration
@@ -47,28 +46,6 @@ export default function Kanban() {
     { id: "post_sale", name: "Pós-venda", color: "bg-chart-3" }
   ];
 
-  const updateClientStatus = useMutation({
-    mutationFn: async ({ clientId, status }: { clientId: string; status: string }) => {
-      return apiRequest("PATCH", `/api/clients/${clientId}`, { 
-        status,
-        updatedAt: new Date().toISOString()
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
-      toast({
-        title: "Status atualizado",
-        description: "Status do cliente foi atualizado com sucesso",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erro ao atualizar",
-        description: "Não foi possível atualizar o status do cliente",
-        variant: "destructive",
-      });
-    },
-  });
 
   const updateProjectStatus = useMutation({
     mutationFn: async ({ projectId, status }: { projectId: string; status: string }) => {
@@ -97,16 +74,6 @@ export default function Kanban() {
     setDraggedClient(client);
   };
 
-  const handleClientDrop = (e: React.DragEvent, targetStatus: string) => {
-    e.preventDefault();
-    if (draggedClient && draggedClient.status !== targetStatus) {
-      updateClientStatus.mutate({ 
-        clientId: draggedClient.id, 
-        status: targetStatus 
-      });
-    }
-    setDraggedClient(null);
-  };
 
   const handleProjectDragStart = (project: ProjectWithClient) => {
     setDraggedProject(project);
@@ -127,23 +94,6 @@ export default function Kanban() {
     e.preventDefault();
   };
 
-  // Arrow navigation functions for clients
-  const moveClientToStatus = (clientId: string, currentStatus: string, direction: 'left' | 'right') => {
-    const currentIndex = clientStatuses.findIndex(s => s.id === currentStatus);
-    let targetIndex;
-    
-    if (direction === 'left') {
-      targetIndex = currentIndex - 1;
-    } else {
-      targetIndex = currentIndex + 1;
-    }
-    
-    // Check if target index is valid
-    if (targetIndex >= 0 && targetIndex < clientStatuses.length) {
-      const targetStatus = clientStatuses[targetIndex].id;
-      updateClientStatus.mutate({ clientId, status: targetStatus });
-    }
-  };
 
   // Arrow navigation functions for projects
   const moveProjectToStatus = (projectId: string, currentStatus: string, direction: 'left' | 'right') => {
@@ -164,7 +114,14 @@ export default function Kanban() {
   };
 
   const getClientsByStatus = (status: string): Client[] => {
-    const filteredClients = clients?.filter(client => client.status === status) || [];
+    let filteredClients: Client[] = [];
+    
+    if (status === "active") {
+      filteredClients = clients?.filter(client => client.hasActiveSubscription) || [];
+    } else if (status === "prospect") {
+      filteredClients = clients?.filter(client => !client.hasActiveSubscription) || [];
+    }
+    
     return filteredClients.sort((a, b) => {
       const aUpdated = new Date(a.updatedAt || a.createdAt || 0).getTime();
       const bUpdated = new Date(b.updatedAt || b.createdAt || 0).getTime();

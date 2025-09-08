@@ -8,8 +8,8 @@ import Dashboard from "@/pages/dashboard";
 import Clients from "@/pages/clients";
 import Projects from "@/pages/projects";
 import Subscriptions from "@/pages/subscriptions";
+import Proposals from "@/pages/proposals";
 import Kanban from "@/pages/kanban";
-import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,8 +23,8 @@ function Router() {
           <Route path="/projects" component={Projects} />
           <Route path="/projects/:projectId" component={Projects} />
           <Route path="/subscriptions" component={Subscriptions} />
+          <Route path="/proposals" component={Proposals} />
           <Route path="/kanban" component={Kanban} />
-          <Route path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </div>

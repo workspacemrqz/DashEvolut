@@ -26,9 +26,8 @@ export default function Clients() {
 
   const filteredClients = clients?.filter(client => {
     if (filter === "all") return true;
-    if (filter === "active" || filter === "inactive" || filter === "prospect") {
-      return client.status === filter;
-    }
+    if (filter === "active") return client.hasActiveSubscription;
+    if (filter === "prospect") return !client.hasActiveSubscription;
     // Filter by sector
     if (filter === "technology") return client.sector.toLowerCase().includes("tecnologia");
     if (filter === "marketing") return client.sector.toLowerCase().includes("marketing");
@@ -40,11 +39,8 @@ export default function Clients() {
     return true;
   }) || [];
 
-  const activeClients = clients?.filter(c => c.status === "active").length || 0;
-  const prospects = clients?.filter(c => c.status === "prospect").length || 0;
-  const avgNps = clients && clients.length > 0 
-    ? clients.reduce((sum, c) => sum + (c.nps || 0), 0) / clients.length 
-    : 0;
+  const activeClients = clients?.filter(c => c.hasActiveSubscription).length || 0;
+  const prospects = clients?.filter(c => !c.hasActiveSubscription).length || 0;
 
   return (
     <div className="flex-1 flex flex-col">
@@ -119,13 +115,6 @@ export default function Clients() {
             <p className="text-text-secondary">Em negociação</p>
           </div>
           
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-3 text-text-primary">NPS Médio</h3>
-            <div className="text-3xl font-bold text-blue-500 mb-2" data-testid="stat-avg-nps">
-              {avgNps.toFixed(1)}
-            </div>
-            <p className="text-text-secondary">Satisfação geral</p>
-          </div>
         </div>
 
         {/* Filter Tabs */}

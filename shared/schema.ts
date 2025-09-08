@@ -13,38 +13,6 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const userSettings = pgTable("user_settings", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  notifications: json("notifications").$type<{
-    push: boolean;
-    projectUpdates: boolean;
-    clientMessages: boolean;
-    deadlineAlerts: boolean;
-    weeklyReports: boolean;
-  }>().default({
-    push: true,
-    projectUpdates: true,
-    clientMessages: true,
-    deadlineAlerts: true,
-    weeklyReports: false,
-  }),
-  uiSettings: json("ui_settings").$type<{
-    theme: string;
-    language: string;
-    dateFormat: string;
-    currency: string;
-    autoSave: boolean;
-  }>().default({
-    theme: "dark",
-    language: "pt-BR",
-    dateFormat: "DD/MM/YYYY",
-    currency: "BRL",
-    autoSave: true,
-  }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
 
 export const clients = pgTable("clients", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -52,11 +20,9 @@ export const clients = pgTable("clients", {
   company: text("company").notNull(),
   email: text("email").notNull().unique(),
   phone: text("phone"),
-  status: text("status", { enum: ["active", "inactive", "prospect"] }).notNull().default("prospect"),
   source: text("source").notNull(), // acquisition source
   sector: text("sector").notNull(),
   nps: real("nps"), // Net Promoter Score
-  ltv: real("ltv").default(0), // Lifetime Value
   upsellPotential: text("upsell_potential", { enum: ["low", "medium", "high"] }).default("medium"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -71,10 +37,6 @@ export const projects = pgTable("projects", {
     enum: ["discovery", "development", "delivery", "post_sale", "completed", "cancelled"] 
   }).notNull().default("discovery"),
   value: real("value").notNull(),
-  estimatedHours: integer("estimated_hours").notNull(),
-  workedHours: integer("worked_hours").default(0),
-  profitMargin: real("profit_margin").default(0),
-  progress: integer("progress").default(0), // percentage
   startDate: timestamp("start_date").notNull(),
   dueDate: timestamp("due_date").notNull(),
   isRecurring: boolean("is_recurring").default(false),
@@ -82,16 +44,6 @@ export const projects = pgTable("projects", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const milestones = pgTable("milestones", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  projectId: varchar("project_id").references(() => projects.id).notNull(),
-  title: text("title").notNull(),
-  description: text("description"),
-  dueDate: timestamp("due_date").notNull(),
-  isCompleted: boolean("is_completed").default(false),
-  requiresClientApproval: boolean("requires_client_approval").default(false),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
 
 export const interactions = pgTable("interactions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -115,7 +67,7 @@ export const analytics = pgTable("analytics", {
 
 export const alerts = pgTable("alerts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  type: text("type", { enum: ["project_delayed", "payment_pending", "upsell_opportunity", "milestone_due", "subscription_due", "subscription_overdue"] }).notNull(),
+  type: text("type", { enum: ["project_delayed", "payment_pending", "upsell_opportunity", "subscription_due", "subscription_overdue"] }).notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   entityId: varchar("entity_id").notNull(), // project_id, client_id, or subscription_id
@@ -123,6 +75,22 @@ export const alerts = pgTable("alerts", {
   priority: text("priority", { enum: ["low", "medium", "high", "critical"] }).default("medium"),
   isRead: boolean("is_read").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const notificationRules = pgTable("notification_rules", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  condition: json("condition").$type<{
+    type: string;
+    field: string;
+    operator: string;
+    value: any;
+    entityType: string;
+  }>().notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const subscriptions = pgTable("subscriptions", {
@@ -181,18 +149,6 @@ export const updateUserProfileSchema = createInsertSchema(users).omit({
 }).partial();
 
 
-export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const updateUserSettingsSchema = createInsertSchema(userSettings).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).partial();
 
 export const insertClientSchema = createInsertSchema(clients).omit({
   id: true,
@@ -200,16 +156,18 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   updatedAt: true,
 });
 
+export const updateClientSchema = createInsertSchema(clients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
+
 export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertMilestoneSchema = createInsertSchema(milestones).omit({
-  id: true,
-  createdAt: true,
-});
 
 export const insertInteractionSchema = createInsertSchema(interactions).omit({
   id: true,
@@ -225,6 +183,18 @@ export const insertAlertSchema = createInsertSchema(alerts).omit({
   id: true,
   createdAt: true,
 });
+
+export const insertNotificationRuleSchema = createInsertSchema(notificationRules).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateNotificationRuleSchema = createInsertSchema(notificationRules).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
 
 export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
   id: true,
@@ -252,18 +222,14 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
-export type UserSettings = typeof userSettings.$inferSelect;
-export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
-export type UpdateUserSettings = z.infer<typeof updateUserSettingsSchema>;
 
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+export type UpdateClient = z.infer<typeof updateClientSchema>;
 
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 
-export type Milestone = typeof milestones.$inferSelect;
-export type InsertMilestone = z.infer<typeof insertMilestoneSchema>;
 
 export type Interaction = typeof interactions.$inferSelect;
 export type InsertInteraction = z.infer<typeof insertInteractionSchema>;
@@ -273,6 +239,10 @@ export type InsertAnalytics = z.infer<typeof insertAnalyticsSchema>;
 
 export type Alert = typeof alerts.$inferSelect;
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
+
+export type NotificationRule = typeof notificationRules.$inferSelect;
+export type InsertNotificationRule = z.infer<typeof insertNotificationRuleSchema>;
+export type UpdateNotificationRule = z.infer<typeof updateNotificationRuleSchema>;
 
 export type Subscription = typeof subscriptions.$inferSelect;
 export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
@@ -295,6 +265,7 @@ export type ClientWithStats = Client & {
   projectCount: number;
   totalValue: number;
   lastInteraction?: Interaction;
+  hasActiveSubscription?: boolean;
 };
 
 export type SubscriptionWithClient = Subscription & {

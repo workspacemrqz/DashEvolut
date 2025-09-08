@@ -5,7 +5,6 @@ import Header from "@/components/layout/header";
 import ProjectTable from "@/components/projects/project-table";
 import ProjectForm from "@/components/projects/project-form";
 import ProjectDetails from "@/components/projects/project-details";
-import MilestonesSection from "@/components/projects/milestones-section";
 import { ProjectWithClient } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
 import {
@@ -50,9 +49,6 @@ export default function Projects() {
     }
   }, [projectId, specificProject, projects]);
 
-  const { data: milestones } = useQuery<any[]>({
-    queryKey: ["/api/milestones"],
-  });
 
   const filteredProjects = projects?.filter(project => {
     if (filter === "all") return true;
@@ -79,19 +75,10 @@ export default function Projects() {
   }) || [];
 
   // Calculate KPIs
-  const avgProfitMargin = projects && projects.length > 0 
-    ? projects.reduce((sum, p) => sum + (p.profitMargin || 0), 0) / projects.length 
-    : 0;
-  const totalWorkedHours = projects?.reduce((sum, p) => sum + (p.workedHours || 0), 0) || 0;
   const totalRevenue = projects?.reduce((sum, p) => sum + p.value, 0) || 0;
   
   // Calculate forecast accuracy (mock calculation)
-  const forecastAccuracy = 92;
 
-  // Get upcoming milestones
-  const upcomingMilestones = milestones?.filter((m: any) => !m.isCompleted)
-    ?.sort((a: any, b: any) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-    ?.slice(0, 5) || [];
 
   return (
     <div className="flex-1 flex flex-col">
@@ -146,37 +133,21 @@ export default function Projects() {
       />
       <main className="flex-1 p-3 lg:p-6 overflow-auto">
         {/* Project KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-4 lg:mb-6">
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-sm font-medium mb-2 text-text-secondary">Margem de Lucro</h3>
-            <div className="text-2xl font-bold text-green-500 mb-1" data-testid="kpi-profit-margin">
-              {avgProfitMargin.toFixed(1)}%
-            </div>
-            <p className="text-sm text-text-secondary">Média geral</p>
-          </div>
-          
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-sm font-medium mb-2 text-dark-text" data-testid="label-worked-hours">Horas Trabalhadas</h3>
-            <div className="text-2xl font-bold text-text-primary" data-testid="kpi-worked-hours">
-              {totalWorkedHours.toLocaleString()}h
-            </div>
-            <p className="text-sm text-text-secondary">Este mês</p>
-          </div>
-          
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-sm font-medium mb-2 text-text-secondary">Previsão vs Real</h3>
-            <div className="text-2xl font-bold text-yellow-500 mb-1" data-testid="kpi-forecast-accuracy">
-              {forecastAccuracy}%
-            </div>
-            <p className="text-sm text-text-secondary">Precisão</p>
-          </div>
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-6 mb-4 lg:mb-6">
           <div className="kpi-card rounded-xl p-6">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Faturamento</h3>
             <div className="text-2xl font-bold text-text-primary" data-testid="kpi-revenue">
               R$ {totalRevenue.toLocaleString('pt-BR')}
             </div>
             <p className="text-sm text-text-secondary">Total dos projetos</p>
+          </div>
+
+          <div className="kpi-card rounded-xl p-6">
+            <h3 className="text-sm font-medium mb-2 text-text-secondary">Projetos Ativos</h3>
+            <div className="text-2xl font-bold text-blue-500 mb-1" data-testid="kpi-active-projects">
+              {projects?.filter(p => p.status !== 'completed' && p.status !== 'cancelled').length || 0}
+            </div>
+            <p className="text-sm text-text-secondary">Em andamento</p>
           </div>
         </div>
 
@@ -213,11 +184,6 @@ export default function Projects() {
           />
         </div>
 
-        {/* Milestones Section */}
-        <MilestonesSection 
-          milestones={upcomingMilestones}
-          data-testid="section-milestones"
-        />
 
         {/* Project Form Modal */}
         <ProjectForm 

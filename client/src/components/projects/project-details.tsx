@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, DollarSign, Clock, TrendingUp, User } from "lucide-react";
+import { Calendar, DollarSign, User } from "lucide-react";
 
 interface ProjectDetailsProps {
   open: boolean;
@@ -113,40 +113,15 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             </div>
           </div>
 
-          {/* Project Metrics */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <DollarSign className="w-4 h-4 text-green-500 mr-2" />
-                <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
-              </div>
-              <p className="text-2xl font-bold text-green-500" data-testid="project-value">
-                R$ {project.value.toLocaleString('pt-BR')}
-              </p>
-              {project.profitMargin && (
-                <p className="text-sm text-text-secondary">
-                  Margem: {project.profitMargin}%
-                </p>
-              )}
+          {/* Project Value */}
+          <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
+            <div className="flex items-center mb-2">
+              <DollarSign className="w-4 h-4 text-green-500 mr-2" />
+              <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
             </div>
-
-            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <TrendingUp className="w-4 h-4 text-blue-500 mr-2" />
-                <h4 className="font-semibold text-text-primary">Progresso</h4>
-              </div>
-              <div className="space-y-2">
-                <p className="text-2xl font-bold text-blue-500" data-testid="project-progress">
-                  {project.progress}%
-                </p>
-                <div className="w-full bg-border-secondary rounded-full h-2">
-                  <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all" 
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
+            <p className="text-2xl font-bold text-green-500" data-testid="project-value">
+              R$ {project.value.toLocaleString('pt-BR')}
+            </p>
           </div>
 
           {/* Timeline */}
@@ -184,33 +159,6 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             </div>
           </div>
 
-          {/* Hours Tracking */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <Clock className="w-4 h-4 text-text-secondary mr-2" />
-                <h4 className="font-semibold text-text-primary">Horas Estimadas</h4>
-              </div>
-              <p className="text-xl font-bold text-text-primary" data-testid="estimated-hours">
-                {project.estimatedHours || 0}h
-              </p>
-            </div>
-
-            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <Clock className="w-4 h-4 text-text-secondary mr-2" />
-                <h4 className="font-semibold text-text-primary" style={{color: '#F5F5F5 '}} data-testid="label-worked-hours">Horas Trabalhadas</h4>
-              </div>
-              <p className="text-xl font-bold text-text-primary" data-testid="worked-hours">
-                {project.workedHours || 0}h
-              </p>
-              {project.estimatedHours && project.estimatedHours > 0 && (
-                <p className="text-sm text-text-secondary">
-                  {((project.workedHours || 0) / project.estimatedHours * 100).toFixed(1)}% do estimado
-                </p>
-              )}
-            </div>
-          </div>
 
           {/* Project Type */}
           {project.isRecurring && (

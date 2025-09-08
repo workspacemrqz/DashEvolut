@@ -1,9 +1,11 @@
 import { ClientWithStats, ProjectWithClient } from "@shared/schema";
-import { Eye, MessageCircle, Mail, MoreHorizontal, ExternalLink } from "lucide-react";
+import { Eye, MessageCircle, Mail, MoreHorizontal, ExternalLink, Trash2, Edit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import ClientForm from "./client-form";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import DeleteConfirmationDialog from "@/components/ui/delete-confirmation-dialog";
+import { apiRequest } from "@/lib/queryClient";
 
 interface ClientTableProps {
   clients: ClientWithStats[];
@@ -20,10 +24,11 @@ interface ClientTableProps {
   "data-testid"?: string;
 }
 
-const statusMap = {
-  active: { label: "Ativo", className: "status-active" },
-  inactive: { label: "Inativo", className: "status-inactive" },
-  prospect: { label: "Prospect", className: "status-prospect" },
+const getClientStatus = (client: ClientWithStats) => {
+  if (client.hasActiveSubscription) {
+    return { label: "Ativo", className: "status-active" };
+  }
+  return { label: "Prospect", className: "status-prospect" };
 };
 
 const upsellMap = {
@@ -34,8 +39,13 @@ const upsellMap = {
 
 export default function ClientTable({ clients, isLoading, "data-testid": testId }: ClientTableProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedClient, setSelectedClient] = useState<ClientWithStats | null>(null);
   const [showClientDetails, setShowClientDetails] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<ClientWithStats | null>(null);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [clientToEdit, setClientToEdit] = useState<ClientWithStats | null>(null);
   const [, navigate] = useLocation();
 
   // Buscar projetos do cliente selecionado
@@ -73,6 +83,58 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
     const body = encodeURIComponent(`Olá ${client.name},\n\nEspero que esteja bem. Gostaria de...`);
     window.open(`mailto:${client.email}?subject=${subject}&body=${body}`, "_blank");
   };
+
+  const deleteClientMutation = useMutation({
+    mutationFn: (clientId: string) => apiRequest('DELETE', `/api/clients/${clientId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      toast({
+        title: "Cliente removido",
+        description: "O cliente foi removido com sucesso.",
+      });
+      setShowDeleteDialog(false);
+      setClientToDelete(null);
+    },
+    onError: (error: any) => {
+      // Extract message from error string (format: "400: {"message":"..."}")
+      let errorMessage = "Não foi possível remover o cliente.";
+      if (error.message) {
+        try {
+          const match = error.message.match(/\d+:\s*({.*})/);
+          if (match) {
+            const errorData = JSON.parse(match[1]);
+            errorMessage = errorData.message || errorMessage;
+          }
+        } catch (e) {
+          // If parsing fails, use the original message
+          errorMessage = error.message;
+        }
+      }
+      
+      toast({
+        title: "Erro ao remover cliente",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDeleteClient = (client: ClientWithStats) => {
+    setClientToDelete(client);
+    setShowDeleteDialog(true);
+  };
+
+  const handleEditClient = (client: ClientWithStats) => {
+    setClientToEdit(client);
+    setShowEditForm(true);
+    setShowClientDetails(false);
+  };
+
+  const confirmDeleteClient = () => {
+    if (clientToDelete) {
+      deleteClientMutation.mutate(clientToDelete.id);
+    }
+  };
   if (isLoading) {
     return (
       <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
@@ -102,8 +164,6 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Cliente</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Fonte</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">NPS</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">LTV</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">Upsell</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
             </tr>
@@ -130,32 +190,14 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 </td>
                 <td className="p-2 lg:p-4">
                   <Badge 
-                    className={`status-badge ${statusMap[client.status].className} text-xs`}
+                    className={`status-badge ${getClientStatus(client).className} text-xs`}
                     data-testid={`client-status-${client.id}`}
                   >
-                    {statusMap[client.status].label}
+                    {getClientStatus(client).label}
                   </Badge>
                 </td>
                 <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base hidden md:table-cell" data-testid={`client-source-${client.id}`}>
                   {client.source}
-                </td>
-                <td className="p-2 lg:p-4 hidden lg:table-cell">
-                  {client.nps ? (
-                    <div className="flex items-center">
-                      <span 
-                        className={`font-semibold text-sm lg:text-base ${client.nps >= 8 ? 'text-green-500' : client.nps >= 6 ? 'text-yellow-500' : 'text-red-500'}`}
-                        data-testid={`client-nps-${client.id}`}
-                      >
-                        {client.nps.toFixed(1)}
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-text-secondary text-sm lg:text-base">N/A</span>
-                  )}
-                </td>
-                <td className="p-2 lg:p-4 text-text-primary text-sm lg:text-base" data-testid={`client-ltv-${client.id}`}>
-                  <span className="lg:hidden">R$ {client.ltv ? Math.round(client.ltv / 1000) + 'k' : '0'}</span>
-                  <span className="hidden lg:inline">R$ {client.ltv?.toLocaleString('pt-BR') || '0'}</span>
                 </td>
                 <td className="p-2 lg:p-4 hidden lg:table-cell">
                   <span 
@@ -188,6 +230,13 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                     >
                       <Mail className="w-4 h-4" />
                     </button>
+                    <button 
+                      onClick={() => handleDeleteClient(client)}
+                      className="text-red-500 p-1 hidden sm:block"
+                      data-testid={`action-delete-${client.id}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -217,8 +266,8 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 <div className="min-w-0 flex-1">
                   <h3 className="text-lg lg:text-xl font-bold text-text-primary truncate">{selectedClient.name}</h3>
                   <p className="text-text-secondary text-sm lg:text-base truncate">{selectedClient.company}</p>
-                  <Badge className={`status-badge ${statusMap[selectedClient.status].className} mt-2`}>
-                    {statusMap[selectedClient.status].label}
+                  <Badge className={`status-badge ${getClientStatus(selectedClient).className} mt-2`}>
+                    {getClientStatus(selectedClient).label}
                   </Badge>
                 </div>
               </div>
@@ -236,31 +285,23 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 lg:gap-4 p-3 rounded-lg bg-bg-secondary border border-border-secondary">
-                <div className="text-center">
-                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">NPS</h4>
-                  <p className={`text-lg lg:text-2xl font-bold ${selectedClient.nps ? selectedClient.nps >= 8 ? 'text-green-500' : selectedClient.nps >= 6 ? 'text-yellow-500' : 'text-red-500' : 'text-text-secondary'}`}>
-                    {selectedClient.nps?.toFixed(1) || "N/A"}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">LTV</h4>
-                  <p className="text-lg lg:text-2xl font-bold text-text-primary">
-                    <span className="lg:hidden">R$ {selectedClient.ltv ? Math.round(selectedClient.ltv / 1000) + 'k' : '0'}</span>
-                    <span className="hidden lg:inline">R$ {selectedClient.ltv?.toLocaleString('pt-BR') || '0'}</span>
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className="font-semibold text-text-primary text-xs lg:text-sm">Projetos</h4>
-                  <p className="text-lg lg:text-2xl font-bold text-text-primary">{selectedClient.projectCount}</p>
-                </div>
-              </div>
 
               <div>
                 <h4 className="font-semibold text-text-primary mb-2">Potencial de Upsell</h4>
                 <span className={`font-semibold ${upsellMap[selectedClient.upsellPotential || 'medium'].color}`}>
                   {upsellMap[selectedClient.upsellPotential || 'medium'].label}
                 </span>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button
+                  onClick={() => handleEditClient(selectedClient)}
+                  className="btn-primary flex items-center gap-2"
+                  data-testid="button-edit-client"
+                >
+                  <Edit className="w-4 h-4" />
+                  Editar Cliente
+                </Button>
               </div>
 
               {/* Projects Section */}
@@ -300,6 +341,23 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={confirmDeleteClient}
+        title="Remover Cliente"
+        itemName={clientToDelete?.name || ""}
+        isLoading={deleteClientMutation.isPending}
+      />
+
+      {/* Edit Client Form */}
+      <ClientForm 
+        open={showEditForm} 
+        onOpenChange={setShowEditForm}
+        clientToEdit={clientToEdit}
+      />
     </div>
   );
 }

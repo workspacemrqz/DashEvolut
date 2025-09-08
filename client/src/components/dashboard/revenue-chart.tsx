@@ -17,9 +17,6 @@ export default function RevenueChart({ "data-testid": testId }: RevenueChartProp
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     
-    // Base revenue values for consistent display
-    const baseRevenues = [25000, 28000, 32000, 35000, 38000, 42000, 45000, 41000, 44000, 47000, 49000, 52000];
-    
     return months.map((month, index) => {
       if (index > currentMonth) {
         return { month, revenue: 0 };
@@ -34,8 +31,8 @@ export default function RevenueChart({ "data-testid": testId }: RevenueChartProp
         return false;
       }).reduce((sum, project) => sum + project.value, 0) || 0;
       
-      // Use project revenue if available, otherwise use base revenue
-      return { month, revenue: monthlyRevenue > 0 ? monthlyRevenue : baseRevenues[index] };
+      // Use only real project revenue, no fallback values
+      return { month, revenue: monthlyRevenue };
     });
   };
 

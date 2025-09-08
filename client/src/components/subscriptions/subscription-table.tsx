@@ -1,5 +1,5 @@
 import { SubscriptionWithClient, SubscriptionService, PaymentWithFile } from "@shared/schema";
-import { Eye, DollarSign, Calendar, MoreHorizontal, CreditCard, Edit, Pause, Play, X, CheckSquare, FileText } from "lucide-react";
+import { Eye, DollarSign, Calendar, MoreHorizontal, CreditCard, Edit, Pause, Play, X, CheckSquare, FileText, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,7 @@ import { ptBR } from "date-fns/locale";
 import { useState } from "react";
 import ServiceChecklist from "./service-checklist";
 import SubscriptionForm from "./subscription-form";
+import DeleteConfirmationDialog from "@/components/ui/delete-confirmation-dialog";
 
 interface SubscriptionTableProps {
   subscriptions: SubscriptionWithClient[];
@@ -44,13 +45,18 @@ export default function SubscriptionTable({
   onPaymentClick, 
   "data-testid": testId 
 }: SubscriptionTableProps) {
+  // Debug log
+  console.log('🔍 [TABLE] Received subscriptions:', subscriptions);
+  console.log('🔍 [TABLE] Is loading:', isLoading);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionWithClient | null>(null);
   const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(false);
   const [showServiceChecklist, setShowServiceChecklist] = useState(false);
   const [showEditSubscription, setShowEditSubscription] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [subscriptionToEdit, setSubscriptionToEdit] = useState<SubscriptionWithClient | null>(null);
+  const [subscriptionToDelete, setSubscriptionToDelete] = useState<SubscriptionWithClient | null>(null);
 
   // Buscar detalhes da assinatura selecionada
   const { data: subscriptionDetails } = useQuery({
@@ -102,6 +108,52 @@ export default function SubscriptionTable({
     setShowEditSubscription(true);
   };
 
+  const deleteSubscriptionMutation = useMutation({
+    mutationFn: (subscriptionId: string) => apiRequest('DELETE', `/api/subscriptions/${subscriptionId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/subscriptions'] });
+      toast({
+        title: "Assinatura removida",
+        description: "A assinatura foi removida com sucesso.",
+      });
+      setShowDeleteDialog(false);
+      setSubscriptionToDelete(null);
+    },
+    onError: (error: any) => {
+      // Extract message from error string (format: "400: {"message":"..."}")
+      let errorMessage = "Não foi possível remover a assinatura.";
+      if (error.message) {
+        try {
+          const match = error.message.match(/\d+:\s*({.*})/);
+          if (match) {
+            const errorData = JSON.parse(match[1]);
+            errorMessage = errorData.message || errorMessage;
+          }
+        } catch (e) {
+          // If parsing fails, use the original message
+          errorMessage = error.message;
+        }
+      }
+      
+      toast({
+        title: "Erro ao remover assinatura",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDeleteSubscription = (subscription: SubscriptionWithClient) => {
+    setSubscriptionToDelete(subscription);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDeleteSubscription = () => {
+    if (subscriptionToDelete) {
+      deleteSubscriptionMutation.mutate(subscriptionToDelete.id);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
@@ -138,8 +190,9 @@ export default function SubscriptionTable({
           </thead>
           <tbody>
             {subscriptions.map((subscription) => {
-              const isOverdue = isPast(subscription.nextBillingDate);
-              const completedServices = subscription.services.filter(s => s.isCompleted).length;
+              const nextBillingDate = new Date(subscription.nextBillingDate);
+              const isOverdue = !isNaN(nextBillingDate.getTime()) && isPast(nextBillingDate);
+              const completedServices = subscription.services?.filter(s => s.isCompleted).length || 0;
               
               return (
                 <tr 
@@ -150,15 +203,15 @@ export default function SubscriptionTable({
                     <div className="flex items-center">
                       <div className="w-8 lg:w-10 h-8 lg:h-10 gradient-bg rounded-full flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
                         <span className="text-xs lg:text-sm font-semibold">
-                          {subscription.client.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {subscription.client?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '??'}
                         </span>
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium text-text-primary text-sm lg:text-base truncate" data-testid={`subscription-client-name-${subscription.id}`}>
-                          {subscription.client.name}
+                          {subscription.client?.name || 'Cliente não encontrado'}
                         </p>
                         <p className="text-xs lg:text-sm text-text-secondary truncate" data-testid={`subscription-client-company-${subscription.id}`}>
-                          {subscription.client.company}
+                          {subscription.client?.company || 'Empresa não informada'}
                         </p>
                       </div>
                     </div>
@@ -189,11 +242,11 @@ export default function SubscriptionTable({
                       className={`text-sm font-medium ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
                       data-testid={`subscription-next-billing-${subscription.id}`}
                     >
-                      {format(subscription.nextBillingDate, "dd/MM/yyyy", { locale: ptBR })}
+                      {!isNaN(nextBillingDate.getTime()) ? format(nextBillingDate, "dd/MM/yyyy", { locale: ptBR }) : 'Data inválida'}
                     </span>
                   </td>
                   <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base" data-testid={`subscription-services-${subscription.id}`}>
-                    {subscription.services.length > 0 ? (
+                    {subscription.services && subscription.services.length > 0 ? (
                       <span className="text-text-primary">
                         {completedServices}/{subscription.services.length} concluídos
                       </span>
@@ -261,6 +314,14 @@ export default function SubscriptionTable({
                               Cancelar
                             </DropdownMenuItem>
                           )}
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteSubscription(subscription)}
+                            className="text-left justify-start bg-transparent text-dynamic-light text-red-600 dark:text-red-400"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Remover
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -282,7 +343,7 @@ export default function SubscriptionTable({
                   Detalhes da Assinatura
                 </DialogTitle>
                 <DialogDescription className="text-text-secondary">
-                  {selectedSubscription.client.name} - {selectedSubscription.client.company}
+                  {selectedSubscription.client?.name || 'Cliente não encontrado'} - {selectedSubscription.client?.company || 'Empresa não informada'}
                 </DialogDescription>
               </DialogHeader>
 
@@ -306,8 +367,8 @@ export default function SubscriptionTable({
                     </div>
                     <div>
                       <span className="text-text-secondary">Próximo Vencimento:</span>
-                      <p className={`font-medium ${isPast(selectedSubscription.nextBillingDate) ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}>
-                        {format(selectedSubscription.nextBillingDate, "dd/MM/yyyy", { locale: ptBR })}
+                      <p className={`font-medium ${isPast(new Date(selectedSubscription.nextBillingDate)) ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}>
+                        {!isNaN(new Date(selectedSubscription.nextBillingDate).getTime()) ? format(new Date(selectedSubscription.nextBillingDate), "dd/MM/yyyy", { locale: ptBR }) : 'Data inválida'}
                       </p>
                     </div>
                     <div>
@@ -357,17 +418,17 @@ export default function SubscriptionTable({
                   <div className="space-y-3 text-sm">
                     <div>
                       <span className="text-text-secondary">Nome:</span>
-                      <p className="font-medium text-text-primary">{selectedSubscription.client.name}</p>
+                      <p className="font-medium text-text-primary">{selectedSubscription.client?.name || 'Cliente não encontrado'}</p>
                     </div>
                     <div>
                       <span className="text-text-secondary">Empresa:</span>
-                      <p className="font-medium text-text-primary">{selectedSubscription.client.company}</p>
+                      <p className="font-medium text-text-primary">{selectedSubscription.client?.company || 'Empresa não informada'}</p>
                     </div>
                     <div>
                       <span className="text-text-secondary">Email:</span>
-                      <p className="font-medium text-text-primary">{selectedSubscription.client.email}</p>
+                      <p className="font-medium text-text-primary">{selectedSubscription.client?.email || 'Email não informado'}</p>
                     </div>
-                    {selectedSubscription.client.phone && (
+                    {selectedSubscription.client?.phone && (
                       <div>
                         <span className="text-text-secondary">Telefone:</span>
                         <p className="font-medium text-text-primary">{selectedSubscription.client.phone}</p>
@@ -375,13 +436,13 @@ export default function SubscriptionTable({
                     )}
                     <div>
                       <span className="text-text-secondary">Setor:</span>
-                      <p className="font-medium text-text-primary">{selectedSubscription.client.sector}</p>
+                      <p className="font-medium text-text-primary">{selectedSubscription.client?.sector || 'Setor não informado'}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Serviços */}
-                {selectedSubscription.services.length > 0 && (
+                {selectedSubscription.services && selectedSubscription.services.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-text-primary border-b border-border-secondary pb-2">
                       Serviços ({selectedSubscription.services.filter(s => s.isCompleted).length}/{selectedSubscription.services.length} concluídos)
@@ -459,6 +520,16 @@ export default function SubscriptionTable({
         open={showEditSubscription}
         onOpenChange={setShowEditSubscription}
         subscription={subscriptionToEdit}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={confirmDeleteSubscription}
+        title="Remover Assinatura"
+        itemName={subscriptionToDelete?.client?.name || ""}
+        isLoading={deleteSubscriptionMutation.isPending}
       />
     </div>
   );
