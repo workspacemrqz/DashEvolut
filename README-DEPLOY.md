@@ -72,6 +72,11 @@ Adicione todas as variáveis listadas acima na seção "Environment Variables"
 ### Build Falha
 - Verifique se todas as dependências estão em `dependencies` (não `devDependencies`)
 - Confirme que a versão do Node.js é compatível (>=18.0.0)
+- Se houver erro com plugins do Replit, eles foram removidos da produção
+
+### Erro de Módulo não Encontrado (@replit/*)
+- **CORRIGIDO**: Os plugins do Replit agora são carregados apenas em desenvolvimento
+- O build de produção não inclui mais dependências específicas do Replit
 
 ### Erro de Conexão com Banco
 - Verifique se `DATABASE_URL` está correta
@@ -81,6 +86,10 @@ Adicione todas as variáveis listadas acima na seção "Environment Variables"
 - Verifique os logs no EasyPanel
 - Confirme que a `PORT` está configurada corretamente
 - Verifique se o comando `npm start` está funcionando
+
+### Build Script Personalizado
+- Agora usa `build.js` para um processo de build mais robusto
+- Verifica automaticamente se todos os arquivos necessários foram criados
 
 ## Monitoramento
 
