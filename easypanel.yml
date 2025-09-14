@@ -1,0 +1,28 @@
+# Configuração para EasyPanel
+name: evolutia-dashboard
+services:
+  - name: web
+    type: app
+    source:
+      type: git
+      url: # Seu repositório Git aqui
+      branch: main
+    build:
+      type: buildpack
+      buildpack: heroku/builder:24
+    deploy:
+      replicas: 1
+      command: npm start
+      env:
+        - name: NODE_ENV
+          value: production
+        - name: PORT
+          value: "3000"
+        # Adicione suas outras variáveis de ambiente aqui
+        # - name: DATABASE_URL
+        #   value: "sua_database_url"
+    domains:
+      - host: # Seu domínio aqui
+    resources:
+      memory: 512Mi
+      cpu: 0.5

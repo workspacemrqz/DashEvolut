@@ -162,7 +162,7 @@ export default function NotificationsSection({ "data-testid": testId }: Notifica
     }
   };
 
-  if (isLoadingRules || isLoadingAlerts) {
+  if (isLoadingAlerts) {
     return (
       <div className="container-bg rounded-xl p-6 border border-border-secondary" data-testid={testId}>
         <div className="flex items-center justify-between mb-4">
