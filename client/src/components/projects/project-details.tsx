@@ -8,7 +8,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, DollarSign, User } from "lucide-react";
+import { Calendar, DollarSign, User, Receipt, TrendingUp, TrendingDown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+
+interface ProjectCost {
+  id: string;
+  projectId: string;
+  description: string;
+  amount: number;
+  category?: string | null;
+  costDate: Date;
+  notes?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface ProjectDetailsProps {
   open: boolean;
@@ -18,6 +32,16 @@ interface ProjectDetailsProps {
 }
 
 export default function ProjectDetails({ open, onOpenChange, project, onEdit }: ProjectDetailsProps) {
+  // Buscar custos do projeto
+  const { data: costs = [] } = useQuery<ProjectCost[]>({
+    queryKey: [`/api/projects/${project.id}/costs`],
+    enabled: open, // Só busca quando o modal está aberto
+  });
+
+  // Calcular total de custos e lucro
+  const totalCosts = costs.reduce((sum, cost) => sum + cost.amount, 0);
+  const profit = project.value - totalCosts;
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'discovery': return 'Discovery';
@@ -113,15 +137,47 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             </div>
           </div>
 
-          {/* Project Value */}
-          <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-            <div className="flex items-center mb-2">
-              <DollarSign className="w-4 h-4 text-green-500 mr-2" />
-              <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
+          {/* Financial Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Project Value */}
+            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
+              <div className="flex items-center mb-2">
+                <DollarSign className="w-4 h-4 text-blue-500 mr-2" />
+                <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
+              </div>
+              <p className="text-2xl font-bold text-blue-500" data-testid="project-value">
+                R$ {project.value.toLocaleString('pt-BR')}
+              </p>
             </div>
-            <p className="text-2xl font-bold text-green-500" data-testid="project-value">
-              R$ {project.value.toLocaleString('pt-BR')}
-            </p>
+
+            {/* Total Costs */}
+            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
+              <div className="flex items-center mb-2">
+                <Receipt className="w-4 h-4 text-orange-500 mr-2" />
+                <h4 className="font-semibold text-text-primary">Total de Custos</h4>
+              </div>
+              <p className="text-2xl font-bold text-orange-500" data-testid="project-costs">
+                R$ {totalCosts.toLocaleString('pt-BR')}
+              </p>
+            </div>
+
+            {/* Project Profit */}
+            <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
+              <div className="flex items-center mb-2">
+                {profit >= 0 ? (
+                  <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 text-red-500 mr-2" />
+                )}
+                <h4 className="font-semibold text-text-primary">Lucro do Projeto</h4>
+              </div>
+              <p className={`text-2xl font-bold ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`} data-testid="project-profit">
+                R$ {profit.toLocaleString('pt-BR')}
+              </p>
+              <p className="text-sm text-text-secondary">
+                Margem: {project.value > 0 ? ((profit / project.value) * 100).toFixed(1) : '0'}%
+              </p>
+            </div>
           </div>
 
           {/* Timeline */}
@@ -169,6 +225,46 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
               <p className="text-sm text-text-secondary mt-1">
                 Este projeto possui entregas recorrentes.
               </p>
+            </div>
+          )}
+
+          {/* Project Costs Details */}
+          {costs.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-text-primary flex items-center">
+                <Receipt className="w-4 h-4 mr-2" />
+                Custos do Projeto ({costs.length})
+              </h4>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {costs.map((cost) => (
+                  <div
+                    key={cost.id}
+                    className="p-3 rounded-lg bg-bg-secondary border border-border-secondary"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h5 className="font-medium text-text-primary">{cost.description}</h5>
+                        <div className="flex items-center gap-2 mt-1">
+                          {cost.category && (
+                            <span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                              {cost.category}
+                            </span>
+                          )}
+                          <span className="text-sm text-text-secondary">
+                            {format(new Date(cost.costDate), 'dd/MM/yyyy')}
+                          </span>
+                        </div>
+                        {cost.notes && (
+                          <p className="text-sm text-text-secondary mt-1">{cost.notes}</p>
+                        )}
+                      </div>
+                      <span className="font-semibold text-orange-500 ml-3">
+                        R$ {cost.amount.toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
