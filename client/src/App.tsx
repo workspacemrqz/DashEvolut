@@ -51,7 +51,7 @@ function Router() {
           
           {/* Redirects from old English URLs to new Portuguese URLs */}
           <Route path="/projects" component={() => { window.location.replace('/projetos'); return null; }} />
-          <Route path="/projects/:projectId" component={({ params }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
+          <Route path="/projects/:projectId" component={({ params }: { params?: any }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
           <Route path="/proposals" component={() => { window.location.replace('/propostas'); return null; }} />
           <Route path="/kanban" component={Kanban} />
           <Route path="/login" component={() => <Login />} />

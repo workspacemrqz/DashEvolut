@@ -148,65 +148,78 @@ export const projectCosts = pgTable("project_costs", {
 });
 
 // Insert schemas
-export const insertUserSchema = createInsertSchema(users).omit({
+export const insertUserSchema = createInsertSchema(users, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const updateUserProfileSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).partial();
+export const updateUserProfileSchema = insertUserSchema.partial();
 
 
 
-export const insertClientSchema = createInsertSchema(clients).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const updateClientSchema = createInsertSchema(clients).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).partial();
-
-export const insertProjectSchema = createInsertSchema(projects).omit({
+export const insertClientSchema = createInsertSchema(clients, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
+export const updateClientSchema = insertClientSchema.partial();
 
-export const insertInteractionSchema = createInsertSchema(interactions).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertAnalyticsSchema = createInsertSchema(analytics).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertAlertSchema = createInsertSchema(alerts).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertNotificationRuleSchema = createInsertSchema(notificationRules).omit({
+export const insertProjectSchema = createInsertSchema(projects, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const updateNotificationRuleSchema = createInsertSchema(notificationRules).omit({
+
+export const insertInteractionSchema = createInsertSchema(interactions, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAnalyticsSchema = createInsertSchema(analytics, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAlertSchema = createInsertSchema(alerts, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertNotificationRuleSchema = createInsertSchema(notificationRules, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
-}).partial();
+});
+
+export const updateNotificationRuleSchema = insertNotificationRuleSchema.partial();
 
 export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
   id: true,

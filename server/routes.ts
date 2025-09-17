@@ -575,7 +575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Subscription Services routes
   app.get("/api/subscriptions/:id/services", async (req, res) => {
     try {
-      const services = await storage.getSubscriptionServices(req.params.id);
+      const services = await storage.getSubscriptionServicesBySubscription(req.params.id);
       res.json(services);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch services" });
