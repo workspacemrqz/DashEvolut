@@ -368,16 +368,16 @@ export default function Kanban() {
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
             <TabsTrigger 
               value="clients" 
-              className="group data-[state=active]:bg-light-bg data-[state=active]:text-light-text data-[state=inactive]:text-white text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text text-xs lg:text-sm"
             >
-              <Users className="w-4 h-4 mr-1 lg:mr-2 group-data-[state=inactive]:text-white group-data-[state=active]:text-light-text" />
+              <Users className="w-4 h-4 mr-1 lg:mr-2" />
               Clientes
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
-              className="group data-[state=active]:bg-light-bg data-[state=active]:text-light-text data-[state=inactive]:text-white text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text text-xs lg:text-sm"
             >
-              <FolderOpen className="w-4 h-4 mr-1 lg:mr-2 group-data-[state=inactive]:text-white group-data-[state=active]:text-light-text" />
+              <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" />
               Projetos
             </TabsTrigger>
           </TabsList>

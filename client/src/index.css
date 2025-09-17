@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles for Kanban tabs */
+[role="tab"][data-state="inactive"] {
+  color: white !important;
+}
+
+[role="tab"][data-state="inactive"] svg {
+  color: white !important;
+}
+
 :root {
   --background: #090909;
   --foreground: #ebebeb;
