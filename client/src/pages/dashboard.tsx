@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import { ProjectWithClient, ClientWithStats, SubscriptionWithClient } from "@shared/schema";
-import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 import NotificationsSection from "@/components/dashboard/notifications-section";
 
 export default function Dashboard() {
@@ -77,15 +75,6 @@ export default function Dashboard() {
       <Header 
         title="Dashboard" 
         subtitle="Visão geral dos principais indicadores"
-        actions={
-          <Button
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Atualizar
-          </Button>
-        }
       />
 
       <main className="flex-1 p-6 overflow-auto">
