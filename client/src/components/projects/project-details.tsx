@@ -1,3 +1,4 @@
+import React from "react";
 import { ProjectWithClient } from "@shared/schema";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -6,7 +7,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogPortal,
+  DialogOverlay,
 } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar, DollarSign, User, Receipt, TrendingUp, TrendingDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -30,6 +35,27 @@ interface ProjectDetailsProps {
   project: ProjectWithClient;
   onEdit?: () => void;
 }
+
+// Custom DialogContent without the X button
+const CustomDialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+CustomDialogContent.displayName = "CustomDialogContent";
 
 export default function ProjectDetails({ open, onOpenChange, project, onEdit }: ProjectDetailsProps) {
   // Buscar custos do projeto
@@ -82,9 +108,25 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
+      <CustomDialogContent className="sm:max-w-[600px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="gradient-text">Detalhes do Projeto</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="gradient-text">Detalhes do Projeto</DialogTitle>
+            <div className="flex items-center gap-2">
+              {onEdit && (
+                <Button 
+                  onClick={onEdit}
+                  className="btn-primary"
+                  data-testid="button-edit-project"
+                >
+                  Editar
+                </Button>
+              )}
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Fechar
+              </Button>
+            </div>
+          </div>
           <DialogDescription className="text-text-secondary">
             Informações completas sobre o projeto
           </DialogDescription>
@@ -92,8 +134,8 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
         <div className="space-y-6">
           {/* Project Header */}
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
+          <div className="space-y-4">
+            <div>
               <h3 className="text-xl font-bold text-text-primary mb-2" data-testid="project-name">
                 {project.name}
               </h3>
@@ -111,15 +153,6 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
                 )}
               </div>
             </div>
-            {onEdit && (
-              <Button 
-                onClick={onEdit}
-                className="btn-primary"
-                data-testid="button-edit-project"
-              >
-                Editar
-              </Button>
-            )}
           </div>
 
           {/* Client Info */}
@@ -261,7 +294,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
             </div>
           )}
         </div>
-      </DialogContent>
+      </CustomDialogContent>
     </Dialog>
   );
 }
