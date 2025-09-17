@@ -54,7 +54,8 @@ function Router() {
           <Route path="/projects/:projectId" component={({ params }: { params?: any }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
           <Route path="/proposals" component={() => { window.location.replace('/propostas'); return null; }} />
           <Route path="/kanban" component={Kanban} />
-          <Route path="/login" component={() => <Login />} />
+          {/* Redirect authenticated users from login to dashboard */}
+          <Route path="/login" component={() => { window.location.replace('/'); return null; }} />
           <Route component={NotFound} />
         </Switch>
       </div>
