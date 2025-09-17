@@ -78,6 +78,14 @@ export default function Clients() {
             </div>
             <p className="text-text-secondary">Em negociação</p>
           </div>
+
+          <div className="kpi-card rounded-xl p-6">
+            <h3 className="text-lg font-semibold mb-3 text-text-primary">Total de Clientes</h3>
+            <div className="text-3xl font-bold text-blue-500 mb-2" data-testid="stat-total-clients">
+              {clients?.length || 0}
+            </div>
+            <p className="text-text-secondary">Base completa</p>
+          </div>
           
         </div>
 
