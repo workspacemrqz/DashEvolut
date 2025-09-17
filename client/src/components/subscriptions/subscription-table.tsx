@@ -248,7 +248,7 @@ export default function SubscriptionTable({
                   <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base" data-testid={`subscription-services-${subscription.id}`}>
                     {subscription.services && subscription.services.length > 0 ? (
                       <span className="text-text-primary">
-                        {completedServices}/{subscription.services.length} concluídos
+                        {completedServices}
                       </span>
                     ) : (
                       <span>Nenhum serviço</span>
@@ -445,7 +445,7 @@ export default function SubscriptionTable({
                 {selectedSubscription.services && selectedSubscription.services.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-text-primary border-b border-border-secondary pb-2">
-                      Serviços ({selectedSubscription.services.filter(s => s.isCompleted).length}/{selectedSubscription.services.length} concluídos)
+                      Serviços ({selectedSubscription.services.filter(s => s.isCompleted).length})
                     </h3>
                     
                     <div className="space-y-2">
