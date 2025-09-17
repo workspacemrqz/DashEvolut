@@ -368,14 +368,14 @@ export default function Kanban() {
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
             <TabsTrigger 
               value="clients" 
-              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm [&:not([data-state=active])]:!text-white [&:not([data-state=active])>svg]:!text-white"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm [&:not([data-state=active])]:!text-white [&:not([data-state=active])]>*:!text-white"
             >
               <Users className="w-4 h-4 mr-1 lg:mr-2" />
               Clientes
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
-              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm [&:not([data-state=active])]:!text-white [&:not([data-state=active])>svg]:!text-white"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm [&:not([data-state=active])]:!text-white [&:not([data-state=active])]>*:!text-white"
             >
               <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" />
               Projetos
