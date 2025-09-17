@@ -1,6 +1,11 @@
 import { defineConfig } from "drizzle-kit";
 
-const databaseUrl = process.env.DATABASE_URL || 'postgres://dashevolutia:@Ev0luTi42025@easypanel.evolutionmanagerevolutia.space:5502/dashevolutia?sslmode=disable';
+// Use Replit's built-in PostgreSQL database
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
 
 export default defineConfig({
   out: "./migrations",
