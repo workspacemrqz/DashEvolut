@@ -1,17 +1,20 @@
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { insertProjectSchema, type InsertProject, type Client, type ProjectWithClient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogPortal,
+  DialogOverlay,
 } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -36,6 +39,27 @@ interface ProjectFormProps {
   onOpenChange: (open: boolean) => void;
   project?: ProjectWithClient | null;
 }
+
+// Custom DialogContent without the X button
+const CustomDialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+CustomDialogContent.displayName = "CustomDialogContent";
 
 const formSchema = insertProjectSchema.extend({
   startDate: insertProjectSchema.shape.startDate.transform((val) => new Date(val)),
@@ -121,18 +145,37 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
+      <CustomDialogContent className="sm:max-w-[700px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="gradient-text">
-            {isEditMode ? "Editar Projeto" : "Novo Projeto"}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="gradient-text">
+              {isEditMode ? "Editar Projeto" : "Novo Projeto"}
+            </DialogTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                type="submit"
+                form="project-form"
+                disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
+                className="btn-primary"
+                data-testid="button-submit"
+              >
+                {isEditMode 
+                  ? (updateProjectMutation.isPending ? "Salvando..." : "Salvar")
+                  : (createProjectMutation.isPending ? "Criando..." : "Criar")
+                }
+              </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Fechar
+              </Button>
+            </div>
+          </div>
           <DialogDescription className="text-text-secondary">
             {isEditMode ? "Edite as informações do projeto" : "Adicione um novo projeto ao sistema"}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form id="project-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -297,31 +340,9 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
             </div>
 
 
-            <div className="flex justify-end space-x-4 pt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => onOpenChange(false)}
-                className="btn-secondary"
-                data-testid="button-cancel"
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
-                className="btn-primary"
-                data-testid="button-submit"
-              >
-                {isEditMode 
-                  ? (updateProjectMutation.isPending ? "Salvando..." : "Salvar Alterações")
-                  : (createProjectMutation.isPending ? "Criando..." : "Criar Projeto")
-                }
-              </Button>
-            </div>
           </form>
         </Form>
-      </DialogContent>
+      </CustomDialogContent>
     </Dialog>
   );
 }
