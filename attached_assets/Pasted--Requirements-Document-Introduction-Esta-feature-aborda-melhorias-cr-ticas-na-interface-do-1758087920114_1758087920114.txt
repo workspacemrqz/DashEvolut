@@ -1,0 +1,52 @@
+# Requirements Document
+
+## Introduction
+
+Esta feature aborda melhorias críticas na interface do usuário e localização do sistema, incluindo correções de layout, funcionalidades ausentes em formulários, adição de recursos de criação manual e tradução completa das URLs para português brasileiro. O objetivo é melhorar a experiência do usuário e garantir consistência visual e linguística em toda a aplicação.
+
+## Requirements
+
+### Requirement 1
+
+**User Story:** Como usuário navegando pela página '/projects', eu quero que a aba lateral mantenha o mesmo tamanho consistente das outras páginas, para que eu tenha uma experiência visual uniforme em toda a aplicação.
+
+#### Acceptance Criteria
+
+1. WHEN o usuário acessa a página '/projects' THEN a aba lateral SHALL ter as mesmas dimensões que nas outras páginas
+2. WHEN o usuário navega entre diferentes páginas THEN a aba lateral SHALL manter consistência visual e de tamanho
+3. WHEN a página '/projects' é carregada THEN a aba lateral SHALL NOT aparecer "amassada" ou com dimensões incorretas
+
+### Requirement 2
+
+**User Story:** Como usuário editando uma proposta, eu quero poder visualizar e editar o campo de tempo de entrega no popup 'Editar Proposta', para que eu possa gerenciar completamente todos os dados da proposta.
+
+#### Acceptance Criteria
+
+1. WHEN o usuário abre o popup 'Editar Proposta' THEN o campo de tempo de entrega SHALL ser exibido
+2. WHEN o usuário visualiza o campo de tempo de entrega THEN ele SHALL estar formatado de forma similar ao campo 'Detalhamento'
+3. WHEN o usuário edita o tempo de entrega THEN os dados SHALL ser salvos corretamente no banco de dados
+4. WHEN o popup é carregado THEN o campo de tempo de entrega SHALL ser populado com os dados existentes do banco
+
+### Requirement 3
+
+**User Story:** Como usuário na página '/proposals', eu quero ter um botão 'Gerar Manualmente' para criar novas propostas diretamente, para que eu possa adicionar propostas sem depender de outros fluxos automatizados.
+
+#### Acceptance Criteria
+
+1. WHEN o usuário acessa a página '/proposals' THEN um botão 'Gerar Manualmente' SHALL estar visível
+2. WHEN o usuário clica no botão 'Gerar Manualmente' THEN uma nova row SHALL ser criada na mesma tabela usada pelo popup 'Editar Proposta'
+3. WHEN uma nova proposta é criada manualmente THEN ela SHALL aparecer na lista de propostas
+4. WHEN a criação manual é executada THEN todos os campos obrigatórios SHALL ser inicializados com valores padrão apropriados
+
+### Requirement 4
+
+**User Story:** Como usuário brasileiro, eu quero que todas as URLs da aplicação estejam em português, para que eu tenha uma experiência completamente localizada e intuitiva.
+
+#### Acceptance Criteria
+
+1. WHEN o usuário acessa qualquer página THEN as URLs SHALL estar em português brasileiro
+2. WHEN o usuário navega para a página de propostas THEN a URL SHALL ser '/propostas' em vez de '/proposals'
+3. WHEN o usuário navega para a página de projetos THEN a URL SHALL ser '/projetos' em vez de '/projects'
+4. WHEN existem outras URLs em inglês THEN elas SHALL ser traduzidas para português brasileiro
+5. WHEN as URLs são alteradas THEN todos os links internos e navegação SHALL funcionar corretamente
+6. WHEN um usuário acessa uma URL antiga em inglês THEN ele SHALL ser redirecionado para a versão em português
