@@ -6,7 +6,7 @@ import ProjectTable from "@/components/projects/project-table";
 import ProjectForm from "@/components/projects/project-form";
 import ProjectDetails from "@/components/projects/project-details";
 import { ProjectWithClient } from "@shared/schema";
-import { Plus, Filter, DollarSign } from "lucide-react";
+import { Plus, Filter } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,6 @@ export default function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [showCostsForm, setShowCostsForm] = useState(false);
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
   const [selectedProjectForView, setSelectedProjectForView] = useState<ProjectWithClient | null>(null);
   const params = useParams<{ projectId?: string }>();
@@ -121,15 +120,6 @@ export default function Projects() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button 
-              onClick={() => setShowCostsForm(true)}
-              variant="secondary"
-              className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-              data-testid="button-costs"
-            >
-              <DollarSign className="w-4 h-4" />
-              <span className="hidden sm:inline">Custos</span>
-            </Button>
             <Button 
               onClick={() => setShowProjectForm(true)}
               className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
