@@ -184,21 +184,21 @@
   
   /* Kanban page custom styles */
   .kanban-badge {
-    background-color: var(--kanban-badge-bg) ;
-    color: var(--kanban-badge-text) ;
+    background-color: #f5f5f5 !important;
+    color: #060606 !important;
   }
   
   .kanban-badge * {
-    color: var(--kanban-badge-text) ;
+    color: #060606 !important;
   }
   
   .kanban-tab-active {
-    background-color: var(--kanban-badge-bg) ;
-    color: var(--kanban-badge-text) ;
+    background-color: #f5f5f5 !important;
+    color: #060606 !important;
   }
   
   .kanban-tab-active * {
-    color: var(--kanban-badge-text) ;
+    color: #060606 !important;
   }
   
   /* Override any remaining box-shadow with ring */
@@ -238,9 +238,9 @@
   }
 
   .btn-secondary {
-    background-color: var(--bg-primary);
+    background-color: #ebebeb;
     border: 1px solid var(--border-secondary);
-    color: #FFFFFF ;
+    color: #060606;
   }
 
   .sidebar-active {
@@ -312,7 +312,8 @@
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    color: #060606 ;
+    background-color: #ffffff;
+    color: #060606 !important;
   }
 
   /* Edit subscription dialog text color override with high hierarchy */
@@ -327,12 +328,7 @@
     color: #F5F5F5 ;
   }
 
-  /* Filter button text and icon color override */
-  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
-  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg,
-  .btn-secondary:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) span {
-    color: #060606 ;
-  }
+  /* Remove conflicting rule - will be handled by main secondary rules */
 
   /* Date input field icons and calendar icons */
   input[type="date"]::-webkit-calendar-picker-indicator {
@@ -414,7 +410,11 @@
   button[data-testid="filter-all"] *,
   button[data-testid="filter-active"] *,
   button[data-testid="filter-prospect"] *,
-  button[data-testid="filter-inactive"] *,
+  button[data-testid="filter-inactive"] * {
+    color: #F5F5F5 !important;
+  }
+  
+  /* Override for filter buttons with secondary variant specifically */
   .btn-secondary[data-testid="filter-all"],
   .btn-secondary[data-testid="filter-active"],
   .btn-secondary[data-testid="filter-prospect"],
@@ -437,7 +437,7 @@
   select.btn-secondary[data-testid="select-time-filter"],
   select.btn-secondary[data-testid="select-time-filter"] *,
   select.btn-secondary[data-testid="select-time-filter"] option {
-    color: #060606 !important;
+    color: #F5F5F5 !important;
   }
 
   /* Remove arrow from dashboard time filter select */
@@ -451,7 +451,10 @@
 
   /* Dashboard mark all as read button text color override */
   button[data-testid="button-mark-all-read"],
-  button[data-testid="button-mark-all-read"] *,
+  button[data-testid="button-mark-all-read"] * {
+    color: #F5F5F5 !important;
+  }
+  
   .btn-secondary[data-testid="button-mark-all-read"],
   .btn-secondary[data-testid="button-mark-all-read"] * {
     color: #060606 !important;
@@ -573,7 +576,7 @@
   [style*="background: #ffffff"] *,
   [style*="background: #FFFFFF"],
   [style*="background: #FFFFFF"] * {
-    color: var(--light-text-color) !important;
+    color: #060606 !important;
   }
 
   .dynamic-dark-bg-1,
@@ -600,13 +603,16 @@
   .bg-f5f5f5 *,
   .bg-ebebeb,
   .bg-ebebeb *,
+  .bg-secondary,
+  .bg-secondary * {
+    color: #060606 !important;
+  }
+  
   .bg-white,
   .bg-white *,
   .bg-ffffff,
-  .bg-ffffff *,
-  .bg-secondary,
-  .bg-secondary * {
-    color: var(--light-text-color) !important;
+  .bg-ffffff * {
+    color: #060606 !important;
   }
 
   .bg-0b1015,
@@ -646,7 +652,7 @@
   .btn-light *,
   .button-light,
   .button-light * {
-    color: var(--light-text-color) !important;
+    color: #060606 !important;
   }
 
   /* Apply to buttons with dark backgrounds */
@@ -736,7 +742,7 @@
   .tag-light *,
   .badge-light,
   .badge-light * {
-    color: var(--light-text-color) !important;
+    color: #060606 !important;
   }
 
   /* Apply to tags and badges with dark backgrounds */
@@ -843,11 +849,16 @@
   /* Ensure text in primary colored elements uses dark text */
   .bg-primary,
   .bg-primary * {
-    color: var(--light-text-color) !important;
+    color: #060606 !important;
   }
 
   /* Force secondary variant to use correct text color */
   .text-secondary-foreground {
+    color: #060606 !important;
+  }
+  
+  /* Force primary variant to use correct text color */
+  .text-primary-foreground {
     color: #060606 !important;
   }
 
@@ -856,25 +867,26 @@
   button.bg-primary *,
   .btn-primary,
   .btn-primary * {
-    color: var(--dark-text-color) !important;
+    color: #060606 !important;
   }
 
   button.bg-secondary,
   button.bg-secondary *,
   .btn-secondary,
   .btn-secondary * {
-    color: var(--light-text-color) !important;
+    color: #060606 !important;
   }
 
-  /* Specific overrides for proposal buttons - highest priority */
+  /* Specific overrides for proposal buttons in dark containers */
   .container-bg .btn-primary,
-  .container-bg .btn-primary *,
+  .container-bg .btn-primary * {
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
+    color: #FFFFFF !important;
+  }
+  
   .container-bg .btn-secondary,
-  .container-bg .btn-secondary *,
-  .container-bg button,
-  .container-bg button *,
-  .container-bg [role="button"],
-  .container-bg [role="button"] * {
+  .container-bg .btn-secondary * {
+    background-color: var(--bg-primary) !important;
     color: #F5F5F5 !important;
   }
 
