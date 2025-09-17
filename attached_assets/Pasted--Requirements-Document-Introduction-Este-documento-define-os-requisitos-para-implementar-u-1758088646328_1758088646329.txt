@@ -1,0 +1,75 @@
+# Requirements Document
+
+## Introduction
+
+Este documento define os requisitos para implementar um sistema de autenticação obrigatória que protege todo o acesso ao site. O sistema deve usar credenciais específicas armazenadas em variáveis de ambiente (secrets) e implementar sessões com expiração automática de 2 horas. Todos os tipos de login existentes devem ser removidos, mantendo apenas este sistema centralizado de autenticação.
+
+## Requirements
+
+### Requirement 1
+
+**User Story:** Como administrador do sistema, eu quero que todo acesso ao site seja protegido por login obrigatório, para que apenas usuários autorizados possam acessar qualquer parte da aplicação.
+
+#### Acceptance Criteria
+
+1. WHEN um usuário tenta acessar qualquer página do site THEN o sistema SHALL redirecionar para a página de login se não estiver autenticado
+2. WHEN um usuário tenta acessar diretamente URLs internas THEN o sistema SHALL bloquear o acesso e redirecionar para login
+3. WHEN um usuário não autenticado tenta fazer requisições à API THEN o sistema SHALL retornar erro 401 (Unauthorized)
+4. IF um usuário está autenticado THEN o sistema SHALL permitir acesso a todas as páginas e funcionalidades
+
+### Requirement 2
+
+**User Story:** Como administrador do sistema, eu quero que as credenciais de login sejam exclusivamente as definidas nas variáveis de ambiente, para que a segurança seja centralizada e não haja credenciais hardcoded no código.
+
+#### Acceptance Criteria
+
+1. WHEN o sistema valida credenciais THEN o sistema SHALL usar exclusivamente LOGIN="Evolut" e SENHA="@Ev0luTi42025" das variáveis de ambiente
+2. WHEN o código é inspecionado THEN o sistema SHALL NOT conter credenciais hardcoded em nenhum arquivo
+3. IF as variáveis de ambiente não estão definidas THEN o sistema SHALL falhar graciosamente com mensagem de erro apropriada
+4. WHEN credenciais incorretas são fornecidas THEN o sistema SHALL rejeitar o login com mensagem de erro genérica
+
+### Requirement 3
+
+**User Story:** Como usuário autenticado, eu quero que minha sessão permaneça ativa por 2 horas após o login, para que eu não precise fazer login repetidamente durante o uso normal.
+
+#### Acceptance Criteria
+
+1. WHEN um usuário faz login com sucesso THEN o sistema SHALL criar uma sessão válida por 2 horas
+2. WHEN uma sessão está ativa e dentro do prazo de 2 horas THEN o sistema SHALL permitir navegação sem novo login
+3. WHEN uma sessão expira após 2 horas THEN o sistema SHALL deslogar automaticamente o usuário
+4. WHEN um usuário é deslogado por expiração THEN o sistema SHALL redirecionar para a página de login
+5. WHEN um usuário faz uma nova ação após 2 horas THEN o sistema SHALL requerer novo login
+
+### Requirement 4
+
+**User Story:** Como administrador do sistema, eu quero que todos os sistemas de login existentes sejam removidos, para que haja apenas um ponto de autenticação centralizado.
+
+#### Acceptance Criteria
+
+1. WHEN o sistema é auditado THEN o sistema SHALL ter apenas um mecanismo de autenticação ativo
+2. WHEN códigos antigos de login são verificados THEN o sistema SHALL NOT conter múltiplos sistemas de autenticação
+3. WHEN a aplicação é iniciada THEN o sistema SHALL usar exclusivamente o novo sistema de autenticação
+4. IF existem rotas de login antigas THEN o sistema SHALL remover ou redirecionar para o novo sistema
+
+### Requirement 5
+
+**User Story:** Como usuário, eu quero ser redirecionado para o dashboard após login bem-sucedido, para que eu possa acessar as funcionalidades principais da aplicação.
+
+#### Acceptance Criteria
+
+1. WHEN um usuário faz login com sucesso THEN o sistema SHALL redirecionar para a página dashboard
+2. WHEN um usuário acessa uma URL específica sem estar logado THEN o sistema SHALL redirecionar para login e depois para a URL original após autenticação
+3. WHEN um usuário já está logado e acessa a página de login THEN o sistema SHALL redirecionar para o dashboard
+4. IF o dashboard não está acessível THEN o sistema SHALL mostrar mensagem de erro apropriada
+
+### Requirement 6
+
+**User Story:** Como desenvolvedor, eu quero que o sistema de autenticação seja implementado de forma segura, para que não haja vulnerabilidades de segurança.
+
+#### Acceptance Criteria
+
+1. WHEN sessões são criadas THEN o sistema SHALL usar tokens seguros e criptografados
+2. WHEN dados de sessão são armazenados THEN o sistema SHALL usar armazenamento seguro (httpOnly cookies ou similar)
+3. WHEN o usuário faz logout THEN o sistema SHALL invalidar completamente a sessão
+4. WHEN há tentativas de acesso não autorizado THEN o sistema SHALL registrar logs de segurança
+5. IF há ataques de força bruta THEN o sistema SHALL implementar proteção básica contra tentativas excessivas
