@@ -619,6 +619,38 @@
   [role="button"][class*="bg-slate-"] {
     color: #FFFFFF !important;
   }
+
+  /* MAXIMUM PRIORITY: Force white text and icons on ALL dark background buttons */
+  button[style*="background"],
+  button[style*="background"] *,
+  button[style*="background"] svg,
+  button[class*="bg-"],
+  button[class*="bg-"] *,
+  button[class*="bg-"] svg,
+  [role="button"][style*="background"],
+  [role="button"][style*="background"] *,
+  [role="button"][style*="background"] svg,
+  [role="button"][class*="bg-"],
+  [role="button"][class*="bg-"] *,
+  [role="button"][class*="bg-"] svg {
+    color: #FFFFFF !important;
+  }
+
+  /* Specific override for light backgrounds to keep dark text */
+  button.bg-white,
+  button.bg-white *,
+  button.bg-white svg,
+  button.bg-gray-100,
+  button.bg-gray-100 *,
+  button.bg-gray-100 svg,
+  button.bg-gray-200,
+  button.bg-gray-200 *,
+  button.bg-gray-200 svg,
+  button[class*="bg-light"],
+  button[class*="bg-light"] *,
+  button[class*="bg-light"] svg {
+    color: #060606 !important;
+  }
   
   .bg-white,
   .bg-white *,
