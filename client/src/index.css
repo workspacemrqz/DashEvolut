@@ -607,6 +607,18 @@
   .bg-secondary * {
     color: #060606 !important;
   }
+
+  /* Override for buttons with dark backgrounds - ensure white text */
+  button.bg-secondary,
+  button[class*="bg-gray-"],
+  button[class*="bg-black"],
+  button[class*="bg-slate-"],
+  [role="button"].bg-secondary,
+  [role="button"][class*="bg-gray-"],
+  [role="button"][class*="bg-black"],
+  [role="button"][class*="bg-slate-"] {
+    color: #FFFFFF !important;
+  }
   
   .bg-white,
   .bg-white *,
@@ -869,11 +881,14 @@
     color: #FFFFFF !important;
   }
 
-  button.bg-secondary,
-  button.bg-secondary *,
   .btn-secondary,
   .btn-secondary * {
     color: #060606 !important;
+  }
+
+  /* Dark background buttons need white text */
+  button.bg-secondary {
+    color: #FFFFFF !important;
   }
 
   /* Specific overrides for proposal buttons in dark containers */
