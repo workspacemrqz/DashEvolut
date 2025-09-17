@@ -865,9 +865,8 @@
   /* Fix button text colors based on background */
   button.bg-primary,
   button.bg-primary *,
-  .btn-primary,
-  .btn-primary * {
-    color: #060606 !important;
+  .btn-primary {
+    color: #FFFFFF !important;
   }
 
   button.bg-secondary,
