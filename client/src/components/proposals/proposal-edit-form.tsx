@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogDescription, DialogHeader, DialogTitle, DialogPortal, DialogOverlay } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +35,27 @@ interface ProposalEditFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+// Custom DialogContent without the X button
+const CustomDialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+CustomDialogContent.displayName = "CustomDialogContent";
 
 export default function ProposalEditForm({ proposalId, open, onOpenChange }: ProposalEditFormProps) {
   const { toast } = useToast();
@@ -193,7 +216,7 @@ export default function ProposalEditForm({ proposalId, open, onOpenChange }: Pro
   if (isLoading) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[800px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
+        <CustomDialogContent className="sm:max-w-[800px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
           <DialogTitle className="sr-only">Carregando Proposta</DialogTitle>
           <DialogDescription className="sr-only">
             Carregando dados da proposta para edição
@@ -201,22 +224,48 @@ export default function ProposalEditForm({ proposalId, open, onOpenChange }: Pro
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-8 h-8 animate-spin" />
           </div>
-        </DialogContent>
+        </CustomDialogContent>
       </Dialog>
     );
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
+      <CustomDialogContent className="sm:max-w-[800px] container-bg border-border-secondary max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="gradient-text">Editar Proposta</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="gradient-text">Editar Proposta</DialogTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                type="submit"
+                form="proposal-edit-form"
+                disabled={updateMutation.isPending}
+                className="btn-primary"
+                data-testid="button-submit-proposal"
+              >
+                {updateMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Salvar Alterações
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Fechar
+              </Button>
+            </div>
+          </div>
           <DialogDescription className="text-text-secondary">
             Edite os dados da proposta em etapas organizadas
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit}>
+        <form id="proposal-edit-form" onSubmit={handleSubmit}>
           <Tabs ref={tabsRef} defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-bg-secondary border border-border-secondary">
               <TabsTrigger 
@@ -431,37 +480,8 @@ export default function ProposalEditForm({ proposalId, open, onOpenChange }: Pro
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-end space-x-2 pt-6 mt-6 border-t border-border-secondary">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="btn-secondary proposal-btn-cancel"
-              data-proposal-button="cancel"
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              disabled={updateMutation.isPending}
-              className="btn-primary proposal-btn-save"
-              data-proposal-button="save"
-            >
-              {updateMutation.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Salvar Alterações
-                </>
-              )}
-            </Button>
-          </div>
         </form>
-      </DialogContent>
+      </CustomDialogContent>
     </Dialog>
   );
 }

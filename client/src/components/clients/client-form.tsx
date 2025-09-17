@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,11 +8,14 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogPortal,
+  DialogOverlay,
 } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -36,6 +40,27 @@ interface ClientFormProps {
   onOpenChange: (open: boolean) => void;
   clientToEdit?: ClientWithStats | null;
 }
+
+// Custom DialogContent without the X button
+const CustomDialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+CustomDialogContent.displayName = "CustomDialogContent";
 
 const formSchema = insertClientSchema.extend({
   phone: insertClientSchema.shape.phone.optional(),
@@ -153,18 +178,37 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] container-bg border-border-secondary">
+      <CustomDialogContent className="sm:max-w-[600px] container-bg border-border-secondary">
         <DialogHeader>
-          <DialogTitle className="gradient-text">
-            {isEditing ? "Editar Cliente" : "Novo Cliente"}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="gradient-text">
+              {isEditing ? "Editar Cliente" : "Novo Cliente"}
+            </DialogTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                type="submit"
+                form="client-form"
+                disabled={createClientMutation.isPending || updateClientMutation.isPending}
+                className="btn-primary"
+                data-testid="button-submit"
+              >
+                {isEditing 
+                  ? (updateClientMutation.isPending ? "Atualizando..." : "Atualizar Cliente")
+                  : (createClientMutation.isPending ? "Criando..." : "Criar Cliente")
+                }
+              </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Fechar
+              </Button>
+            </div>
+          </div>
           <DialogDescription className="text-text-secondary">
             {isEditing ? "Atualize as informações do cliente" : "Adicione um novo cliente ao sistema"}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form id="client-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -326,31 +370,9 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
               />
             </div>
 
-            <div className="flex justify-end space-x-4 pt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => onOpenChange(false)}
-                className="btn-secondary"
-                data-testid="button-cancel"
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                disabled={createClientMutation.isPending || updateClientMutation.isPending}
-                className="btn-primary"
-                data-testid="button-submit"
-              >
-                {isEditing 
-                  ? (updateClientMutation.isPending ? "Atualizando..." : "Atualizar Cliente")
-                  : (createClientMutation.isPending ? "Criando..." : "Criar Cliente")
-                }
-              </Button>
-            </div>
           </form>
         </Form>
-      </DialogContent>
+      </CustomDialogContent>
     </Dialog>
   );
 }
