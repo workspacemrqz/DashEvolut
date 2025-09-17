@@ -878,14 +878,12 @@
   }
 
   /* Specific overrides for proposal buttons in dark containers */
-  .container-bg .btn-primary,
-  .container-bg .btn-primary * {
+  .container-bg .btn-primary {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
     color: #FFFFFF !important;
   }
   
-  .container-bg .btn-secondary,
-  .container-bg .btn-secondary * {
+  .container-bg .btn-secondary {
     background-color: var(--bg-primary) !important;
     color: #F5F5F5 !important;
   }
