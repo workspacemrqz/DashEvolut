@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, Send } from "lucide-react";
+import { FileText, Send, Plus } from "lucide-react";
 import ProposalsTable from "@/components/proposals/proposals-table";
 import ProposalEditForm from "@/components/proposals/proposal-edit-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Proposals() {
   const [proposalText, setProposalText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [editingProposalId, setEditingProposalId] = useState<number | null>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -78,6 +80,45 @@ export default function Proposals() {
 
   const handleCloseEditForm = () => {
     setEditingProposalId(null);
+  };
+
+  // Manual proposal creation mutation
+  const createManualProposalMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/proposals', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}), // Using default values from backend
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create proposal');
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/proposals"] });
+      toast({
+        title: "Sucesso",
+        description: "Proposta criada manualmente com sucesso!",
+      });
+      // Open the newly created proposal for editing
+      setEditingProposalId(data.id);
+    },
+    onError: () => {
+      toast({
+        title: "Erro",
+        description: "Erro ao criar a proposta. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleCreateManualProposal = () => {
+    createManualProposalMutation.mutate();
   };
 
   return (
@@ -163,7 +204,29 @@ export default function Proposals() {
           </Card>
 
           {/* Propostas Criadas */}
-          <ProposalsTable onEditProposal={handleEditProposal} />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-text-primary">Propostas Criadas</h2>
+              <Button
+                onClick={handleCreateManualProposal}
+                disabled={createManualProposalMutation.isPending}
+                className="btn-secondary px-4 py-2 text-sm font-medium flex items-center gap-2"
+              >
+                {createManualProposalMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    Criando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    Gerar Manualmente
+                  </>
+                )}
+              </Button>
+            </div>
+            <ProposalsTable onEditProposal={handleEditProposal} />
+          </div>
         </div>
       </main>
 

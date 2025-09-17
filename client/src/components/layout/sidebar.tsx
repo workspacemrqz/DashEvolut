@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
   { name: "Clientes", href: "/clients", icon: Users },
-  { name: "Projetos", href: "/projects", icon: FolderOpen },
+  { name: "Projetos", href: "/projetos", icon: FolderOpen },
   { name: "Assinaturas", href: "/subscriptions", icon: CreditCard },
-  { name: "Propostas", href: "/proposals", icon: FileText },
+  { name: "Propostas", href: "/propostas", icon: FileText },
   { name: "Kanban", href: "/kanban", icon: Kanban },
 ];
 

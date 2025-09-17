@@ -828,6 +828,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create new proposal manually
+  app.post("/api/proposals", async (req, res) => {
+    try {
+      const { Pool } = await import('pg');
+      
+      const pool = new Pool({
+        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+      });
+
+      const client = await pool.connect();
+      
+      try {
+        const {
+          p1_titulo = 'Nova Proposta',
+          p1_subtitulo = 'Subtítulo da proposta',
+          p1_tags = '[]',
+          p2_subtitulo = 'Descrição do projeto',
+          p2_texto = 'Texto descritivo do projeto',
+          p2_objetivos = '[]',
+          p2_diferenciais = '[]',
+          p3_titulo_da_entrega = 'Entregáveis',
+          p3_checklist = '[]',
+          p4_preco = 'R$ 0,00',
+          p4_entrega = '30 dias',
+          p4_detalhamento = '[]'
+        } = req.body;
+
+        // Generate random password and URL
+        const senha = Math.random().toString(36).substring(2, 15);
+        const url = Math.random().toString(36).substring(2, 15);
+
+        const result = await client.query(`
+          INSERT INTO propostas (
+            p1_titulo, p1_subtitulo, p1_tags, p2_subtitulo, p2_texto,
+            p2_objetivos, p2_diferenciais, p3_titulo_da_entrega, p3_checklist,
+            p4_preco, p4_entrega, p4_detalhamento, senha, url, audio
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+          RETURNING *
+        `, [
+          p1_titulo, p1_subtitulo, p1_tags, p2_subtitulo, p2_texto,
+          p2_objetivos, p2_diferenciais, p3_titulo_da_entrega, p3_checklist,
+          p4_preco, p4_entrega, p4_detalhamento, senha, url, ''
+        ]);
+        
+        res.json(result.rows[0]);
+      } finally {
+        client.release();
+      }
+      
+      await pool.end();
+    } catch (error) {
+      console.error('Error creating proposal:', error);
+      res.status(500).json({ message: "Failed to create proposal" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -44,10 +44,15 @@ function Router() {
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/clients" component={Clients} />
-          <Route path="/projects" component={Projects} />
-          <Route path="/projects/:projectId" component={Projects} />
+          <Route path="/projetos" component={Projects} />
+          <Route path="/projetos/:projectId" component={Projects} />
           <Route path="/subscriptions" component={Subscriptions} />
-          <Route path="/proposals" component={Proposals} />
+          <Route path="/propostas" component={Proposals} />
+          
+          {/* Redirects from old English URLs to new Portuguese URLs */}
+          <Route path="/projects" component={() => { window.location.replace('/projetos'); return null; }} />
+          <Route path="/projects/:projectId" component={({ params }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
+          <Route path="/proposals" component={() => { window.location.replace('/propostas'); return null; }} />
           <Route path="/kanban" component={Kanban} />
           <Route path="/login" component={() => <Login />} />
           <Route component={NotFound} />
