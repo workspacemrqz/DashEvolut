@@ -141,8 +141,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Project Value */}
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <DollarSign className="w-4 h-4 text-blue-500 mr-2" />
+              <div className="mb-2">
                 <h4 className="font-semibold text-text-primary">Valor do Projeto</h4>
               </div>
               <p className="text-2xl font-bold text-blue-500" data-testid="project-value">
@@ -152,8 +151,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
             {/* Total Costs */}
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                <Receipt className="w-4 h-4 text-orange-500 mr-2" />
+              <div className="mb-2">
                 <h4 className="font-semibold text-text-primary">Total de Custos</h4>
               </div>
               <p className="text-2xl font-bold text-orange-500" data-testid="project-costs">
@@ -163,12 +161,7 @@ export default function ProjectDetails({ open, onOpenChange, project, onEdit }: 
 
             {/* Project Profit */}
             <div className="p-4 rounded-lg bg-bg-secondary border border-border-secondary">
-              <div className="flex items-center mb-2">
-                {profit >= 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 text-red-500 mr-2" />
-                )}
+              <div className="mb-2">
                 <h4 className="font-semibold text-text-primary">Lucro do Projeto</h4>
               </div>
               <p className={`text-2xl font-bold ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`} data-testid="project-profit">
