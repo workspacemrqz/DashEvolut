@@ -24,7 +24,7 @@ app.use(session({
     tableName: 'session',
     createTableIfMissing: true
   }),
-  secret: process.env.DATABASE_URL || 'fallback-secret-for-dev',
+  secret: process.env.SESSION_SECRET || 'fallback-secret-for-dev',
   resave: false,
   saveUninitialized: false,
   cookie: {
