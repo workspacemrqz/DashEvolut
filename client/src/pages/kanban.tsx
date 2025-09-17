@@ -368,16 +368,18 @@ export default function Kanban() {
           <TabsList className="grid w-full grid-cols-2 bg-card border border-border-secondary">
             <TabsTrigger 
               value="clients" 
-              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text data-[state=inactive]:text-[hsl(203.89,88.28%,53.14%)] [&[data-state=inactive]>svg]:text-[hsl(203.89,88.28%,53.14%)] text-xs lg:text-sm"
+              style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }}
             >
-              <Users className="w-4 h-4 mr-1 lg:mr-2" />
+              <Users className="w-4 h-4 mr-1 lg:mr-2" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }} />
               Clientes
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
-              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text text-xs lg:text-sm"
+              className="data-[state=active]:bg-light-bg data-[state=active]:text-light-text [&[data-state=active]>svg]:text-light-text data-[state=inactive]:text-[hsl(203.89,88.28%,53.14%)] [&[data-state=inactive]>svg]:text-[hsl(203.89,88.28%,53.14%)] text-xs lg:text-sm"
+              style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }}
             >
-              <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" />
+              <FolderOpen className="w-4 h-4 mr-1 lg:mr-2" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }} />
               Projetos
             </TabsTrigger>
           </TabsList>
