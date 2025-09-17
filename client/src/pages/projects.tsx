@@ -5,6 +5,7 @@ import Header from "@/components/layout/header";
 import ProjectTable from "@/components/projects/project-table";
 import ProjectForm from "@/components/projects/project-form";
 import ProjectDetails from "@/components/projects/project-details";
+import { ProjectCostsForm } from "@/components/projects/project-costs-form";
 import { ProjectWithClient } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
 import {
@@ -21,6 +22,7 @@ export default function Projects() {
   const [filter, setFilter] = useState("all");
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [showProjectCosts, setShowProjectCosts] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
   const [selectedProjectForView, setSelectedProjectForView] = useState<ProjectWithClient | null>(null);
@@ -81,7 +83,7 @@ export default function Projects() {
   // Handle costs for project
   const handleCostsProject = (project: ProjectWithClient) => {
     setSelectedProjectForCosts(project);
-    // For now, just show a toast. In the future, this could open a costs modal
+    setShowProjectCosts(true);
     console.log("Opening costs for project:", project.name);
   };
   
@@ -230,6 +232,21 @@ export default function Projects() {
               setShowProjectDetails(false);
               setShowProjectForm(true);
             }}
+          />
+        )}
+
+        {/* Project Costs Modal */}
+        {selectedProjectForCosts && (
+          <ProjectCostsForm
+            isOpen={showProjectCosts}
+            onOpenChange={(open) => {
+              setShowProjectCosts(open);
+              if (!open) {
+                setSelectedProjectForCosts(null);
+              }
+            }}
+            projectId={selectedProjectForCosts.id}
+            projectName={selectedProjectForCosts.name}
           />
         )}
       </main>

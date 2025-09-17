@@ -11,6 +11,7 @@ import {
   type SubscriptionService, type InsertSubscriptionService,
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
+  type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile
 } from "@shared/schema";
 import { PostgresStorage } from "./postgres-storage";
@@ -40,6 +41,12 @@ export interface IStorage {
   updateProject(id: string, project: Partial<InsertProject>): Promise<Project | undefined>;
   deleteProject(id: string): Promise<boolean>;
   
+  // Project Costs
+  getProjectCosts(projectId: string): Promise<ProjectCost[]>;
+  getProjectCost(costId: string): Promise<ProjectCost | undefined>;
+  createProjectCost(cost: InsertProjectCost): Promise<ProjectCost>;
+  updateProjectCost(costId: string, cost: UpdateProjectCost): Promise<ProjectCost | undefined>;
+  deleteProjectCost(costId: string): Promise<boolean>;
   
   // Interactions
   getInteractions(): Promise<Interaction[]>;

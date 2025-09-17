@@ -15,7 +15,9 @@ import {
   insertPaymentSchema,
   insertPaymentFileSchema,
   insertNotificationRuleSchema,
-  updateNotificationRuleSchema
+  updateNotificationRuleSchema,
+  insertProjectCostSchema,
+  updateProjectCostSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -240,6 +242,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Project Costs routes
+  app.get("/api/projects/:projectId/costs", async (req, res) => {
+    try {
+      const costs = await storage.getProjectCosts(req.params.projectId);
+      res.json(costs);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch project costs" });
+    }
+  });
+
+  app.post("/api/projects/:projectId/costs", async (req, res) => {
+    try {
+      const costSchemaWithStringDate = insertProjectCostSchema.extend({
+        costDate: z.string().transform((val) => new Date(val)),
+        projectId: z.string().default(req.params.projectId),
+      });
+      const validatedData = costSchemaWithStringDate.parse({
+        ...req.body,
+        projectId: req.params.projectId
+      });
+      const cost = await storage.createProjectCost(validatedData);
+      res.status(201).json(cost);
+    } catch (error) {
+      console.error("Error creating project cost:", error);
+      res.status(400).json({ message: "Invalid cost data" });
+    }
+  });
+
+  app.patch("/api/projects/:projectId/costs/:costId", async (req, res) => {
+    try {
+      const updates = updateProjectCostSchema.parse(req.body);
+      const cost = await storage.updateProjectCost(req.params.costId, updates);
+      if (!cost) {
+        return res.status(404).json({ message: "Cost not found" });
+      }
+      res.json(cost);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid cost update data" });
+    }
+  });
+
+  app.delete("/api/projects/:projectId/costs/:costId", async (req, res) => {
+    try {
+      const deleted = await storage.deleteProjectCost(req.params.costId);
+      if (!deleted) {
+        return res.status(404).json({ message: "Cost not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete cost" });
+    }
+  });
 
   // Interactions routes
   app.get("/api/interactions", async (req, res) => {

@@ -11,8 +11,9 @@ import {
   type SubscriptionService, type InsertSubscriptionService,
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
+  type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile,
-  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles
+  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, projectCosts
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -197,6 +198,37 @@ export class PostgresStorage implements IStorage {
     return result.rowCount > 0;
   }
 
+  // Project Costs
+  async getProjectCosts(projectId: string): Promise<ProjectCost[]> {
+    return await this.db.select().from(projectCosts).where(eq(projectCosts.projectId, projectId)).orderBy(desc(projectCosts.costDate));
+  }
+
+  async getProjectCost(costId: string): Promise<ProjectCost | undefined> {
+    const result = await this.db.select().from(projectCosts).where(eq(projectCosts.id, costId)).limit(1);
+    return result[0];
+  }
+
+  async createProjectCost(cost: InsertProjectCost): Promise<ProjectCost> {
+    const newCost = { 
+      ...cost, 
+      id: randomUUID(), 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    };
+    const result = await this.db.insert(projectCosts).values(newCost).returning();
+    return result[0];
+  }
+
+  async updateProjectCost(costId: string, cost: UpdateProjectCost): Promise<ProjectCost | undefined> {
+    const updatedCost = { ...cost, updatedAt: new Date() };
+    const result = await this.db.update(projectCosts).set(updatedCost).where(eq(projectCosts.id, costId)).returning();
+    return result[0];
+  }
+
+  async deleteProjectCost(costId: string): Promise<boolean> {
+    const result = await this.db.delete(projectCosts).where(eq(projectCosts.id, costId));
+    return result.rowCount > 0;
+  }
 
   // Interactions
   async getInteractions(): Promise<Interaction[]> {
