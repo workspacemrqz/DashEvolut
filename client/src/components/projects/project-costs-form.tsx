@@ -221,7 +221,12 @@ export function ProjectCostsForm({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <CustomDialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Gerenciar Custos do Projeto</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>Gerenciar Custos do Projeto</DialogTitle>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Fechar
+            </Button>
+          </div>
           <DialogDescription>
             Projeto: <strong>{projectName}</strong>
           </DialogDescription>
@@ -380,11 +385,6 @@ export function ProjectCostsForm({
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
-          </Button>
-        </DialogFooter>
       </CustomDialogContent>
     </Dialog>
   );
