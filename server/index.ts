@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
 config();
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import { Pool } from "pg";
+import connectPgSimple from "connect-pg-simple";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { notificationService } from "./notification-service";
@@ -8,6 +11,29 @@ import { notificationService } from "./notification-service";
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false, limit: '50mb' }));
+
+// Setup session store with PostgreSQL
+const pgSession = connectPgSimple(session);
+const sessionPool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+app.use(session({
+  store: new pgSession({
+    pool: sessionPool,
+    tableName: 'session',
+    createTableIfMissing: true
+  }),
+  secret: process.env.DATABASE_URL || 'fallback-secret-for-dev',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true in production with HTTPS
+    httpOnly: true,
+    maxAge: 7200000 // 2 hours in milliseconds
+  },
+  name: 'evolutia.sid'
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();

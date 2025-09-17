@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import path from "path";
@@ -21,7 +21,74 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 
+// Extend session types
+declare module 'express-session' {
+  interface SessionData {
+    userId?: string;
+    isAuthenticated?: boolean;
+  }
+}
+
+// Authentication middleware
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  if (req.session.isAuthenticated) {
+    next();
+  } else {
+    res.status(401).json({ message: "Authentication required" });
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication endpoints (NOT protected by requireAuth middleware)
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (username === process.env.LOGIN && password === process.env.SENHA) {
+        req.session.isAuthenticated = true;
+        req.session.userId = "admin";
+        res.json({ 
+          success: true, 
+          message: "Login successful",
+          user: { id: "admin", username: "Evolut" }
+        });
+      } else {
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Login failed" });
+    }
+  });
+
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ success: false, message: "Logout failed" });
+        }
+        res.clearCookie('evolutia.sid');
+        res.json({ success: true, message: "Logout successful" });
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Logout failed" });
+    }
+  });
+
+  app.get("/api/auth/status", async (req, res) => {
+    try {
+      if (req.session.isAuthenticated) {
+        res.json({ 
+          isAuthenticated: true, 
+          user: { id: req.session.userId, username: "Evolut" }
+        });
+      } else {
+        res.json({ isAuthenticated: false });
+      }
+    } catch (error) {
+      res.status(500).json({ isAuthenticated: false });
+    }
+  });
+
   // Setup file upload storage
   const uploadsDir = path.join(process.cwd(), 'uploads');
   if (!fs.existsSync(uploadsDir)) {
@@ -50,6 +117,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       fileSize: 10 * 1024 * 1024 // 10MB limit
     }
   });
+
+  // Apply authentication middleware to all API routes except auth endpoints
+  app.use('/api', (req, res, next) => {
+    if (req.path.startsWith('/auth/')) {
+      next();
+    } else {
+      requireAuth(req, res, next);
+    }
+  });
+
   // User routes
   app.get("/api/user/profile", async (req, res) => {
     try {
