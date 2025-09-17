@@ -24,6 +24,7 @@ export default function Projects() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<ProjectWithClient | null>(null);
   const [selectedProjectForView, setSelectedProjectForView] = useState<ProjectWithClient | null>(null);
+  const [selectedProjectForCosts, setSelectedProjectForCosts] = useState<ProjectWithClient | null>(null);
   const params = useParams<{ projectId?: string }>();
   const projectId = params?.projectId;
   const [, navigate] = useLocation();
@@ -76,6 +77,13 @@ export default function Projects() {
 
   // Calculate KPIs
   const totalRevenue = projects?.reduce((sum, p) => sum + p.value, 0) || 0;
+  
+  // Handle costs for project
+  const handleCostsProject = (project: ProjectWithClient) => {
+    setSelectedProjectForCosts(project);
+    // For now, just show a toast. In the future, this could open a costs modal
+    console.log("Opening costs for project:", project.name);
+  };
   
   // Calculate forecast accuracy (mock calculation)
 
@@ -180,6 +188,7 @@ export default function Projects() {
               setSelectedProjectForEdit(project);
               setShowProjectForm(true);
             }}
+            onCostsProject={handleCostsProject}
             data-testid="table-projects"
           />
         </div>

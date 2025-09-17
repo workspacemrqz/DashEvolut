@@ -1,5 +1,5 @@
 import { ProjectWithClient } from "@shared/schema";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -19,6 +19,7 @@ interface ProjectTableProps {
   projects: ProjectWithClient[];
   isLoading: boolean;
   onEditProject?: (project: ProjectWithClient) => void;
+  onCostsProject?: (project: ProjectWithClient) => void;
   "data-testid"?: string;
 }
 
@@ -31,7 +32,7 @@ const statusMap = {
   cancelled: { label: "Cancelado", className: "status-inactive" },
 };
 
-export default function ProjectTable({ projects, isLoading, onEditProject, "data-testid": testId }: ProjectTableProps) {
+export default function ProjectTable({ projects, isLoading, onEditProject, onCostsProject, "data-testid": testId }: ProjectTableProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectWithClient | null>(null);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -52,6 +53,17 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
       toast({
         title: "Em desenvolvimento",
         description: "A funcionalidade de edição será implementada em breve.",
+      });
+    }
+  };
+
+  const handleCostsProject = (project: ProjectWithClient) => {
+    if (onCostsProject) {
+      onCostsProject(project);
+    } else {
+      toast({
+        title: "Em desenvolvimento",
+        description: "A funcionalidade de custos será implementada em breve.",
       });
     }
   };
@@ -187,6 +199,13 @@ export default function ProjectTable({ projects, isLoading, onEditProject, "data
                       data-testid={`action-view-${project.id}`}
                     >
                       <Eye className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleCostsProject(project)}
+                      className="text-orange-500 p-1"
+                      data-testid={`action-costs-${project.id}`}
+                    >
+                      <DollarSign className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEditProject(project)}
