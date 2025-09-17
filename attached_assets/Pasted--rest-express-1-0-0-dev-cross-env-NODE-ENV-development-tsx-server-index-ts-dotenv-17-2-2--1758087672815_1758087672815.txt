@@ -1,0 +1,134 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+5:38:51 AM [express] serving on port 5000
+5:38:51 AM [express] 🔔 Starting notification service...
+⏰ Starting periodic notification check every 30 minutes
+🔍 Checking notification rules...
+📋 Found 1 active rules
+🔍 Checking rule: Projetos Atrasados - Teste
+📊 Found 2 overdue projects
+✅ All rules checked successfully
+5:39:00 AM [express] GET /api/auth/status 200 in 2ms :: {"isAuthenticated":false}
+5:39:04 AM [express] GET /api/auth/status 200 in 1ms :: {"isAuthenticated":false}
+5:40:19 AM [express] GET /api/auth/status 304 in 1ms :: {"isAuthenticated":false}
+5:40:35 AM [express] POST /api/auth/login 200 in 1267ms :: {"success":true,"message":"Login successf…
+🌐 [API] GET /api/subscriptions called
+🔍 [DEBUG] Starting getSubscriptionsWithClients...
+5:40:37 AM [express] GET /api/projects 200 in 1104ms :: [{"id":"f9776733-c843-48ee-8982-c1d77a93cac1…
+🔍 [DEBUG] Raw query result: [
+  {
+    "subscription": {
+      "id": "f5005912-a297-4c2f-8647-496f13570152",
+      "clientId": "88d5d968-3ae6-4119-8b37-d9f9f93a2021",
+      "billingDay": 1,
+      "amount": 800,
+      "notes": "",
+      "status": "active",
+      "createdAt": "2025-09-05T23:25:37.221Z",
+      "updatedAt": "2025-09-14T23:28:40.221Z"
+    },
+    "client": {
+      "id": "88d5d968-3ae6-4119-8b37-d9f9f93a2021",
+      "name": "Camila",
+      "company": "Unipet",
+      "email": "",
+      "phone": "+55 (86) 8876-5739",
+      "source": "Cold Call",
+      "sector": "Hospital Veterinário",
+      "nps": null,
+      "upsellPotential": "high",
+      "createdAt": "2025-09-05T22:38:12.173Z",
+      "updatedAt": "2025-09-06T14:31:40.315Z"
+    }
+  }
+]
+🔍 [DEBUG] Processing subscription f5005912-a297-4c2f-8647-496f13570152:
+  - clientId: 88d5d968-3ae6-4119-8b37-d9f9f93a2021
+  - client: {"id":"88d5d968-3ae6-4119-8b37-d9f9f93a2021","name":"Camila","company":"Unipet","email":"","phone":"+55 (86) 8876-5739","source":"Cold Call","sector":"Hospital Veterinário","nps":null,"upsellPotential":"high","createdAt":"2025-09-05T22:38:12.173Z","updatedAt":"2025-09-06T14:31:40.315Z"}
+  - services count: 6
+  - nextBillingDate: 2025-10-01T00:00:00.000Z
+  - final result client: EXISTS
+🔍 [DEBUG] Final subscriptionsWithServices: [
+  {
+    "id": "f5005912-a297-4c2f-8647-496f13570152",
+    "clientId": "88d5d968-3ae6-4119-8b37-d9f9f93a2021",
+    "billingDay": 1,
+    "amount": 800,
+    "notes": "",
+    "status": "active",
+    "createdAt": "2025-09-05T23:25:37.221Z",
+    "updatedAt": "2025-09-14T23:28:40.221Z",
+    "client": {
+      "id": "88d5d968-3ae6-4119-8b37-d9f9f93a2021",
+      "name": "Camila",
+      "company": "Unipet",
+      "email": "",
+      "phone": "+55 (86) 8876-5739",
+      "source": "Cold Call",
+      "sector": "Hospital Veterinário",
+      "nps": null,
+      "upsellPotential": "high",
+      "createdAt": "2025-09-05T22:38:12.173Z",
+      "updatedAt": "2025-09-06T14:31:40.315Z"
+    },
+    "services": [
+      {
+        "id": "6700ad31-a517-4e9a-8e1b-46cbc71b02d8",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "Integração com whatsapp (Plano Ultimate R$99,99/mês)",
+        "isCompleted": false,
+        "order": 6,
+        "createdAt": "2025-09-15T20:40:16.362Z"
+      },
+      {
+        "id": "25be4f99-8e82-4be2-a36b-79bc27928ad9",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "Hospedagem e Infraestrutura (Site e CRM)",
+        "isCompleted": false,
+        "order": 5,
+        "createdAt": "2025-09-15T20:39:51.601Z"
+      },
+      {
+        "id": "96cb5913-c6ca-4ad6-839f-d65f7aae3f93",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "1 reunião mensal para análise de métricas, sugestões de melhoria (incluindo prompts), fluxos e práticas de inside sales",
+        "isCompleted": false,
+        "order": 4,
+        "createdAt": "2025-09-15T20:38:10.619Z"
+      },
+      {
+        "id": "2a6205d6-351b-44d4-b770-2d73c1e25a9a",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "Orientação remota de uso",
+        "isCompleted": false,
+        "order": 3,
+        "createdAt": "2025-09-15T20:38:01.883Z"
+      },
+      {
+        "id": "1d838ae7-84a0-49f1-aa1f-92f71409afa5",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "Melhorias pontuais necessárias ao funcionamento do sistema",
+        "isCompleted": false,
+        "order": 2,
+        "createdAt": "2025-09-15T20:37:57.588Z"
+      },
+      {
+        "id": "9b357d38-cd9c-43b5-b0f6-68f2e746d4f9",
+        "subscriptionId": "f5005912-a297-4c2f-8647-496f13570152",
+        "description": "Suporte corretivo (correção de erros e falhas)",
+        "isCompleted": false,
+        "order": 1,
+        "createdAt": "2025-09-15T20:37:54.071Z"
+      }
+    ],
+    "nextBillingDate": "2025-10-01T00:00:00.000Z"
+  }
+]
+🌐 [API] Returning subscriptions: 1 items
+5:40:37 AM [express] GET /api/alerts/unread 200 in 343ms :: [{"id":"95593ed0-5f84-4360-b1cd-665aaa4f…
+5:40:37 AM [express] GET /api/clients 200 in 1198ms :: [{"id":"88d5d968-3ae6-4119-8b37-d9f9f93a2021"…
+5:40:37 AM [express] GET /api/subscriptions 200 in 1209ms :: [{"id":"f5005912-a297-4c2f-8647-496f135…
+5:41:04 AM [express] GET /api/proposals 200 in 1054ms :: [{"id":14,"titulo":"Teste Proposta Manual",…
