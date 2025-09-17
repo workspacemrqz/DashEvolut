@@ -97,39 +97,6 @@ export default function Projects() {
         subtitle="Controle financeiro e operacional"
         actions={
           <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
-            <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="secondary" 
-                  className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-                  data-testid="button-filter"
-                >
-                  <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-bg-container border-border-secondary">
-                <DropdownMenuLabel className="text-text-primary">Filtrar por valor</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("high-value")} className="text-text-secondary ">
-                  Alto valor (&gt;R$ 20k)
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("medium-value")} className="text-text-secondary ">
-                  Médio valor (R$ 10k-20k)
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("low-value")} className="text-text-secondary ">
-                  Baixo valor (&lt;R$ 10k)
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-text-primary">Filtrar por urgência</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setFilter("urgent")} className="text-text-secondary ">
-                  Urgente (vence em 7 dias)
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("overdue")} className="text-text-secondary ">
-                  Atrasado
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Button 
               onClick={() => setShowProjectForm(true)}
               className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"

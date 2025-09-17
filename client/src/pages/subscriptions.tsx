@@ -60,34 +60,6 @@ export default function Subscriptions() {
         subtitle="Controle de assinaturas e pagamentos recorrentes"
         actions={
           <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
-            <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="secondary" 
-                  className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-                  data-testid="button-filter-subscriptions"
-                >
-                  <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-bg-container border-border-secondary">
-                <DropdownMenuLabel className="text-text-primary">Status da Assinatura</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("all")} className="text-text-secondary">
-                  Todas
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("active")} className="text-text-secondary">
-                  Ativas
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("paused")} className="text-text-secondary">
-                  Pausadas
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("cancelled")} className="text-text-secondary">
-                  Canceladas
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             
             <Button
               onClick={() => setShowSubscriptionForm(true)}

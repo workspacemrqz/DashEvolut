@@ -49,42 +49,6 @@ export default function Clients() {
         subtitle="Relacionamento e análise de clientes"
         actions={
           <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
-            <DropdownMenu open={showFilterMenu} onOpenChange={setShowFilterMenu}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="secondary" 
-                  className="btn-secondary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-                  data-testid="button-filter"
-                >
-                  <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline text-dynamic-light">Filtros</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-bg-container border-border-secondary">
-                <DropdownMenuLabel className="text-text-primary">Filtrar por setor</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter("technology")} className="text-text-secondary">
-                  Tecnologia
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("marketing")} className="text-text-secondary">
-                  Marketing
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("consultoria")} className="text-text-secondary">
-                  Consultoria
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-text-primary">Filtrar por fonte</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setFilter("indicacao")} className="text-text-secondary">
-                  Indicação
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("google")} className="text-text-secondary">
-                  Google Ads
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter("linkedin")} className="text-text-secondary">
-                  LinkedIn
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Button 
               onClick={() => setShowClientForm(true)}
               className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
