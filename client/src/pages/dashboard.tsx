@@ -96,11 +96,6 @@ export default function Dashboard() {
               )}
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-purple-300">R$ {metrics.mrr.toLocaleString('pt-BR')}</div>
-              <div className="text-sm text-gray-300">MRR</div>
-              <div className="text-xs text-gray-400 mt-1">{metrics.activeSubscriptions} assinaturas</div>
-            </div>
-            <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-white">R$ {metrics.activePipelineValue.toLocaleString('pt-BR')}</div>
               <div className="text-sm text-gray-300">Pipeline Ativo</div>
             </div>
