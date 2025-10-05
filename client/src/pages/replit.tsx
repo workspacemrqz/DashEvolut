@@ -43,7 +43,7 @@ export default function ReplitPage() {
 
   const createMutation = useMutation({
     mutationFn: (data: InsertReplitUnit) =>
-      apiRequest("/api/replit-units", { method: "POST", body: data }),
+      apiRequest("POST", "/api/replit-units", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
       setIsDialogOpen(false);
@@ -63,7 +63,7 @@ export default function ReplitPage() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<InsertReplitUnit> }) =>
-      apiRequest(`/api/replit-units/${id}`, { method: "PUT", body: data }),
+      apiRequest("PUT", `/api/replit-units/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
       setIsDialogOpen(false);
@@ -84,7 +84,7 @@ export default function ReplitPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      apiRequest(`/api/replit-units/${id}`, { method: "DELETE" }),
+      apiRequest("DELETE", `/api/replit-units/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
       toast({

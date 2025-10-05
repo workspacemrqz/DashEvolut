@@ -41,6 +41,7 @@ Preferred communication style: Simple, everyday language.
   - Interactions: Client communication history
   - Alerts: System notifications for business events
   - Notification Rules: Configurable business rule engine
+  - Replit Units: Tracking of Replit unit purchases with value, email, assignee (Camargo/Marquez), and timestamp
 
 ## Authentication & Authorization
 - Currently uses a simple user system without complex authentication
@@ -55,6 +56,7 @@ Preferred communication style: Simple, everyday language.
 - **Proposal Generation**: Integration with external webhook for automated proposal creation
 - **Notification System**: Rule-based alerting for delayed projects, payment reminders, and upselling opportunities
 - **Kanban Board**: Drag-and-drop interface for visual project and client management
+- **Replit Units Management**: Full CRUD operations for managing Replit unit purchases with monetary values (Brazilian Real), email tracking, assignee selection, and datetime stamps
 
 ## External Dependencies
 
