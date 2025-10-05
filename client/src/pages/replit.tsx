@@ -145,9 +145,7 @@ export default function ReplitPage() {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Tem certeza que deseja excluir esta unidade?")) {
-      deleteMutation.mutate(id);
-    }
+    deleteMutation.mutate(id);
   };
 
   const handleOpenChange = (open: boolean) => {
