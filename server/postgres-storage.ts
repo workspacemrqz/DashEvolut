@@ -26,8 +26,11 @@ export class PostgresStorage implements IStorage {
   private pool: Pool;
 
   constructor() {
-    // Usar sempre o banco PostgreSQL correto (porta 5502)
-    const connectionString = 'postgres://dashevolutia:@Ev0luTi42025@easypanel.evolutionmanagerevolutia.space:5502/dashevolutia?sslmode=disable';
+    const connectionString = process.env.DATABASE_URL;
+    
+    if (!connectionString) {
+      throw new Error("DATABASE_URL environment variable is required");
+    }
     
     this.pool = new Pool({
       connectionString: connectionString,
