@@ -210,7 +210,7 @@ export default function Proposals() {
               <Button
                 onClick={handleCreateManualProposal}
                 disabled={createManualProposalMutation.isPending}
-                className="btn-secondary px-4 py-2 text-sm font-medium flex items-center gap-2"
+                className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
               >
                 {createManualProposalMutation.isPending ? (
                   <>
