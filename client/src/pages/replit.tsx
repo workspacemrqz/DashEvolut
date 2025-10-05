@@ -36,7 +36,7 @@ import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 const STATUS_OPTIONS = [
   { value: "Reembolso", bgColor: "bg-yellow-500", textColor: "text-black" },
   { value: "Reembolso concluído", bgColor: "bg-green-500", textColor: "text-white" },
-  { value: "Replit apagado", bgColor: "bg-white", textColor: "[color:#060606]" },
+  { value: "Replit apagado", bgColor: "bg-white", textColor: "text-[#060606]" },
   { value: "Reembolso negado", bgColor: "bg-red-500", textColor: "text-white" },
   { value: "Pedido de reembolso reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
 ];
