@@ -148,9 +148,12 @@ export default function ReplitPage() {
         <h1 className="text-3xl font-bold text-foreground">Unidades Replit</h1>
         <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
           <DialogTrigger asChild>
-            <Button data-testid="button-add-unit">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Unidade
+            <Button 
+              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
+              data-testid="button-add-unit"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Nova Unidade</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
