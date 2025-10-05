@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -32,10 +33,19 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 
+const STATUS_OPTIONS = [
+  { value: "Reembolso", emoji: "💸" },
+  { value: "Reembolso concluído", emoji: "✅" },
+  { value: "Replit apagado", emoji: "⚡" },
+  { value: "Reembolso negado", emoji: "❌" },
+  { value: "Pedido de reembolso reenviado", emoji: "🔄" },
+];
+
 export default function ReplitPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
     queryKey: ["/api/replit-units"],
@@ -110,6 +120,7 @@ export default function ReplitPage() {
       email: formData.get("email") as string,
       nome: formData.get("nome") as "Camargo" | "Marquez",
       dataHorario: formData.get("dataHorario") as string,
+      status: selectedStatus,
     };
 
     if (editingUnit) {
@@ -121,7 +132,16 @@ export default function ReplitPage() {
 
   const handleEdit = (unit: ReplitUnit) => {
     setEditingUnit(unit);
+    setSelectedStatus(unit.status || []);
     setIsDialogOpen(true);
+  };
+
+  const handleStatusToggle = (status: string) => {
+    setSelectedStatus(prev =>
+      prev.includes(status)
+        ? prev.filter(s => s !== status)
+        : [...prev, status]
+    );
   };
 
   const handleDelete = (id: string) => {
@@ -134,6 +154,7 @@ export default function ReplitPage() {
     setIsDialogOpen(open);
     if (!open) {
       setEditingUnit(null);
+      setSelectedStatus([]);
     }
   };
 
@@ -142,6 +163,14 @@ export default function ReplitPage() {
       style: 'currency',
       currency: 'BRL'
     }).format(value);
+  };
+
+  const getStatusEmojis = (statusArray: string[]) => {
+    if (!statusArray || statusArray.length === 0) return "";
+    return statusArray.map(status => {
+      const option = STATUS_OPTIONS.find(opt => opt.value === status);
+      return option ? option.emoji : "";
+    }).join(" ");
   };
 
   return (
@@ -221,6 +250,27 @@ export default function ReplitPage() {
                   data-testid="input-data-horario"
                 />
               </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <div className="space-y-2">
+                  {STATUS_OPTIONS.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`status-${option.value}`}
+                        checked={selectedStatus.includes(option.value)}
+                        onCheckedChange={() => handleStatusToggle(option.value)}
+                        data-testid={`checkbox-${option.value}`}
+                      />
+                      <label
+                        htmlFor={`status-${option.value}`}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {option.emoji} {option.value}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="flex justify-end gap-2">
                 <Button
                   type="button"
@@ -260,6 +310,7 @@ export default function ReplitPage() {
                   <TableHead>Email</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Data & Horário</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -277,6 +328,9 @@ export default function ReplitPage() {
                     </TableCell>
                     <TableCell data-testid={`text-data-${unit.id}`}>
                       {unit.dataHorario}
+                    </TableCell>
+                    <TableCell data-testid={`text-status-${unit.id}`}>
+                      <span className="text-lg">{getStatusEmojis(unit.status)}</span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

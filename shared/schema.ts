@@ -153,6 +153,7 @@ export const replitUnits = pgTable("replit_units", {
   email: text("email").notNull(),
   nome: text("nome", { enum: ["Camargo", "Marquez"] }).notNull(),
   dataHorario: text("data_horario").notNull(),
+  status: text("status").array().default(sql`'{}'::text[]`).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
