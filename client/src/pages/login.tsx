@@ -43,13 +43,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#030303] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-3xl font-extrabold text-[#F9FAFB]">
             Evolut IA Dashboard
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#F9FAFB]">
             Faça login para acessar o sistema
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function Login() {
               
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full text-[#060606]" 
                 disabled={isLoading}
               >
                 {isLoading ? (
