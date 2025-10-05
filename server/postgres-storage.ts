@@ -12,8 +12,9 @@ import {
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
+  type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile,
-  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, projectCosts
+  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, projectCosts, replitUnits
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -579,6 +580,33 @@ export class PostgresStorage implements IStorage {
 
   async deletePaymentFile(id: string): Promise<boolean> {
     const result = await this.db.delete(paymentFiles).where(eq(paymentFiles.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Replit Units
+  async getReplitUnits(): Promise<ReplitUnit[]> {
+    return await this.db.select().from(replitUnits).orderBy(desc(replitUnits.createdAt));
+  }
+
+  async getReplitUnit(id: string): Promise<ReplitUnit | undefined> {
+    const result = await this.db.select().from(replitUnits).where(eq(replitUnits.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createReplitUnit(unit: InsertReplitUnit): Promise<ReplitUnit> {
+    const newUnit = { ...unit, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const result = await this.db.insert(replitUnits).values(newUnit).returning();
+    return result[0];
+  }
+
+  async updateReplitUnit(id: string, unit: UpdateReplitUnit): Promise<ReplitUnit | undefined> {
+    const updatedUnit = { ...unit, updatedAt: new Date() };
+    const result = await this.db.update(replitUnits).set(updatedUnit).where(eq(replitUnits.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteReplitUnit(id: string): Promise<boolean> {
+    const result = await this.db.delete(replitUnits).where(eq(replitUnits.id, id));
     return result.rowCount > 0;
   }
 }

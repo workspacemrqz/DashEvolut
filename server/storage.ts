@@ -12,6 +12,7 @@ import {
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
+  type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile
 } from "@shared/schema";
 import { PostgresStorage } from "./postgres-storage";
@@ -113,6 +114,13 @@ export interface IStorage {
   createPaymentFile(file: InsertPaymentFile): Promise<PaymentFile>;
   updatePaymentFile(id: string, file: Partial<InsertPaymentFile>): Promise<PaymentFile | undefined>;
   deletePaymentFile(id: string): Promise<boolean>;
+  
+  // Replit Units
+  getReplitUnits(): Promise<ReplitUnit[]>;
+  getReplitUnit(id: string): Promise<ReplitUnit | undefined>;
+  createReplitUnit(unit: InsertReplitUnit): Promise<ReplitUnit>;
+  updateReplitUnit(id: string, unit: UpdateReplitUnit): Promise<ReplitUnit | undefined>;
+  deleteReplitUnit(id: string): Promise<boolean>;
 }
 
 export const storage = new PostgresStorage();

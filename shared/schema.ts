@@ -147,6 +147,16 @@ export const projectCosts = pgTable("project_costs", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const replitUnits = pgTable("replit_units", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  valor: real("valor").notNull(),
+  email: text("email").notNull(),
+  nome: text("nome", { enum: ["Camargo", "Marquez"] }).notNull(),
+  dataHorario: text("data_horario").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users, {
   id: z.string().optional(),
@@ -254,6 +264,14 @@ export const updateProjectCostSchema = createInsertSchema(projectCosts).omit({
   updatedAt: true,
 }).partial();
 
+export const insertReplitUnitSchema = createInsertSchema(replitUnits).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateReplitUnitSchema = insertReplitUnitSchema.partial();
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -296,6 +314,10 @@ export type InsertPaymentFile = z.infer<typeof insertPaymentFileSchema>;
 export type ProjectCost = typeof projectCosts.$inferSelect;
 export type InsertProjectCost = z.infer<typeof insertProjectCostSchema>;
 export type UpdateProjectCost = z.infer<typeof updateProjectCostSchema>;
+
+export type ReplitUnit = typeof replitUnits.$inferSelect;
+export type InsertReplitUnit = z.infer<typeof insertReplitUnitSchema>;
+export type UpdateReplitUnit = z.infer<typeof updateReplitUnitSchema>;
 
 // Derived types for API responses
 export type ProjectWithClient = Project & {
