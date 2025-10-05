@@ -34,11 +34,11 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 
 const STATUS_OPTIONS = [
-  { value: "Reembolso", emoji: "💸" },
-  { value: "Reembolso concluído", emoji: "✅" },
-  { value: "Replit apagado", emoji: "⚡" },
-  { value: "Reembolso negado", emoji: "❌" },
-  { value: "Pedido de reembolso reenviado", emoji: "🔄" },
+  { value: "Reembolso", color: "text-yellow-500" },
+  { value: "Reembolso concluído", color: "text-green-500" },
+  { value: "Replit apagado", color: "text-white" },
+  { value: "Reembolso negado", color: "text-red-500" },
+  { value: "Pedido de reembolso reenviado", color: "text-blue-500" },
 ];
 
 export default function ReplitPage() {
@@ -165,12 +165,9 @@ export default function ReplitPage() {
     }).format(value);
   };
 
-  const getStatusEmojis = (statusArray: string[]) => {
-    if (!statusArray || statusArray.length === 0) return "";
-    return statusArray.map(status => {
-      const option = STATUS_OPTIONS.find(opt => opt.value === status);
-      return option ? option.emoji : "";
-    }).join(" ");
+  const getStatusColor = (status: string) => {
+    const option = STATUS_OPTIONS.find(opt => opt.value === status);
+    return option ? option.color : "text-gray-400";
   };
 
   return (
@@ -330,7 +327,17 @@ export default function ReplitPage() {
                       {unit.dataHorario}
                     </TableCell>
                     <TableCell data-testid={`text-status-${unit.id}`}>
-                      <span className="text-lg">{getStatusEmojis(unit.status)}</span>
+                      <div className="flex flex-wrap gap-1">
+                        {unit.status && unit.status.map((status, index) => (
+                          <span 
+                            key={index} 
+                            className={`text-sm font-medium ${getStatusColor(status)}`}
+                          >
+                            {status}
+                            {index < unit.status.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
