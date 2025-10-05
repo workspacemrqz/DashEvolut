@@ -32,6 +32,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const STATUS_OPTIONS = [
   { value: "Solicitado", bgColor: "bg-yellow-500", textColor: "text-black" },
@@ -46,10 +47,40 @@ export default function ReplitPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez">("Todos");
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
     queryKey: ["/api/replit-units"],
   });
+
+  const filteredUnits = units.filter(unit => {
+    if (nameFilter === "Todos") return true;
+    return unit.nome === nameFilter;
+  });
+
+  const stats = {
+    camargo: {
+      total: units.filter(u => u.nome === "Camargo").reduce((sum, u) => sum + u.valor, 0),
+      count: units.filter(u => u.nome === "Camargo").length,
+    },
+    marquez: {
+      total: units.filter(u => u.nome === "Marquez").reduce((sum, u) => sum + u.valor, 0),
+      count: units.filter(u => u.nome === "Marquez").length,
+    },
+  };
+
+  const chartData = [
+    {
+      name: "Camargo",
+      "Valor Investido (R$)": stats.camargo.total,
+      "Unidades": stats.camargo.count,
+    },
+    {
+      name: "Marquez",
+      "Valor Investido (R$)": stats.marquez.total,
+      "Unidades": stats.marquez.count,
+    },
+  ];
 
   const createMutation = useMutation({
     mutationFn: (data: InsertReplitUnit) =>
@@ -295,18 +326,74 @@ export default function ReplitPage() {
         </Dialog>
       </div>
 
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Estatísticas por Pessoa</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="name" stroke="#F9FAFB" />
+                <YAxis stroke="#F9FAFB" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: "#1a1a1a", 
+                    border: "1px solid #333",
+                    borderRadius: "8px",
+                    color: "#F9FAFB"
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="Valor Investido (R$)" fill="#10b981" />
+                <Bar dataKey="Unidades" fill="#3b82f6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle>Lista de Unidades</CardTitle>
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <CardTitle>Lista de Unidades</CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant={nameFilter === "Todos" ? "default" : "outline"}
+                onClick={() => setNameFilter("Todos")}
+                data-testid="filter-todos"
+                className={nameFilter === "Todos" ? "btn-primary" : ""}
+              >
+                Todos
+              </Button>
+              <Button
+                variant={nameFilter === "Camargo" ? "default" : "outline"}
+                onClick={() => setNameFilter("Camargo")}
+                data-testid="filter-camargo"
+                className={nameFilter === "Camargo" ? "btn-primary" : ""}
+              >
+                Camargo
+              </Button>
+              <Button
+                variant={nameFilter === "Marquez" ? "default" : "outline"}
+                onClick={() => setNameFilter("Marquez")}
+                data-testid="filter-marquez"
+                className={nameFilter === "Marquez" ? "btn-primary" : ""}
+              >
+                Marquez
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">
               Carregando...
             </div>
-          ) : units.length === 0 ? (
+          ) : filteredUnits.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhuma unidade cadastrada
+              {units.length === 0 ? "Nenhuma unidade cadastrada" : "Nenhuma unidade encontrada com este filtro"}
             </div>
           ) : (
             <Table>
@@ -321,7 +408,7 @@ export default function ReplitPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {units.map((unit) => (
+                {filteredUnits.map((unit) => (
                   <TableRow key={unit.id} data-testid={`row-unit-${unit.id}`}>
                     <TableCell data-testid={`text-valor-${unit.id}`}>
                       {formatCurrency(unit.valor)}
