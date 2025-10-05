@@ -884,6 +884,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Replit Units Routes
+  app.get("/api/replit-units", async (_req, res) => {
+    try {
+      const units = await storage.getReplitUnits();
+      res.json(units);
+    } catch (error) {
+      console.error('Error fetching replit units:', error);
+      res.status(500).json({ message: "Failed to fetch replit units" });
+    }
+  });
+
+  app.get("/api/replit-units/:id", async (req, res) => {
+    try {
+      const unit = await storage.getReplitUnit(req.params.id);
+      if (!unit) {
+        return res.status(404).json({ message: "Replit unit not found" });
+      }
+      res.json(unit);
+    } catch (error) {
+      console.error('Error fetching replit unit:', error);
+      res.status(500).json({ message: "Failed to fetch replit unit" });
+    }
+  });
+
+  app.post("/api/replit-units", async (req, res) => {
+    try {
+      const unit = await storage.createReplitUnit(req.body);
+      res.status(201).json(unit);
+    } catch (error) {
+      console.error('Error creating replit unit:', error);
+      res.status(500).json({ message: "Failed to create replit unit" });
+    }
+  });
+
+  app.put("/api/replit-units/:id", async (req, res) => {
+    try {
+      const unit = await storage.updateReplitUnit(req.params.id, req.body);
+      if (!unit) {
+        return res.status(404).json({ message: "Replit unit not found" });
+      }
+      res.json(unit);
+    } catch (error) {
+      console.error('Error updating replit unit:', error);
+      res.status(500).json({ message: "Failed to update replit unit" });
+    }
+  });
+
+  app.delete("/api/replit-units/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteReplitUnit(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Replit unit not found" });
+      }
+      res.json({ message: "Replit unit deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting replit unit:', error);
+      res.status(500).json({ message: "Failed to delete replit unit" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
