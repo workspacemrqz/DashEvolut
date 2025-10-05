@@ -225,7 +225,7 @@ export default function ReplitPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={handleCloseDialog}
+                  onClick={() => handleOpenChange(false)}
                   data-testid="button-cancel"
                 >
                   Cancelar
