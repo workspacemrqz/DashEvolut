@@ -264,7 +264,10 @@ export default function ReplitPage() {
                         htmlFor={`status-${option.value}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                       >
-                        <span className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}>
+                        <span 
+                          className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}
+                          style={option.value === "Replit apagado" ? { color: "#060606" } : undefined}
+                        >
                           {option.value}
                         </span>
                       </label>
@@ -338,6 +341,7 @@ export default function ReplitPage() {
                             <span 
                               key={index} 
                               className={`px-2 py-1 rounded-md text-xs font-semibold ${style.bgColor} ${style.textColor}`}
+                              style={status === "Replit apagado" ? { color: "#060606" } : undefined}
                             >
                               {status}
                             </span>
