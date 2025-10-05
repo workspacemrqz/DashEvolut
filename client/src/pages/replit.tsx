@@ -34,11 +34,11 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 
 const STATUS_OPTIONS = [
-  { value: "Reembolso", bgColor: "bg-yellow-500", textColor: "text-black" },
-  { value: "Reembolso concluído", bgColor: "bg-green-500", textColor: "text-white" },
-  { value: "Replit apagado", bgColor: "bg-[#030303]", textColor: "text-[#060606]" },
-  { value: "Reembolso negado", bgColor: "bg-red-500", textColor: "text-white" },
-  { value: "Pedido de reembolso reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
+  { value: "Solicitado", bgColor: "bg-yellow-500", textColor: "text-black" },
+  { value: "Concluído", bgColor: "bg-green-500", textColor: "text-white" },
+  { value: "Limpo", bgColor: "bg-[#030303]", textColor: "text-[#060606]" },
+  { value: "Negado", bgColor: "bg-red-500", textColor: "text-white" },
+  { value: "Reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
 ];
 
 export default function ReplitPage() {
@@ -266,7 +266,7 @@ export default function ReplitPage() {
                       >
                         <span 
                           className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}
-                          style={option.value === "Replit apagado" ? { color: "#060606" } : undefined}
+                          style={option.value === "Limpo" ? { color: "#060606" } : undefined}
                         >
                           {option.value}
                         </span>
@@ -345,7 +345,7 @@ export default function ReplitPage() {
                             <span 
                               key={index} 
                               className={`px-2 py-1 rounded-md text-xs font-semibold ${style.bgColor} ${style.textColor}`}
-                              style={status === "Replit apagado" ? { color: "#060606" } : undefined}
+                              style={status === "Limpo" ? { color: "#060606" } : undefined}
                             >
                               {status}
                             </span>
