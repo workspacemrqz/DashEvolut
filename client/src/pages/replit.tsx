@@ -34,11 +34,11 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 
 const STATUS_OPTIONS = [
-  { value: "Reembolso", color: "text-yellow-500" },
-  { value: "Reembolso concluído", color: "text-green-500" },
-  { value: "Replit apagado", color: "text-white" },
-  { value: "Reembolso negado", color: "text-red-500" },
-  { value: "Pedido de reembolso reenviado", color: "text-blue-500" },
+  { value: "Reembolso", bgColor: "bg-yellow-500", textColor: "text-black" },
+  { value: "Reembolso concluído", bgColor: "bg-green-500", textColor: "text-white" },
+  { value: "Replit apagado", bgColor: "bg-white", textColor: "text-black" },
+  { value: "Reembolso negado", bgColor: "bg-red-500", textColor: "text-white" },
+  { value: "Pedido de reembolso reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
 ];
 
 export default function ReplitPage() {
@@ -165,9 +165,11 @@ export default function ReplitPage() {
     }).format(value);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyle = (status: string) => {
     const option = STATUS_OPTIONS.find(opt => opt.value === status);
-    return option ? option.color : "text-gray-400";
+    return option 
+      ? { bgColor: option.bgColor, textColor: option.textColor }
+      : { bgColor: "bg-gray-500", textColor: "text-white" };
   };
 
   return (
@@ -262,7 +264,9 @@ export default function ReplitPage() {
                         htmlFor={`status-${option.value}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                       >
-                        {option.emoji} {option.value}
+                        <span className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}>
+                          {option.value}
+                        </span>
                       </label>
                     </div>
                   ))}
@@ -328,15 +332,17 @@ export default function ReplitPage() {
                     </TableCell>
                     <TableCell data-testid={`text-status-${unit.id}`}>
                       <div className="flex flex-wrap gap-1">
-                        {unit.status && unit.status.map((status, index) => (
-                          <span 
-                            key={index} 
-                            className={`text-sm font-medium ${getStatusColor(status)}`}
-                          >
-                            {status}
-                            {index < unit.status.length - 1 && ", "}
-                          </span>
-                        ))}
+                        {unit.status && unit.status.map((status, index) => {
+                          const style = getStatusStyle(status);
+                          return (
+                            <span 
+                              key={index} 
+                              className={`px-2 py-1 rounded-md text-xs font-semibold ${style.bgColor} ${style.textColor}`}
+                            >
+                              {status}
+                            </span>
+                          );
+                        })}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
