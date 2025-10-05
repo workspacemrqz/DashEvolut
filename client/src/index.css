@@ -1177,3 +1177,10 @@
     color: #ababab !important;
   }
 }
+
+/* Login button text color override - MAXIMUM PRIORITY */
+button[type="submit"].w-full,
+button[type="submit"].w-full *,
+button[type="submit"].w-full svg {
+  color: #060606 !important;
+}
