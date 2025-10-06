@@ -48,6 +48,7 @@ export default function ReplitPage() {
   const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez">("Todos");
+  const [dataHorarioValue, setDataHorarioValue] = useState("");
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
     queryKey: ["/api/replit-units"],
@@ -164,6 +165,8 @@ export default function ReplitPage() {
   const handleEdit = (unit: ReplitUnit) => {
     setEditingUnit(unit);
     setSelectedStatus(unit.status || []);
+    // Garante que o valor seja formatado ao carregar para edição
+    setDataHorarioValue(formatDataHorario(unit.dataHorario));
     setIsDialogOpen(true);
   };
 
@@ -184,6 +187,7 @@ export default function ReplitPage() {
     if (!open) {
       setEditingUnit(null);
       setSelectedStatus([]);
+      setDataHorarioValue("");
     }
   };
 
@@ -192,6 +196,32 @@ export default function ReplitPage() {
       style: 'currency',
       currency: 'BRL'
     }).format(value);
+  };
+
+  const formatDataHorario = (value: string) => {
+    // Remove tudo que não for número
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limita a 14 dígitos (DDMMYYYYHHMM)
+    const limited = numbers.slice(0, 14);
+    
+    // Aplica a formatação progressiva
+    if (limited.length <= 2) {
+      return limited; // DD
+    } else if (limited.length <= 4) {
+      return `${limited.slice(0, 2)}/${limited.slice(2)}`; // DD/MM
+    } else if (limited.length <= 8) {
+      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4)}`; // DD/MM/YYYY
+    } else if (limited.length <= 10) {
+      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4, 8)} ${limited.slice(8)}`; // DD/MM/YYYY HH
+    } else {
+      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4, 8)} ${limited.slice(8, 10)}:${limited.slice(10)}`; // DD/MM/YYYY HH:MM
+    }
+  };
+
+  const handleDataHorarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatDataHorario(e.target.value);
+    setDataHorarioValue(formatted);
   };
 
   const getStatusStyle = (status: string) => {
@@ -272,10 +302,12 @@ export default function ReplitPage() {
                   id="dataHorario"
                   name="dataHorario"
                   type="text"
-                  defaultValue={editingUnit?.dataHorario || ""}
-                  placeholder="Ex: 01/01/2025 14:30"
+                  value={dataHorarioValue}
+                  onChange={handleDataHorarioChange}
+                  placeholder="Digite 14 números (ex: 01012025 1430)"
                   required
                   data-testid="input-data-horario"
+                  maxLength={16}
                 />
               </div>
               <div className="space-y-2">
@@ -419,7 +451,7 @@ export default function ReplitPage() {
                       {unit.nome}
                     </TableCell>
                     <TableCell data-testid={`text-data-${unit.id}`}>
-                      {unit.dataHorario}
+                      {formatDataHorario(unit.dataHorario)}
                     </TableCell>
                     <TableCell data-testid={`text-status-${unit.id}`}>
                       <div className="flex flex-wrap gap-1">
