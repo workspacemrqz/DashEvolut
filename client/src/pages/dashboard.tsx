@@ -3,6 +3,7 @@ import Header from "@/components/layout/header";
 import { ProjectWithClient, ClientWithStats, SubscriptionWithClient } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import NotificationsSection from "@/components/dashboard/notifications-section";
+import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -96,8 +97,11 @@ export default function Dashboard() {
               )}
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-white">R$ {metrics.activePipelineValue.toLocaleString('pt-BR')}</div>
-              <div className="text-sm text-gray-300">Pipeline Ativo</div>
+              <div className="text-2xl font-bold text-white">R$ {metrics.totalProjectValue.toLocaleString('pt-BR')}</div>
+              <div className="text-sm text-gray-300 flex items-center justify-center gap-2">
+                Faturamento
+                <Badge variant="secondary" className="text-xs">Projetos</Badge>
+              </div>
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-purple-300">{metrics.activeSubscriptions}</div>
