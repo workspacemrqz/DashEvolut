@@ -136,11 +136,13 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   });
 
   const onSubmit = (data: InsertProject) => {
+    console.log("📤 [FRONTEND] Form data before formatting:", data);
     const formattedData = {
       ...data,
       startDate: data.startDate instanceof Date ? data.startDate.toISOString() : data.startDate,
       dueDate: data.dueDate instanceof Date ? data.dueDate.toISOString() : data.dueDate,
     };
+    console.log("📤 [FRONTEND] Formatted data being sent:", formattedData);
     
     if (isEditMode) {
       updateProjectMutation.mutate(formattedData as InsertProject);

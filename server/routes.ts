@@ -294,18 +294,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/projects/:id", async (req, res) => {
     try {
-      const updateSchemaWithStringDates = insertProjectSchema.partial().extend({
-        startDate: z.string().transform((val) => new Date(val)).optional(),
-        dueDate: z.string().transform((val) => new Date(val)).optional(),
+      console.log("📝 [PATCH] Received data:", JSON.stringify(req.body, null, 2));
+      
+      // Create update schema that accepts string dates
+      const updateSchema = z.object({
+        name: z.string().optional(),
+        description: z.string().optional(),
+        clientId: z.string().optional(),
+        status: z.enum(["discovery", "development", "delivery", "post_sale", "completed", "cancelled"]).optional(),
+        value: z.number().optional(),
+        startDate: z.union([
+          z.string().transform((val) => new Date(val)),
+          z.date()
+        ]).optional(),
+        dueDate: z.union([
+          z.string().transform((val) => new Date(val)),
+          z.date()
+        ]).optional(),
+        isRecurring: z.boolean().optional(),
       });
-      const updates = updateSchemaWithStringDates.parse(req.body);
+      
+      const updates = updateSchema.parse(req.body);
+      console.log("✅ [PATCH] Parsed updates:", updates);
       const project = await storage.updateProject(req.params.id, updates);
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
       }
       res.json(project);
     } catch (error) {
-      res.status(400).json({ message: "Invalid update data" });
+      console.error("❌ [PATCH] Error:", error);
+      res.status(400).json({ message: "Invalid update data", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
