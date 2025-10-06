@@ -9,7 +9,6 @@ import Clients from "@/pages/clients";
 import Projects from "@/pages/projects";
 import Subscriptions from "@/pages/subscriptions";
 import Proposals from "@/pages/proposals";
-import Kanban from "@/pages/kanban";
 import Replit from "@/pages/replit";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/login";
@@ -54,7 +53,6 @@ function Router() {
           <Route path="/projects" component={() => { window.location.replace('/projetos'); return null; }} />
           <Route path="/projects/:projectId" component={({ params }: { params?: any }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
           <Route path="/proposals" component={() => { window.location.replace('/propostas'); return null; }} />
-          <Route path="/kanban" component={Kanban} />
           <Route path="/replit" component={Replit} />
           {/* Redirect authenticated users from login to dashboard */}
           <Route path="/login" component={() => { window.location.replace('/'); return null; }} />

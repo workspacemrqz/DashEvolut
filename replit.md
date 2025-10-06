@@ -55,7 +55,6 @@ Preferred communication style: Simple, everyday language.
 - **Subscription Billing**: Recurring payment management with service checklists
 - **Proposal Generation**: Integration with external webhook for automated proposal creation
 - **Notification System**: Rule-based alerting for delayed projects, payment reminders, and upselling opportunities
-- **Kanban Board**: Drag-and-drop interface for visual project and client management
 - **Replit Units Management**: Full CRUD operations for managing Replit unit purchases with monetary values (Brazilian Real), email tracking, assignee selection, and datetime stamps
 
 ## External Dependencies

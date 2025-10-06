@@ -2,15 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles for Kanban tabs */
-[role="tab"][data-state="inactive"] {
-  color: white !important;
-}
-
-[role="tab"][data-state="inactive"] svg {
-  color: white !important;
-}
-
 :root {
   --background: #090909;
   --foreground: #ebebeb;
@@ -68,10 +59,6 @@
   --shadow-2xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
   --shadow-2xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
   --tracking-normal: 0em;
-  
-  /* Custom colors for Kanban page */
-  --kanban-badge-bg: #f5f5f5;
-  --kanban-badge-text: #060606;
   
   /* Dynamic color system variables */
   --light-bg-color: #f5f5f5;
@@ -189,25 +176,6 @@
     box-shadow: none ;
     --tw-ring-shadow: none ;
     --tw-ring-offset-shadow: none ;
-  }
-  
-  /* Kanban page custom styles */
-  .kanban-badge {
-    background-color: #f5f5f5 !important;
-    color: #060606 !important;
-  }
-  
-  .kanban-badge * {
-    color: #060606 !important;
-  }
-  
-  .kanban-tab-active {
-    background-color: #f5f5f5 !important;
-    color: #060606 !important;
-  }
-  
-  .kanban-tab-active * {
-    color: #060606 !important;
   }
   
   /* Override any remaining box-shadow with ring */
@@ -525,12 +493,6 @@
     .form-buttons {
       flex-direction: column;
       gap: 8px;
-    }
-    
-    /* Ensure Kanban scroll works smoothly */
-    .kanban-container {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
     }
   }
 

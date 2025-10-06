@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BarChart3, Users, FolderOpen, Kanban, Menu, X, CreditCard, FileText, Server } from "lucide-react";
+import { BarChart3, Users, FolderOpen, Menu, X, CreditCard, FileText, Server } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 
@@ -9,7 +9,6 @@ const navigation = [
   { name: "Projetos", href: "/projetos", icon: FolderOpen },
   { name: "Assinaturas", href: "/subscriptions", icon: CreditCard },
   { name: "Propostas", href: "/propostas", icon: FileText },
-  { name: "Kanban", href: "/kanban", icon: Kanban },
   { name: "Replit", href: "/replit", icon: Server },
 ];
 
