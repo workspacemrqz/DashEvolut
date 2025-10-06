@@ -101,7 +101,7 @@ export default function Dashboard() {
               <div className="text-sm text-gray-300">
                 Faturamento
               </div>
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5 mt-1">Projetos</Badge>
+              <Badge variant="secondary" className="text-xs px-1.5 py-0 mt-1">Projetos</Badge>
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-purple-300">{metrics.activeSubscriptions}</div>
