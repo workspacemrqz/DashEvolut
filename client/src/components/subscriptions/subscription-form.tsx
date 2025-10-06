@@ -92,8 +92,6 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
     queryKey: ["/api/clients"],
   });
 
-  const clients = allClients?.filter((client: any) => client.hasActiveSubscription);
-
   const form = useForm<InsertSubscription>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -224,10 +222,10 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                         <SelectContent className="dropdown-content">
                           {loadingClients ? (
                             <SelectItem value="loading" disabled>Carregando clientes...</SelectItem>
-                          ) : clients?.length === 0 ? (
-                            <SelectItem value="no-clients" disabled>Nenhum cliente ativo encontrado</SelectItem>
+                          ) : !allClients || allClients.length === 0 ? (
+                            <SelectItem value="no-clients" disabled>Nenhum cliente cadastrado</SelectItem>
                           ) : (
-                            clients?.map((client) => (
+                            allClients.map((client) => (
                               <SelectItem key={client.id} value={client.id}>
                                 {client.name} - {client.company}
                               </SelectItem>
