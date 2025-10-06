@@ -37,7 +37,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 const STATUS_OPTIONS = [
   { value: "Solicitado", bgColor: "bg-yellow-500", textColor: "text-black" },
   { value: "Concluído", bgColor: "bg-green-500", textColor: "text-white" },
-  { value: "Limpo", bgColor: "bg-[#030303]", textColor: "text-[#060606]" },
+  { value: "Limpo", bgColor: "bg-[#277677]", textColor: "text-white" },
   { value: "Negado", bgColor: "bg-red-500", textColor: "text-white" },
   { value: "Reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
 ];
@@ -295,7 +295,6 @@ export default function ReplitPage() {
                       >
                         <span 
                           className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}
-                          style={option.value === "Limpo" ? { color: "#060606" } : undefined}
                         >
                           {option.value}
                         </span>
@@ -430,7 +429,6 @@ export default function ReplitPage() {
                             <span 
                               key={index} 
                               className={`px-2 py-1 rounded-md text-xs font-semibold ${style.bgColor} ${style.textColor}`}
-                              style={status === "Limpo" ? { color: "#060606" } : undefined}
                             >
                               {status}
                             </span>
