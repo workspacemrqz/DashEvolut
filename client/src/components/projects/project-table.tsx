@@ -169,7 +169,7 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
                 </td>
                 <td className="p-2 lg:p-4">
                   <Badge 
-                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary status-badge status-development text-[#060606]"
+                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold border-transparent bg-primary status-badge status-development text-[#060606]"
                     data-testid={`project-status-${project.id}`}
                   >
                     <span className="lg:hidden">{statusMap[project.status].label.slice(0, 4)}</span>

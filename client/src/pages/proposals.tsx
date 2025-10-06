@@ -161,7 +161,7 @@ export default function Proposals() {
                   placeholder="Digite aqui o texto da sua proposta..."
                   value={proposalText}
                   onChange={handleTextChange}
-                  className="min-h-[200px] resize-none bg-bg-primary border-border-secondary text-text-primary placeholder:text-text-secondary focus:border-border-primary"
+                  className="min-h-[200px] resize-none bg-bg-primary border-border-secondary text-text-primary placeholder:text-text-secondary"
                   maxLength={3500 + (proposalText.length - getCharacterCount())} // Ajusta para incluir espaços no limite visual
                 />
                 <div className="flex justify-between items-center text-sm">

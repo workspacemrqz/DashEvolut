@@ -19,7 +19,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-lg bg-[#1a1a1a] border border-[#333] px-3 py-2 text-sm text-white transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-[#ccc] [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between rounded-lg bg-[#1a1a1a] border border-[#333] px-3 py-2 text-sm text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-[#ccc] [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -118,7 +118,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-md py-2 pl-8 pr-2 text-sm text-white outline-none transition-all hover:bg-gradient-to-r hover:from-[#1F9BF1] hover:to-[#3A66E3] hover:text-white focus-visible:bg-gradient-to-r focus-visible:from-[#1F9BF1] focus-visible:to-[#3A66E3] focus-visible:text-white focus-visible:outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-pointer select-none items-center rounded-md py-2 pl-8 pr-2 text-sm text-white outline-none transition-all hover:bg-gradient-to-r hover:from-[#1F9BF1] hover:to-[#3A66E3] hover:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
