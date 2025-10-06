@@ -84,7 +84,10 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-blue-300">{metrics.activeProjects}</div>
-              <div className="text-sm text-gray-300">Projetos em andamento</div>
+              <div className="text-sm text-gray-300">
+                Projetos
+              </div>
+              <Badge variant="secondary" className="text-xs px-1.5 py-0 mt-1">em andamento</Badge>
               {metrics.overdueProjects > 0 && (
                 <div className="text-xs text-red-400 mt-1">{metrics.overdueProjects} atrasados</div>
               )}
