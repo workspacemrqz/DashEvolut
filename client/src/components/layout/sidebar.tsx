@@ -78,7 +78,7 @@ export default function Sidebar() {
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="p-6 pt-16 border-b border-border-secondary">
+          <div className="p-6 pt-16">
             <img 
               src="/assets/LOGO Evolut IA com texto na horizontal.png" 
               alt="Evolut IA Logo" 
@@ -118,7 +118,7 @@ export default function Sidebar() {
   // Desktop sidebar - same as before but hidden on mobile
   return (
     <div className="w-64 container-bg border-r border-border-secondary flex flex-col hidden lg:flex">
-      <div className="p-6 border-b border-border-secondary">
+      <div className="p-6">
         <img 
           src="/assets/LOGO Evolut IA com texto na horizontal.png" 
           alt="Evolut IA Logo" 
