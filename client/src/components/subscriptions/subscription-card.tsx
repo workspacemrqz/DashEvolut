@@ -99,7 +99,7 @@ export default function SubscriptionCard({
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="dropdown-content">
+          <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
             <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)}>
               <CreditCard className="h-4 w-4 mr-2" />
               Registrar Pagamento

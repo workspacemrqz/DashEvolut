@@ -273,34 +273,34 @@ export default function SubscriptionTable({
                             <MoreHorizontal className="w-4 h-4" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="dropdown-content">
-                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)} className="text-left justify-start bg-transparent text-dynamic-light">
+                        <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
+                          <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)}>
                             <CreditCard className="h-4 w-4 mr-2" />
                             Registrar Pagamento
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleManageServices(subscription)} className="text-left justify-start bg-transparent text-dynamic-light">
+                          <DropdownMenuItem onClick={() => handleManageServices(subscription)}>
                             <CheckSquare className="h-4 w-4 mr-2" />
                             Gerenciar Serviços
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)} className="text-left justify-start bg-transparent text-dynamic-light">
+                          <DropdownMenuItem onClick={() => handleEditSubscription(subscription)}>
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Assinatura
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           {subscription.status === "active" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")} className="text-left justify-start bg-transparent text-dynamic-light">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")}>
                               <Pause className="h-4 w-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "paused" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start bg-transparent text-dynamic-light">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")}>
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
                           )}
                           {subscription.status === "cancelled" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")} className="text-left justify-start bg-transparent text-dynamic-light">
+                            <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")}>
                               <Play className="h-4 w-4 mr-2" />
                               Reativar
                             </DropdownMenuItem>
@@ -308,7 +308,6 @@ export default function SubscriptionTable({
                           {subscription.status !== "cancelled" && (
                             <DropdownMenuItem 
                               onClick={() => handleStatusChange(subscription.id, "cancelled")}
-                              className="text-left justify-start bg-transparent text-dynamic-light"
                             >
                               <X className="h-4 w-4 mr-2" />
                               Cancelar
@@ -317,7 +316,7 @@ export default function SubscriptionTable({
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
                             onClick={() => handleDeleteSubscription(subscription)}
-                            className="text-left justify-start bg-transparent text-dynamic-light text-red-600 dark:text-red-400"
+                            className="text-red-600 dark:text-red-400"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Remover
