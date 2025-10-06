@@ -98,10 +98,10 @@ export default function Dashboard() {
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-white">R$ {metrics.totalProjectValue.toLocaleString('pt-BR')}</div>
-              <div className="text-sm text-gray-300 flex items-center justify-center gap-2">
+              <div className="text-sm text-gray-300">
                 Faturamento
-                <Badge variant="secondary" className="text-xs">Projetos</Badge>
               </div>
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5 mt-1">Projetos</Badge>
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-purple-300">{metrics.activeSubscriptions}</div>
