@@ -585,7 +585,19 @@ export class PostgresStorage implements IStorage {
 
   // Replit Units
   async getReplitUnits(): Promise<ReplitUnit[]> {
-    return await this.db.select().from(replitUnits).orderBy(desc(replitUnits.createdAt));
+    const units = await this.db.select().from(replitUnits);
+    // Sort by dataHorario (format: DD/MM/YYYY HH:MM) from newest to oldest
+    return units.sort((a, b) => {
+      const parseDate = (dateStr: string) => {
+        const [datePart, timePart] = dateStr.split(' ');
+        const [day, month, yearOrTime] = datePart.split('/');
+        const year = yearOrTime.length === 4 ? yearOrTime : `2024`;
+        const time = timePart || yearOrTime;
+        const [hours, minutes] = time.split(':');
+        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
+      };
+      return parseDate(b.dataHorario).getTime() - parseDate(a.dataHorario).getTime();
+    });
   }
 
   async getReplitUnit(id: string): Promise<ReplitUnit | undefined> {
