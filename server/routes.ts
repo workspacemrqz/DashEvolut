@@ -906,6 +906,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete proposal
+  app.delete("/api/proposals/:id", async (req, res) => {
+    try {
+      const { Pool } = await import('pg');
+      
+      const pool = new Pool({
+        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+      });
+
+      const client = await pool.connect();
+      
+      try {
+        const result = await client.query(`
+          DELETE FROM propostas WHERE id = $1 RETURNING *
+        `, [req.params.id]);
+        
+        if (result.rows.length === 0) {
+          return res.status(404).json({ message: "Proposal not found" });
+        }
+        
+        res.json({ message: "Proposal deleted successfully" });
+      } finally {
+        client.release();
+      }
+      
+      await pool.end();
+    } catch (error) {
+      console.error('Error deleting proposal:', error);
+      res.status(500).json({ message: "Failed to delete proposal" });
+    }
+  });
+
   // Replit Units Routes
   app.get("/api/replit-units", async (_req, res) => {
     try {

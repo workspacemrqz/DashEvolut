@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, FileText, RefreshCw, Edit } from "lucide-react";
+import { ExternalLink, FileText, RefreshCw, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 
 interface Proposal {
   id: number;
@@ -55,6 +56,31 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
       setTimeout(() => {
         setIsRefreshing(false);
       }, 1000);
+    }
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      apiRequest("DELETE", `/api/proposals/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/proposals"] });
+      toast({
+        title: "Sucesso",
+        description: "Proposta excluída com sucesso!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erro",
+        description: "Erro ao excluir a proposta.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDeleteProposal = (proposalId: number) => {
+    if (confirm("Tem certeza que deseja excluir esta proposta?")) {
+      deleteMutation.mutate(proposalId);
     }
   };
 
@@ -183,15 +209,28 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     variant="outline"
                     className="btn-secondary proposal-btn-edit flex items-center gap-2"
                     data-proposal-button="edit"
+                    data-testid={`button-edit-${proposal.id}`}
                   >
                     <Edit className="w-4 h-4" style={{ color: '#060606' }} />
                     Editar
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteProposal(proposal.id)}
+                    size="sm"
+                    variant="outline"
+                    className="btn-secondary proposal-btn-delete flex items-center gap-2"
+                    disabled={deleteMutation.isPending}
+                    data-testid={`button-delete-${proposal.id}`}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                    Apagar
                   </Button>
                   <Button
                     onClick={() => handleViewProposal(proposal.link)}
                     size="sm"
                     className="btn-primary flex items-center gap-2"
                     style={{ color: '#F5F5F5' }}
+                    data-testid={`button-view-${proposal.id}`}
                   >
                     <ExternalLink className="w-4 h-4" style={{ color: '#F5F5F5' }} />
                     Ver Proposta
