@@ -211,7 +211,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     data-proposal-button="edit"
                     data-testid={`button-edit-${proposal.id}`}
                   >
-                    <Edit className="w-4 h-4" style={{ color: '#060606' }} />
+                    <Edit className="h-4 w-4" color="#060606" />
                     Editar
                   </Button>
                   <Button
@@ -222,7 +222,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     disabled={deleteMutation.isPending}
                     data-testid={`button-delete-${proposal.id}`}
                   >
-                    <Trash2 className="w-4 h-4" style={{ color: '#060606' }} />
+                    <Trash2 className="h-4 w-4" color="#060606" />
                     Apagar
                   </Button>
                   <Button
