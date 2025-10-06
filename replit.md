@@ -52,7 +52,7 @@ Preferred communication style: Simple, everyday language.
 - **Dashboard Analytics**: Real-time KPI calculation, revenue tracking, project pipeline visualization
 - **Client Management**: Customer lifecycle tracking from prospect to active client
 - **Project Management**: Status-based project tracking with overdue detection
-- **Subscription Billing**: Recurring payment management with service checklists
+- **Subscription Billing**: Recurring payment management with service checklists. Enhanced client selection in subscription form with searchable sheet interface for better UX when selecting clients from the database.
 - **Proposal Generation**: Integration with external webhook for automated proposal creation
 - **Notification System**: Rule-based alerting for delayed projects, payment reminders, and upselling opportunities
 - **Replit Units Management**: Full CRUD operations for managing Replit unit purchases with monetary values (Brazilian Real), email tracking, assignee selection, and datetime stamps
