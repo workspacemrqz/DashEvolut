@@ -176,7 +176,8 @@ export default function SubscriptionCard({
               </p>
               <button
                 onClick={() => setShowServiceChecklist(true)}
-                className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary"
+                className="btn-secondary px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                style={{ minWidth: 'auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                 data-testid={`button-manage-services-${subscription.id}`}
               >
                 Gerenciar Serviços
