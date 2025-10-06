@@ -93,13 +93,6 @@ export default function Dashboard() {
               )}
             </div>
             <div className="kpi-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-green-300">{metrics.activeClients}</div>
-              <div className="text-sm text-gray-300">Clientes Ativos</div>
-              {metrics.prospects > 0 && (
-                <div className="text-xs text-yellow-400 mt-1">{metrics.prospects} prospects</div>
-              )}
-            </div>
-            <div className="kpi-card rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-white">R$ {metrics.totalProjectValue.toLocaleString('pt-BR')}</div>
               <div className="text-sm text-gray-300">
                 Faturamento
