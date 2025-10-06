@@ -140,7 +140,7 @@ export default function Projects() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary text-dark-text"
+              className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary"
               data-testid={`filter-${tab.key}`}
             >
               {tab.label}

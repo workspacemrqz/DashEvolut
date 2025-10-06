@@ -81,9 +81,8 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
               variant="outline"
               size="sm"
               className="btn-secondary"
-              style={{ color: '#F5F5F5' }}
             >
-              <RefreshCw className="w-4 h-4 mr-2" style={{ color: '#F5F5F5' }} />
+              <RefreshCw className="w-4 h-4 mr-2" />
               Atualizar
             </Button>
           </div>
@@ -139,7 +138,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
             data-proposal-button="update"
             disabled={isLoading || isRefreshing}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} style={{ color: '#060606' }} />
             {isRefreshing ? 'Atualizando...' : 'Atualizar'}
           </Button>
         </div>
@@ -185,7 +184,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     className="btn-secondary proposal-btn-edit flex items-center gap-2"
                     data-proposal-button="edit"
                   >
-                    <Edit className="w-4 h-4" />
+                    <Edit className="w-4 h-4" style={{ color: '#060606' }} />
                     Editar
                   </Button>
                   <Button

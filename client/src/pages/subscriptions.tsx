@@ -114,7 +114,7 @@ export default function Subscriptions() {
               className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 filter === tab.key 
                   ? 'btn-primary' 
-                  : 'btn-secondary text-dark-text'
+                  : 'btn-secondary'
               }`}
               data-testid={`filter-${tab.key}`}
             >

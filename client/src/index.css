@@ -215,8 +215,8 @@
   }
 
   .btn-secondary {
-    background-color: #ebebeb;
-    border: 1px solid var(--border-secondary);
+    background-color: #EBEBEB;
+    border: 1px solid #303030;
     color: #060606;
   }
 
@@ -387,19 +387,19 @@
   button[data-testid="filter-all"] *,
   button[data-testid="filter-active"] *,
   button[data-testid="filter-prospect"] *,
-  button[data-testid="filter-inactive"] * {
-    color: #F5F5F5 !important;
-  }
-  
-  /* Override for filter buttons with secondary variant specifically */
-  .btn-secondary[data-testid="filter-all"],
-  .btn-secondary[data-testid="filter-active"],
-  .btn-secondary[data-testid="filter-prospect"],
-  .btn-secondary[data-testid="filter-inactive"],
-  .btn-secondary[data-testid="filter-all"] *,
-  .btn-secondary[data-testid="filter-active"] *,
-  .btn-secondary[data-testid="filter-prospect"] *,
-  .btn-secondary[data-testid="filter-inactive"] * {
+  button[data-testid="filter-inactive"] *,
+  button[data-testid="filter-discovery"],
+  button[data-testid="filter-development"],
+  button[data-testid="filter-delivery"],
+  button[data-testid="filter-post_sale"],
+  button[data-testid="filter-discovery"] *,
+  button[data-testid="filter-development"] *,
+  button[data-testid="filter-delivery"] *,
+  button[data-testid="filter-post_sale"] *,
+  button[data-testid="filter-paused"],
+  button[data-testid="filter-cancelled"],
+  button[data-testid="filter-paused"] *,
+  button[data-testid="filter-cancelled"] * {
     color: #060606 !important;
   }
 
@@ -428,10 +428,7 @@
 
   /* Dashboard mark all as read button text color override */
   button[data-testid="button-mark-all-read"],
-  button[data-testid="button-mark-all-read"] * {
-    color: #F5F5F5 !important;
-  }
-  
+  button[data-testid="button-mark-all-read"] *,
   .btn-secondary[data-testid="button-mark-all-read"],
   .btn-secondary[data-testid="button-mark-all-read"] * {
     color: #060606 !important;
@@ -901,16 +898,19 @@
   }
   
   .container-bg .btn-secondary {
-    background-color: var(--bg-primary) !important;
-    color: #F5F5F5 !important;
+    background-color: #EBEBEB !important;
+    color: #060606 !important;
   }
 
   /* Force icon colors in proposal buttons */
   .container-bg .btn-primary svg,
-  .container-bg .btn-secondary svg,
   .container-bg button svg,
   .container-bg [role="button"] svg {
     color: #F5F5F5 !important;
+  }
+  
+  .container-bg .btn-secondary svg {
+    color: #060606 !important;
   }
 
   /* Specific overrides for proposal page buttons - highest priority */
@@ -935,7 +935,10 @@
   .container-bg .btn-secondary:has([class*="RefreshCw"]) svg,
   .container-bg .btn-secondary:has([class*="Edit"]),
   .container-bg .btn-secondary:has([class*="Edit"]) *,
-  .container-bg .btn-secondary:has([class*="Edit"]) svg,
+  .container-bg .btn-secondary:has([class*="Edit"]) svg {
+    color: #060606 !important;
+  }
+  
   .container-bg .btn-primary:has([class*="ExternalLink"]),
   .container-bg .btn-primary:has([class*="ExternalLink"]) *,
   .container-bg .btn-primary:has([class*="ExternalLink"]) svg {
@@ -984,9 +987,6 @@
   button.proposal-btn-cancel,
   button.proposal-btn-cancel *,
   button.proposal-btn-cancel svg,
-  button.proposal-btn-save,
-  button.proposal-btn-save *,
-  button.proposal-btn-save svg,
   .container-bg button.proposal-btn-update,
   .container-bg button.proposal-btn-update *,
   .container-bg button.proposal-btn-update svg,
@@ -995,7 +995,13 @@
   .container-bg button.proposal-btn-edit svg,
   .container-bg button.proposal-btn-cancel,
   .container-bg button.proposal-btn-cancel *,
-  .container-bg button.proposal-btn-cancel svg,
+  .container-bg button.proposal-btn-cancel svg {
+    color: #060606 !important;
+  }
+  
+  button.proposal-btn-save,
+  button.proposal-btn-save *,
+  button.proposal-btn-save svg,
   .container-bg button.proposal-btn-save,
   .container-bg button.proposal-btn-save *,
   .container-bg button.proposal-btn-save svg {
@@ -1012,9 +1018,6 @@
   .container-bg .btn-secondary.proposal-btn-cancel,
   .container-bg .btn-secondary.proposal-btn-cancel *,
   .container-bg .btn-secondary.proposal-btn-cancel svg,
-  .container-bg .btn-primary.proposal-btn-save,
-  .container-bg .btn-primary.proposal-btn-save *,
-  .container-bg .btn-primary.proposal-btn-save svg,
   /* Override the specific conflicting rule */
   .container-bg .btn-secondary.proposal-btn-update:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
   .container-bg .btn-secondary.proposal-btn-update:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) *,
@@ -1025,6 +1028,12 @@
   .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]),
   .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) *,
   .container-bg .btn-secondary.proposal-btn-cancel:not([data-testid^="filter-"]):not([data-testid="button-mark-all-read"]):not([data-testid="select-time-filter"]) svg {
+    color: #060606 !important;
+  }
+  
+  .container-bg .btn-primary.proposal-btn-save,
+  .container-bg .btn-primary.proposal-btn-save *,
+  .container-bg .btn-primary.proposal-btn-save svg {
     color: #F5F5F5 !important;
   }
 
@@ -1038,9 +1047,6 @@
   [data-proposal-button="cancel"],
   [data-proposal-button="cancel"] *,
   [data-proposal-button="cancel"] svg,
-  [data-proposal-button="save"],
-  [data-proposal-button="save"] *,
-  [data-proposal-button="save"] svg,
   .container-bg [data-proposal-button="update"],
   .container-bg [data-proposal-button="update"] *,
   .container-bg [data-proposal-button="update"] svg,
@@ -1049,7 +1055,13 @@
   .container-bg [data-proposal-button="edit"] svg,
   .container-bg [data-proposal-button="cancel"],
   .container-bg [data-proposal-button="cancel"] *,
-  .container-bg [data-proposal-button="cancel"] svg,
+  .container-bg [data-proposal-button="cancel"] svg {
+    color: #060606 !important;
+  }
+  
+  [data-proposal-button="save"],
+  [data-proposal-button="save"] *,
+  [data-proposal-button="save"] svg,
   .container-bg [data-proposal-button="save"],
   .container-bg [data-proposal-button="save"] *,
   .container-bg [data-proposal-button="save"] svg {
