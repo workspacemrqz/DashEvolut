@@ -174,15 +174,13 @@ export default function SubscriptionCard({
               <p className="text-sm text-text-secondary">
                 Serviços ({subscription.services.filter(s => s.isCompleted).length}/{subscription.services.length} concluídos)
               </p>
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={() => setShowServiceChecklist(true)}
-                className="text-xs px-2 py-1 h-6"
+                className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 btn-secondary"
                 data-testid={`button-manage-services-${subscription.id}`}
               >
-                Gerenciar
-              </Button>
+                Gerenciar Serviços
+              </button>
             </div>
             <div className="space-y-1">
               {subscription.services.slice(0, 3).map((service) => (
