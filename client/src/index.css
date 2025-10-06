@@ -1158,3 +1158,96 @@ button[type="submit"].w-full *,
 button[type="submit"].w-full svg {
   color: #060606 !important;
 }
+
+/* Calendar (react-day-picker) dark theme styles */
+.rdp {
+  background-color: #060606 !important;
+  color: #EBEBEB !important;
+}
+
+.rdp-month,
+.rdp-caption,
+.rdp-caption_label,
+.rdp-head,
+.rdp-head_row,
+.rdp-head_cell,
+.rdp-tbody,
+.rdp-row,
+.rdp-cell {
+  background-color: #060606 !important;
+  color: #EBEBEB !important;
+}
+
+/* Calendar navigation buttons */
+.rdp-nav_button,
+.rdp-button_reset {
+  color: #EBEBEB !important;
+  background-color: transparent !important;
+  border-color: #EBEBEB !important;
+}
+
+.rdp-nav_button:hover,
+.rdp-button_reset:hover {
+  opacity: 1 !important;
+  background-color: rgba(235, 235, 235, 0.1) !important;
+}
+
+/* Calendar day cells */
+.rdp-day {
+  color: #EBEBEB !important;
+  background-color: transparent !important;
+}
+
+.rdp-day:hover {
+  background-color: rgba(235, 235, 235, 0.1) !important;
+}
+
+/* Selected day */
+.rdp-day_selected,
+.rdp-day_selected:hover {
+  background-color: #3b82f6 !important;
+  color: #FFFFFF !important;
+}
+
+/* Today */
+.rdp-day_today {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Outside days (from other months) */
+.rdp-day_outside {
+  opacity: 0.5 !important;
+}
+
+/* Disabled days */
+.rdp-day_disabled {
+  opacity: 0.3 !important;
+}
+
+/* Calendar footer buttons (Limpar, Hoje) */
+.rdp + div button,
+[role="dialog"] button {
+  color: #EBEBEB !important;
+}
+
+/* Specific calendar popover styling */
+[data-radix-popper-content-wrapper] {
+  background-color: #060606 !important;
+}
+
+/* Ghost button variant in calendar */
+button[class*="ghost"] {
+  color: #EBEBEB !important;
+}
+
+button[class*="ghost"]:hover {
+  background-color: rgba(235, 235, 235, 0.1) !important;
+}
+
+/* Outline button variant in calendar */
+button[class*="outline"] {
+  color: #EBEBEB !important;
+  border-color: #EBEBEB !important;
+  background-color: transparent !important;
+}
