@@ -35,9 +35,9 @@ import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const STATUS_OPTIONS = [
+  { value: "Limpo", bgColor: "bg-[#277677]", textColor: "text-white" },
   { value: "Solicitado", bgColor: "bg-yellow-500", textColor: "text-black" },
   { value: "Concluído", bgColor: "bg-green-500", textColor: "text-white" },
-  { value: "Limpo", bgColor: "bg-[#277677]", textColor: "text-white" },
   { value: "Negado", bgColor: "bg-red-500", textColor: "text-white" },
   { value: "Reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
 ];
