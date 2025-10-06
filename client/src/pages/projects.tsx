@@ -136,7 +136,7 @@ export default function Projects() {
             { key: "development", label: "Desenvolvimento" },
             { key: "delivery", label: "Entrega" },
             { key: "post_sale", label: "Pós-venda" },
-            { key: "completed", label: "Completado" },
+            { key: "completed", label: "Concluído" },
             { key: "cancelled", label: "Cancelado" }
           ].map(tab => (
             <button
