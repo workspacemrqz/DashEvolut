@@ -309,7 +309,7 @@
 
   /* Date input field icons and calendar icons */
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0) ;
+    filter: brightness(0) saturate(100%) invert(92%);
   }
 
   /* Ensure white text on blue/black backgrounds */
