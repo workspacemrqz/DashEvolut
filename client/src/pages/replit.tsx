@@ -47,7 +47,7 @@ export default function ReplitPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-  const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez">("Todos");
+  const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez" | "Dividido">("Todos");
   const [dataHorarioValue, setDataHorarioValue] = useState("");
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
@@ -68,6 +68,10 @@ export default function ReplitPage() {
       total: units.filter(u => u.nome === "Marquez").reduce((sum, u) => sum + u.valor, 0),
       count: units.filter(u => u.nome === "Marquez").length,
     },
+    dividido: {
+      total: units.filter(u => u.nome === "Dividido").reduce((sum, u) => sum + u.valor, 0),
+      count: units.filter(u => u.nome === "Dividido").length,
+    },
   };
 
   const chartData = [
@@ -80,6 +84,11 @@ export default function ReplitPage() {
       name: "Marquez",
       "Valor Investido (R$)": stats.marquez.total,
       "Unidades": stats.marquez.count,
+    },
+    {
+      name: "Dividido",
+      "Valor Investido (R$)": stats.dividido.total,
+      "Unidades": stats.dividido.count,
     },
   ];
 
@@ -303,6 +312,7 @@ export default function ReplitPage() {
                   <SelectContent>
                     <SelectItem value="Camargo">Camargo</SelectItem>
                     <SelectItem value="Marquez">Marquez</SelectItem>
+                    <SelectItem value="Dividido">Dividido</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -423,6 +433,14 @@ export default function ReplitPage() {
                 className={nameFilter === "Marquez" ? "btn-primary" : ""}
               >
                 Marquez
+              </Button>
+              <Button
+                variant={nameFilter === "Dividido" ? "default" : "outline"}
+                onClick={() => setNameFilter("Dividido")}
+                data-testid="filter-dividido"
+                className={nameFilter === "Dividido" ? "btn-primary" : ""}
+              >
+                Dividido
               </Button>
             </div>
           </div>

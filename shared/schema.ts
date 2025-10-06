@@ -151,7 +151,7 @@ export const replitUnits = pgTable("replit_units", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   valor: real("valor").notNull(),
   email: text("email").notNull(),
-  nome: text("nome", { enum: ["Camargo", "Marquez"] }).notNull(),
+  nome: text("nome", { enum: ["Camargo", "Marquez", "Dividido"] }).notNull(),
   dataHorario: text("data_horario").notNull(),
   status: text("status").array().default(sql`'{}'::text[]`).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
