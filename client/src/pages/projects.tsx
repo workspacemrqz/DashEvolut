@@ -55,7 +55,7 @@ export default function Projects() {
 
   const filteredProjects = projects?.filter(project => {
     if (filter === "all") return true;
-    if (filter === "discovery" || filter === "development" || filter === "delivery" || filter === "post_sale") {
+    if (filter === "discovery" || filter === "development" || filter === "delivery" || filter === "post_sale" || filter === "completed" || filter === "cancelled") {
       return project.status === filter;
     }
     // Filter by value
@@ -135,7 +135,9 @@ export default function Projects() {
             { key: "discovery", label: "Discovery" },
             { key: "development", label: "Desenvolvimento" },
             { key: "delivery", label: "Entrega" },
-            { key: "post_sale", label: "Pós-venda" }
+            { key: "post_sale", label: "Pós-venda" },
+            { key: "completed", label: "Completado" },
+            { key: "cancelled", label: "Cancelado" }
           ].map(tab => (
             <button
               key={tab.key}
