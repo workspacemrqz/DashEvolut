@@ -399,12 +399,11 @@ export default function SubscriptionTable({
                     </Button>
                     <Button
                       onClick={() => setShowServiceChecklist(true)}
-                      variant="secondary"
-                      className="status-badge status-subscription-active border-0"
+                      className="btn-secondary"
+                      style={{ color: '#060606' }}
                       data-testid="button-manage-services-details"
                     >
-                      <CheckSquare className="h-4 w-4 mr-2" />
-                      Gerenciar Serviços
+                      <Edit className="h-4 w-4" style={{ color: '#060606' }} />
                     </Button>
                   </div>
                 </div>
