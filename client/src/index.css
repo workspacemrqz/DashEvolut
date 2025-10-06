@@ -886,6 +886,12 @@
     color: #060606 !important;
   }
 
+  /* Force Gerenciar Serviços button text color */
+  button[data-testid^="button-manage-services"],
+  button[data-testid^="button-manage-services"] * {
+    color: #060606 !important;
+  }
+
   /* Dark background buttons need white text */
   button.bg-secondary {
     color: #FFFFFF !important;
