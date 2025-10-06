@@ -231,6 +231,15 @@ export default function ReplitPage() {
       : { bgColor: "bg-gray-500", textColor: "text-white" };
   };
 
+  const sortStatuses = (statuses: string[]) => {
+    const order = STATUS_OPTIONS.map(opt => opt.value);
+    return [...statuses].sort((a, b) => {
+      const indexA = order.indexOf(a);
+      const indexB = order.indexOf(b);
+      return indexA - indexB;
+    });
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
@@ -455,7 +464,7 @@ export default function ReplitPage() {
                     </TableCell>
                     <TableCell data-testid={`text-status-${unit.id}`}>
                       <div className="flex flex-wrap gap-1">
-                        {unit.status && unit.status.map((status, index) => {
+                        {unit.status && sortStatuses(unit.status).map((status, index) => {
                           const style = getStatusStyle(status);
                           return (
                             <span 
