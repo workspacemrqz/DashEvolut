@@ -294,7 +294,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/projects/:id", async (req, res) => {
     try {
-      const updates = insertProjectSchema.partial().parse(req.body);
+      const updateSchemaWithStringDates = insertProjectSchema.partial().extend({
+        startDate: z.string().transform((val) => new Date(val)).optional(),
+        dueDate: z.string().transform((val) => new Date(val)).optional(),
+      });
+      const updates = updateSchemaWithStringDates.parse(req.body);
       const project = await storage.updateProject(req.params.id, updates);
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
