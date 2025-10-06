@@ -4,9 +4,17 @@ This is the Evolutia Dashboard - a comprehensive business management application
 
 The application follows a modern full-stack architecture with a React frontend, Express.js backend, and PostgreSQL database. It's designed for business owners and managers who need to track client relationships, project progress, subscription billing, and generate automated proposals.
 
+# Recent Changes (Oct 6, 2025)
+- Fixed project date editing bug: Dates (startDate, dueDate) are now properly converted to ISO strings before sending to backend API
+- Updated Dashboard: "Pipeline Ativo" changed to "Faturamento" with "Projetos" badge, showing total value of all projects
+- Added missing project status filters: "Concluído" and "Cancelado" buttons on Projects page
+- Corrected Portuguese translation: "Completado" → "Concluído" throughout the application
+- Enhanced subscription form with searchable Sheet component for client selection
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Language: Brazilian Portuguese
 
 # System Architecture
 
