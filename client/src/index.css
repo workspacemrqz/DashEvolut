@@ -1183,7 +1183,7 @@ button[type="submit"].w-full svg {
 .rdp-button_reset {
   color: #EBEBEB !important;
   background-color: transparent !important;
-  border-color: #EBEBEB !important;
+  border-color: var(--border) !important;
 }
 
 .rdp-nav_button:hover,
@@ -1248,6 +1248,6 @@ button[class*="ghost"]:hover {
 /* Outline button variant in calendar */
 button[class*="outline"] {
   color: #EBEBEB !important;
-  border-color: #EBEBEB !important;
+  border-color: var(--border) !important;
   background-color: transparent !important;
 }

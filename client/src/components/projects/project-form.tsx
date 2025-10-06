@@ -194,7 +194,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                     <FormControl>
                       <Input
                         placeholder="Website E-commerce"
-                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                         data-testid="input-name"
                         {...field}
                       />
@@ -213,7 +213,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger 
-                          style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                          style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                           data-testid="select-client"
                         >
                           <SelectValue placeholder="Selecione o cliente" />
@@ -242,7 +242,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                   <FormControl>
                     <Textarea
                       placeholder="Desenvolvimento completo de plataforma e-commerce..."
-                      style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                      style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                       data-testid="input-description"
                       rows={3}
                       {...field}
@@ -263,7 +263,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger 
-                          style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                          style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                           data-testid="select-status"
                         >
                           <SelectValue placeholder="Status" />
@@ -293,7 +293,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                       <Input
                         type="number"
                         placeholder="15000"
-                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                         data-testid="input-value"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -315,7 +315,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                     <FormControl>
                       <Input
                         type="date"
-                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                         data-testid="input-start-date"
                         value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
                         onChange={(e) => field.onChange(new Date(e.target.value))}
@@ -335,7 +335,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                     <FormControl>
                       <Input
                         type="date"
-                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#EBEBEB', borderWidth: '1px' }}
+                        style={{ backgroundColor: '#060606', color: '#EBEBEB', borderColor: '#303030', borderWidth: '1px' }}
                         data-testid="input-due-date"
                         value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
                         onChange={(e) => field.onChange(new Date(e.target.value))}
