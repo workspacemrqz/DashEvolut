@@ -232,6 +232,7 @@ export default function ReplitPage() {
   };
 
   const sortStatuses = (statuses: string[]) => {
+    if (!statuses || statuses.length === 0) return statuses;
     const order = STATUS_OPTIONS.map(opt => opt.value);
     return [...statuses].sort((a, b) => {
       const indexA = order.indexOf(a);
