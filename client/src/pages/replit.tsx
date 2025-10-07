@@ -48,6 +48,7 @@ export default function ReplitPage() {
   const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez" | "Dividido">("Todos");
+  const [emailFilter, setEmailFilter] = useState("");
   const [dataHorarioValue, setDataHorarioValue] = useState("");
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
@@ -55,8 +56,9 @@ export default function ReplitPage() {
   });
 
   const filteredUnits = units.filter(unit => {
-    if (nameFilter === "Todos") return true;
-    return unit.nome === nameFilter;
+    const matchesName = nameFilter === "Todos" || unit.nome === nameFilter;
+    const matchesEmail = unit.email.toLowerCase().includes(emailFilter.toLowerCase());
+    return matchesName && matchesEmail;
   });
 
   const stats = {
@@ -409,7 +411,15 @@ export default function ReplitPage() {
         <CardHeader>
           <div className="flex justify-between items-center flex-wrap gap-4">
             <CardTitle>Lista de Unidades</CardTitle>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              <Input
+                type="text"
+                placeholder="Buscar..."
+                value={emailFilter}
+                onChange={(e) => setEmailFilter(e.target.value)}
+                className="w-[200px]"
+                data-testid="input-email-filter"
+              />
               <Button
                 variant={nameFilter === "Todos" ? "default" : "outline"}
                 onClick={() => setNameFilter("Todos")}
