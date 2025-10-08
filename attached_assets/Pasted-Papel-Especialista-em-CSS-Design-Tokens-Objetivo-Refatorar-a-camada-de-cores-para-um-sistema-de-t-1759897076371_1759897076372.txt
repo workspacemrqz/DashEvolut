@@ -1,0 +1,56 @@
+Papel: Especialista em CSS/Design Tokens.
+Objetivo: Refatorar a camada de cores para um sistema de tokens único, eliminar conflitos de cascade/especificidade e manter 100% dos valores de cor atuais (sem alterações nas tonalidades).
+
+Contexto do projeto:
+- Stack de estilos: <CSS/SCSS/Tailwind/CSS-in-JS>
+- Diretórios relevantes: <DIRETORIOS>
+- Tema(s): <único | light/dark> (se dark existir, não crie novos valores; apenas tokens paralelos)
+- Restrições: não alterar layout/spacing; não renomear classes públicas; não introduzir libs.
+
+Plano de ação:
+1) Inventário de cores
+   - Vasculhe <DIRETORIOS> e liste todas as cores em uso (HEX/RGB/HSL, incluindo opacidades).
+   - Normalize para HEX #RRGGBB (e alpha separado se necessário).
+   - Agrupe duplicatas (mesmo valor com nomes diferentes).
+
+2) Design Tokens (preservando valores)
+   - Defina tokens base e semânticos, sem inventar variações:
+     Base: brand-*, neutral-*, accent-* (apenas se já existirem no inventário).
+     Semânticos: text-(primary/secondary/inverse/muted), bg-(default/subtle/muted), border-(default/subtle), state-(success/warning/error/info).
+   - Mantenha exatamente os valores atuais; consolide duplicatas no mesmo token.
+   Implementação:
+     - CSS/SCSS: crie :root em <CAMINHO_TOKENS.css> com --color-<grupo>-<nome>.
+     - Tailwind: extenda theme.colors em tailwind.config.js.
+     - CSS-in-JS: crie theme.colors em <CAMINHO_TEMA>.
+
+3) Migração
+   - Substitua cores literais por tokens em todos os arquivos.
+   - Onde houver inline style/color hardcoded, mova para classes/tema.
+   - Não use !important. Reduza seletores profundos (> 2 níveis). Prefira classes únicas e variáveis.
+   - Mantenha comportamento visual idêntico.
+
+4) Validação e Relatórios
+   - Especificidade: liste seletores alterados e o motivo da redução.
+   - Contraste: reporte pares texto/fundo com contraste < 4.5:1. Não altere os valores; sugira alternativas em comentário sem aplicar.
+   - Cobertura: confirme que não restam cores literais fora dos tokens (explique exceções se existirem).
+   - Build e lint devem passar.
+
+5) Entregáveis
+   - Inventário de cores final (única fonte).
+   - Arquivo(s) de tokens.
+   - Tabela ValorOriginal → Token aplicado (+ exemplos de commits/diffs).
+   - Diffs/patches prontos para aplicar.
+   - Relatório de especificidade e acessibilidade.
+
+Parâmetros
+- Prefixo de tokens: --color- (CSS) | theme.colors (JS) | theme.extend.colors (Tailwind).
+- Formato de cor: HEX #RRGGBB. Para transparência, usar color + opacity separado (ex.: var(--color-...); opacity: 0.5) ou rgba se já existente.
+
+Critérios de sucesso
+- Visual idêntico; nenhuma nova cor introduzida; 0 !important novo; redução de seletores profundamente específicos; 100% das cores referenciadas por tokens; build ok.
+
+Saída
+- Liste primeiro o inventário de cores.
+- Depois entregue os arquivos de tokens completos.
+- Em seguida, mostre a tabela de mapeamento e os diffs/patches.
+- Por fim, o relatório de especificidade e contraste.
