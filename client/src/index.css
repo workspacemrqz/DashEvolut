@@ -231,6 +231,16 @@
     border: 1px solid var(--border-secondary) !important;
   }
 
+  /* Fix button text colors inside kpi-card */
+  .kpi-card .btn-primary,
+  .kpi-card .btn-primary * {
+    color: #FFFFFF !important;
+  }
+
+  .kpi-card .btn-primary svg {
+    color: #F5F5F5 !important;
+  }
+
   .progress-bar {
     background-color: var(--bg-primary);
   }
