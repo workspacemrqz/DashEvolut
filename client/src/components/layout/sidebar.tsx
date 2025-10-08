@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
-  { name: "Clientes", href: "/clients", icon: Users },
+  { name: "Clientes", href: "/clientes", icon: Users },
   { name: "Projetos", href: "/projetos", icon: FolderOpen },
-  { name: "Assinaturas", href: "/subscriptions", icon: CreditCard },
+  { name: "Assinaturas", href: "/assinaturas", icon: CreditCard },
   { name: "Propostas", href: "/propostas", icon: FileText },
-  { name: "Replit", href: "/replit", icon: Server },
+  { name: "Servidores", href: "/servidores", icon: Server },
 ];
 
 export default function Sidebar() {

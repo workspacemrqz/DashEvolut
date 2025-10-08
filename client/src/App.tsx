@@ -43,17 +43,20 @@ function Router() {
       <div className="flex-1 flex flex-col lg:ml-0 ml-0">
         <Switch>
           <Route path="/" component={Dashboard} />
-          <Route path="/clients" component={Clients} />
+          <Route path="/clientes" component={Clients} />
           <Route path="/projetos" component={Projects} />
           <Route path="/projetos/:projectId" component={Projects} />
-          <Route path="/subscriptions" component={Subscriptions} />
+          <Route path="/assinaturas" component={Subscriptions} />
           <Route path="/propostas" component={Proposals} />
+          <Route path="/servidores" component={Replit} />
           
           {/* Redirects from old English URLs to new Portuguese URLs */}
+          <Route path="/clients" component={() => { window.location.replace('/clientes'); return null; }} />
           <Route path="/projects" component={() => { window.location.replace('/projetos'); return null; }} />
           <Route path="/projects/:projectId" component={({ params }: { params?: any }) => { window.location.replace(`/projetos/${params?.projectId || ''}`); return null; }} />
+          <Route path="/subscriptions" component={() => { window.location.replace('/assinaturas'); return null; }} />
           <Route path="/proposals" component={() => { window.location.replace('/propostas'); return null; }} />
-          <Route path="/replit" component={Replit} />
+          <Route path="/replit" component={() => { window.location.replace('/servidores'); return null; }} />
           {/* Redirect authenticated users from login to dashboard */}
           <Route path="/login" component={() => { window.location.replace('/'); return null; }} />
           <Route component={NotFound} />
