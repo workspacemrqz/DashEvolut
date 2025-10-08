@@ -6,6 +6,14 @@ The application follows a modern full-stack architecture with a React frontend, 
 
 # Recent Changes
 
+## Oct 8, 2025 - Complete URL Translation to Portuguese Brazilian
+- **URL Translation**: All website routes and API endpoints translated from English to Portuguese Brazilian
+  - Frontend routes: /clients → /clientes, /projects → /projetos, /subscriptions → /assinaturas, /proposals → /propostas, /replit → /servidores
+  - Backend API routes: /api/clients → /api/clientes, /api/projects → /api/projetos, /api/subscriptions → /api/assinaturas, /api/proposals → /api/propostas, /api/alerts → /api/alertas, /api/replit-units → /api/unidades-replit
+  - Sub-resources translated: /costs → /custos, /services → /servicos, /payments → /pagamentos, /interactions → /interacoes, /unread → /nao-lidos
+  - Automatic redirects configured: Old English URLs automatically redirect to new Portuguese URLs for backward compatibility
+  - All frontend API calls and navigation links updated to use Portuguese routes consistently
+
 ## Oct 8, 2025 - Deploy Configuration for Easypanel
 - **Deployment Setup**: Configured project for Easypanel deployment using Heroku buildpacks (heroku/builder:24)
 - **Security Fix (CRITICAL)**: Removed hardcoded PostgreSQL credentials from server/routes.ts
