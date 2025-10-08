@@ -4,7 +4,23 @@ This is the Evolutia Dashboard - a comprehensive business management application
 
 The application follows a modern full-stack architecture with a React frontend, Express.js backend, and PostgreSQL database. It's designed for business owners and managers who need to track client relationships, project progress, subscription billing, and generate automated proposals.
 
-# Recent Changes (Oct 6, 2025)
+# Recent Changes
+
+## Oct 8, 2025 - Deploy Configuration for Easypanel
+- **Deployment Setup**: Configured project for Easypanel deployment using Heroku buildpacks (heroku/builder:24)
+- **Security Fix (CRITICAL)**: Removed hardcoded PostgreSQL credentials from server/routes.ts
+  - All proposal routes now require DatabaseLandingPage environment variable
+  - No fallback credentials - fails safely if env var not configured
+- **Build Optimization**: Created .slugignore to reduce deployment package size
+- **Environment Variables**: Updated .env.example with all required and optional configuration
+- **Documentation**: Created comprehensive DEPLOY.md with:
+  - Step-by-step Easypanel deployment instructions
+  - Environment variable documentation
+  - Migration strategies and troubleshooting guide
+  - Security best practices
+- **Procfile**: Updated to execute database migrations before server startup
+
+## Oct 6, 2025
 - Fixed project date editing bug: Dates (startDate, dueDate) are now properly converted to ISO strings before sending to backend API
 - Updated Dashboard: "Pipeline Ativo" changed to "Faturamento" with "Projetos" badge, showing total value of all projects
 - Added missing project status filters: "Concluído" and "Cancelado" buttons on Projects page

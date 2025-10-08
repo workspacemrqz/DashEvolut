@@ -1,4 +1,6 @@
-# Configuração para EasyPanel
+# Configuração para EasyPanel com Heroku Buildpacks
+# NOTA: O Procfile é usado automaticamente pelo buildpack
+# Leia DEPLOY.md para instruções completas
 name: evolutia-dashboard
 services:
   - name: web
@@ -12,15 +14,25 @@ services:
       buildpack: heroku/builder:24
     deploy:
       replicas: 1
-      command: npm start
+      # O Procfile define o comando (migrations + start)
+      # PORT é definida automaticamente pelo buildpack
       env:
         - name: NODE_ENV
           value: production
-        - name: PORT
-          value: "3000"
-        # Adicione suas outras variáveis de ambiente aqui
-        # - name: DATABASE_URL
-        #   value: "sua_database_url"
+        # OBRIGATÓRIAS
+        - name: DATABASE_URL
+          value: # postgresql://user:pass@host:port/db
+        - name: SESSION_SECRET
+          value: # usar: openssl rand -base64 32
+        - name: LOGIN
+          value: # seu usuário admin
+        - name: SENHA
+          value: # sua senha admin
+        # OPCIONAIS
+        # - name: WebhookProposta
+        #   value: https://your-webhook-url.com
+        # - name: DatabaseLandingPage
+        #   value: postgresql://user:pass@host:port/db
     domains:
       - host: # Seu domínio aqui
     resources:
