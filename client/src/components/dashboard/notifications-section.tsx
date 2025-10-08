@@ -35,28 +35,28 @@ export default function NotificationsSection({ "data-testid": testId }: Notifica
 
   // Buscar alertas não lidos
   const { data: alerts, isLoading: isLoadingAlerts } = useQuery<Alert[]>({
-    queryKey: ["/api/alerts/unread"],
+    queryKey: ["/api/alertas/nao-lidos"],
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: (alertId: string) => apiRequest("POST", `/api/alerts/${alertId}/read`, {}),
+    mutationFn: (alertId: string) => apiRequest("POST", `/api/alertas/${alertId}/lido`, {}),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas/nao-lidos"] });
     },
   });
 
   const markAllAsReadMutation = useMutation({
-    mutationFn: () => {
-      if (!alerts) return Promise.resolve();
+    mutationFn: async () => {
+      if (!alerts) return;
       const markAllPromises = alerts.map(alert => 
-        apiRequest("POST", `/api/alerts/${alert.id}/read`, {})
+        apiRequest("POST", `/api/alertas/${alert.id}/lido`, {})
       );
-      return Promise.all(markAllPromises);
+      await Promise.all(markAllPromises);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas/nao-lidos"] });
       toast({
         title: "Todas as notificações foram marcadas como lidas",
         description: "Todas as notificações pendentes foram processadas.",
@@ -71,21 +71,21 @@ export default function NotificationsSection({ "data-testid": testId }: Notifica
     // Handle specific actions based on alert type
     switch (alert.type) {
       case "project_delayed":
-        setLocation("/projects");
+        setLocation("/projetos");
         toast({
           title: "Redirecionando para projetos",
           description: "Visualize os detalhes do projeto atrasado.",
         });
         break;
       case "payment_pending":
-        setLocation("/clients");
+        setLocation("/clientes");
         toast({
           title: "Redirecionando para clientes",
           description: "Gerencie o pagamento pendente do cliente.",
         });
         break;
       case "upsell_opportunity":
-        setLocation("/clients");
+        setLocation("/clientes");
         toast({
           title: "Redirecionando para clientes",
           description: "Aproveite a oportunidade de upsell identificada.",

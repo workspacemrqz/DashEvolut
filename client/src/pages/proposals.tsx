@@ -85,7 +85,7 @@ export default function Proposals() {
   // Manual proposal creation mutation
   const createManualProposalMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/proposals', {
+      const response = await fetch('/api/propostas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export default function Proposals() {
       return response.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/proposals"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/propostas"] });
       toast({
         title: "Sucesso",
         description: "Proposta criada manualmente com sucesso!",

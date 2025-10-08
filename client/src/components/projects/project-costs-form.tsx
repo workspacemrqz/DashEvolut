@@ -129,7 +129,7 @@ export function ProjectCostsForm({
     
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/projects/${projectId}/costs`);
+      const response = await fetch(`/api/projetos/${projectId}/custos`);
       if (!response.ok) throw new Error("Failed to fetch costs");
       const data = await response.json();
       setCosts(data.map((cost: any) => ({
@@ -159,7 +159,7 @@ export function ProjectCostsForm({
   const onSubmit = async (data: CostFormData) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/projects/${projectId}/costs`, {
+      const response = await fetch(`/api/projetos/${projectId}/custos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -193,7 +193,7 @@ export function ProjectCostsForm({
 
   const deleteCost = async (costId: string) => {
     try {
-      const response = await fetch(`/api/projects/${projectId}/costs/${costId}`, {
+      const response = await fetch(`/api/projetos/${projectId}/custos/${costId}`, {
         method: "DELETE",
       });
 

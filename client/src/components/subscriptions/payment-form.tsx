@@ -73,7 +73,7 @@ export default function PaymentForm({ open, onOpenChange, subscriptionId }: Paym
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { data: subscription } = useQuery<SubscriptionWithDetails>({
-    queryKey: ["/api/subscriptions", subscriptionId],
+    queryKey: ["/api/assinaturas", subscriptionId],
     enabled: !!subscriptionId && open,
   });
 
@@ -105,7 +105,7 @@ export default function PaymentForm({ open, onOpenChange, subscriptionId }: Paym
       if (data.notes) formData.append('notes', data.notes);
       if (selectedFile) formData.append('receipt', selectedFile);
 
-      const response = await fetch(`/api/subscriptions/${subscriptionId}/payments`, {
+      const response = await fetch(`/api/assinaturas/${subscriptionId}/pagamentos`, {
         method: 'POST',
         body: formData,
       });
@@ -117,8 +117,8 @@ export default function PaymentForm({ open, onOpenChange, subscriptionId }: Paym
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions", subscriptionId, "payments"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas", subscriptionId, "payments"] });
       toast({
         title: "Pagamento registrado com sucesso!",
         description: "O pagamento foi adicionado ao histórico da assinatura.",

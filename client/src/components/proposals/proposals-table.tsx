@@ -23,7 +23,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data: proposals, isLoading, error, refetch } = useQuery<Proposal[]>({
-    queryKey: ["/api/proposals"],
+    queryKey: ["/api/propostas"],
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
@@ -61,9 +61,9 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) =>
-      apiRequest("DELETE", `/api/proposals/${id}`),
+      apiRequest("DELETE", `/api/propostas/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/proposals"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/propostas"] });
       toast({
         title: "Sucesso",
         description: "Proposta excluída com sucesso!",

@@ -42,9 +42,9 @@ export default function SubscriptionCard({
   
   const updateStatusMutation = useMutation({
     mutationFn: (status: "active" | "paused" | "cancelled") => 
-      apiRequest("PATCH", `/api/subscriptions/${subscription.id}`, { status }),
+      apiRequest("PATCH", `/api/assinaturas/${subscription.id}`, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       toast({
         title: "Status atualizado!",
         description: "O status da assinatura foi alterado com sucesso.",

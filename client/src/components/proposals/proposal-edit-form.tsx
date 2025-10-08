@@ -65,14 +65,14 @@ export default function ProposalEditForm({ proposalId, open, onOpenChange }: Pro
 
   // Fetch proposal data
   const { data: proposal, isLoading } = useQuery<ProposalData>({
-    queryKey: [`/api/proposals/${proposalId}`],
+    queryKey: [`/api/propostas/${proposalId}`],
     enabled: !!proposalId,
   });
 
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (data: Partial<ProposalData>) => {
-      const response = await fetch(`/api/proposals/${proposalId}`, {
+      const response = await fetch(`/api/propostas/${proposalId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export default function ProposalEditForm({ proposalId, open, onOpenChange }: Pro
       return response.json();
     },
           onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["/api/proposals"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/propostas"] });
         toast({
           title: "Sucesso",
           description: "Proposta atualizada com sucesso!",

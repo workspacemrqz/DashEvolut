@@ -9,11 +9,11 @@ interface RevenueBreakdownChartProps {
 
 export default function RevenueBreakdownChart({ "data-testid": testId }: RevenueBreakdownChartProps) {
   const { data: projects } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   const { data: subscriptions } = useQuery<SubscriptionWithClient[]>({
-    queryKey: ["/api/subscriptions"],
+    queryKey: ["/api/assinaturas"],
   });
 
   const generateRevenueData = () => {

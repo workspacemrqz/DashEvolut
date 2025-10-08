@@ -21,7 +21,7 @@ export default function Clients() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   
   const { data: clients, isLoading } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const filteredClients = clients?.filter(client => {

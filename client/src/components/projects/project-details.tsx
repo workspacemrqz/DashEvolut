@@ -60,7 +60,7 @@ CustomDialogContent.displayName = "CustomDialogContent";
 export default function ProjectDetails({ open, onOpenChange, project, onEdit }: ProjectDetailsProps) {
   // Buscar custos do projeto
   const { data: costs = [] } = useQuery<ProjectCost[]>({
-    queryKey: [`/api/projects/${project.id}/costs`],
+    queryKey: [`/api/projetos/${project.id}/custos`],
     enabled: open, // Só busca quando o modal está aberto
   });
 

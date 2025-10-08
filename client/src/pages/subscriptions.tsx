@@ -25,7 +25,7 @@ export default function Subscriptions() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   
   const { data: subscriptions, isLoading } = useQuery<SubscriptionWithClient[]>({
-    queryKey: ["/api/subscriptions"],
+    queryKey: ["/api/assinaturas"],
   });
 
   // Debug log

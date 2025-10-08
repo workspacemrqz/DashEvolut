@@ -60,21 +60,21 @@ export default function SubscriptionTable({
 
   // Buscar detalhes da assinatura selecionada
   const { data: subscriptionDetails } = useQuery({
-    queryKey: [`/api/subscriptions/${selectedSubscription?.id}`],
+    queryKey: [`/api/assinaturas/${selectedSubscription?.id}`],
     enabled: !!selectedSubscription?.id,
   });
 
   // Buscar pagamentos da assinatura selecionada
   const { data: subscriptionPayments } = useQuery<PaymentWithFile[]>({
-    queryKey: [`/api/subscriptions/${selectedSubscription?.id}/payments`],
+    queryKey: [`/api/assinaturas/${selectedSubscription?.id}/pagamentos`],
     enabled: !!selectedSubscription?.id,
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: "active" | "paused" | "cancelled" }) => 
-      apiRequest("PATCH", `/api/subscriptions/${id}`, { status }),
+      apiRequest("PATCH", `/api/assinaturas/${id}`, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       toast({
         title: "Status atualizado!",
         description: "O status da assinatura foi alterado com sucesso.",
@@ -109,9 +109,9 @@ export default function SubscriptionTable({
   };
 
   const deleteSubscriptionMutation = useMutation({
-    mutationFn: (subscriptionId: string) => apiRequest('DELETE', `/api/subscriptions/${subscriptionId}`),
+    mutationFn: (subscriptionId: string) => apiRequest('DELETE', `/api/assinaturas/${subscriptionId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/assinaturas'] });
       toast({
         title: "Assinatura removida",
         description: "A assinatura foi removida com sucesso.",

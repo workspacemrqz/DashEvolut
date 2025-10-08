@@ -9,7 +9,7 @@ interface PipelineChartProps {
 
 export default function PipelineChart({ "data-testid": testId }: PipelineChartProps) {
   const { data: projects } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   // Generate pipeline data from projects

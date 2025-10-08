@@ -32,12 +32,12 @@ export default function Projects() {
   const [, navigate] = useLocation();
   
   const { data: projects, isLoading } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   // Fetch specific project if projectId is in URL
   const { data: specificProject } = useQuery<ProjectWithClient>({
-    queryKey: [`/api/projects/${projectId}`],
+    queryKey: [`/api/projetos/${projectId}`],
     enabled: !!projectId,
   });
 
@@ -178,7 +178,7 @@ export default function Projects() {
               setSelectedProjectForEdit(null);
               // If we came from a direct project URL, navigate back to projects list
               if (projectId) {
-                navigate('/projects');
+                navigate('/projetos');
               }
             }
           }}
@@ -195,7 +195,7 @@ export default function Projects() {
                 setSelectedProjectForView(null);
                 // If we came from a direct project URL, navigate back to projects list
                 if (projectId) {
-                  navigate('/projects');
+                  navigate('/projetos');
                 }
               }
             }}

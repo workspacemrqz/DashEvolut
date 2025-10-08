@@ -8,7 +8,7 @@ interface RevenueChartProps {
 
 export default function RevenueChart({ "data-testid": testId }: RevenueChartProps) {
   const { data: projects } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   // Generate revenue data from projects

@@ -8,7 +8,7 @@ interface ClientFunnelChartProps {
 
 export default function ClientFunnelChart({ "data-testid": testId }: ClientFunnelChartProps) {
   const { data: clients } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const generateFunnelData = () => {

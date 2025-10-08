@@ -10,15 +10,15 @@ interface AdvancedKpiCardsProps {
 
 export default function AdvancedKpiCards({ "data-testid": testId }: AdvancedKpiCardsProps) {
   const { data: projects } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   const { data: clients } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const { data: subscriptions } = useQuery<SubscriptionWithClient[]>({
-    queryKey: ["/api/subscriptions"],
+    queryKey: ["/api/assinaturas"],
   });
 
   const calculateKPIs = () => {

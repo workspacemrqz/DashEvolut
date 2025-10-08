@@ -52,7 +52,7 @@ export default function ReplitPage() {
   const [dataHorarioValue, setDataHorarioValue] = useState("");
 
   const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
-    queryKey: ["/api/replit-units"],
+    queryKey: ["/api/unidades-replit"],
   });
 
   const filteredUnits = units.filter(unit => {
@@ -96,9 +96,9 @@ export default function ReplitPage() {
 
   const createMutation = useMutation({
     mutationFn: (data: InsertReplitUnit) =>
-      apiRequest("POST", "/api/replit-units", data),
+      apiRequest("POST", "/api/unidades-replit", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
       setIsDialogOpen(false);
       toast({
         title: "Sucesso",
@@ -116,9 +116,9 @@ export default function ReplitPage() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<InsertReplitUnit> }) =>
-      apiRequest("PUT", `/api/replit-units/${id}`, data),
+      apiRequest("PUT", `/api/unidades-replit/${id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
       setIsDialogOpen(false);
       setEditingUnit(null);
       toast({
@@ -137,9 +137,9 @@ export default function ReplitPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      apiRequest("DELETE", `/api/replit-units/${id}`),
+      apiRequest("DELETE", `/api/unidades-replit/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/replit-units"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
       toast({
         title: "Sucesso",
         description: "Unidade excluída com sucesso!",

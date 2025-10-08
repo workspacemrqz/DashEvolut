@@ -8,7 +8,7 @@ interface ProjectTimelineChartProps {
 
 export default function ProjectTimelineChart({ "data-testid": testId }: ProjectTimelineChartProps) {
   const { data: projects } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   const generateTimelineData = () => {

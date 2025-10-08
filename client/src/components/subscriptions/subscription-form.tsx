@@ -89,7 +89,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
   const [clientSearch, setClientSearch] = useState("");
 
   const { data: allClients, isLoading: loadingClients } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const form = useForm<InsertSubscription>({
@@ -106,13 +106,13 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
   const subscriptionMutation = useMutation({
     mutationFn: (data: InsertSubscription) => {
       if (subscription) {
-        return apiRequest("PATCH", `/api/subscriptions/${subscription.id}`, data);
+        return apiRequest("PATCH", `/api/assinaturas/${subscription.id}`, data);
       } else {
-        return apiRequest("POST", "/api/subscriptions", data);
+        return apiRequest("POST", "/api/assinaturas", data);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       toast({
         title: subscription ? "Assinatura atualizada com sucesso!" : "Assinatura criada com sucesso!",
         description: subscription ? "As alterações foram salvas com sucesso." : "A nova assinatura foi adicionada ao sistema.",

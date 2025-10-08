@@ -50,7 +50,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
 
   // Buscar projetos do cliente selecionado
   const { data: clientProjects } = useQuery<ProjectWithClient[]>({
-    queryKey: [`/api/clients/${selectedClient?.id}/projects`],
+    queryKey: [`/api/clientes/${selectedClient?.id}/projetos`],
     enabled: !!selectedClient?.id,
   });
 
@@ -60,7 +60,7 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
   };
 
   const handleProjectClick = (projectId: string) => {
-    navigate(`/projects/${projectId}`);
+    navigate(`/projetos/${projectId}`);
     setShowClientDetails(false);
   };
 
@@ -85,9 +85,9 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
   };
 
   const deleteClientMutation = useMutation({
-    mutationFn: (clientId: string) => apiRequest('DELETE', `/api/clients/${clientId}`),
+    mutationFn: (clientId: string) => apiRequest('DELETE', `/api/clientes/${clientId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/clientes'] });
       toast({
         title: "Cliente removido",
         description: "O cliente foi removido com sucesso.",

@@ -7,7 +7,7 @@ interface SectorHeatmapProps {
 
 export default function SectorHeatmap({ "data-testid": testId }: SectorHeatmapProps) {
   const { data: clients } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const generateHeatmapData = () => {

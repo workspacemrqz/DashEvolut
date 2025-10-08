@@ -29,22 +29,22 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
   const [editingDescription, setEditingDescription] = useState("");
 
   const { data: services, isLoading } = useQuery<SubscriptionService[]>({
-    queryKey: ["/api/subscriptions", subscriptionId, "services"],
+    queryKey: ["/api/assinaturas", subscriptionId, "services"],
     enabled: !!subscriptionId && open,
   });
 
   const addServiceMutation = useMutation({
     mutationFn: (description: string) => {
       const order = (services?.length || 0) + 1;
-      return apiRequest("POST", `/api/subscriptions/${subscriptionId}/services`, {
+      return apiRequest("POST", `/api/assinaturas/${subscriptionId}/servicos`, {
         description,
         order,
         isCompleted: false,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions", subscriptionId, "services"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas", subscriptionId, "services"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       setNewServiceDescription("");
       toast({
         title: "Serviço adicionado!",
@@ -62,10 +62,10 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
 
   const updateServiceMutation = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<SubscriptionService> }) =>
-      apiRequest("PATCH", `/api/subscription-services/${id}`, updates),
+      apiRequest("PATCH", `/api/servicos-assinatura/${id}`, updates),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions", subscriptionId, "services"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas", subscriptionId, "services"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       setEditingService(null);
       setEditingDescription("");
     },
@@ -79,10 +79,10 @@ export default function ServiceChecklist({ subscriptionId, open, onOpenChange }:
   });
 
   const deleteServiceMutation = useMutation({
-    mutationFn: (id: string) => apiRequest("DELETE", `/api/subscription-services/${id}`),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/servicos-assinatura/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions", subscriptionId, "services"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas", subscriptionId, "services"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
       toast({
         title: "Serviço removido!",
         description: "O serviço foi removido da lista.",

@@ -34,10 +34,10 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
   const { toast } = useToast();
 
   const markAsReadMutation = useMutation({
-    mutationFn: (alertId: string) => apiRequest("POST", `/api/alerts/${alertId}/read`, {}),
+    mutationFn: (alertId: string) => apiRequest("POST", `/api/alertas/${alertId}/lido`, {}),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas/nao-lidos"] });
     },
   });
 
@@ -45,13 +45,13 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
     mutationFn: () => {
       // Mark all alerts as read by calling the API for each alert
       const markAllPromises = alerts.map(alert => 
-        apiRequest("POST", `/api/alerts/${alert.id}/read`, {})
+        apiRequest("POST", `/api/alertas/${alert.id}/lido`, {})
       );
       return Promise.all(markAllPromises);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/alerts/unread"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/alertas/nao-lidos"] });
       toast({
         title: "Todos os alertas foram marcados como lidos",
         description: "Todos os alertas pendentes foram processados.",
@@ -66,21 +66,21 @@ export default function AlertsSection({ alerts, "data-testid": testId }: AlertsS
     // Handle specific actions based on alert type
     switch (alert.type) {
       case "project_delayed":
-        setLocation("/projects");
+        setLocation("/projetos");
         toast({
           title: "Redirecionando para projetos",
           description: "Visualize os detalhes do projeto atrasado.",
         });
         break;
       case "payment_pending":
-        setLocation("/clients");
+        setLocation("/clientes");
         toast({
           title: "Redirecionando para clientes",
           description: "Gerencie o pagamento pendente do cliente.",
         });
         break;
       case "upsell_opportunity":
-        setLocation("/clients");
+        setLocation("/clientes");
         toast({
           title: "Redirecionando para clientes",
           description: "Aproveite a oportunidade de upsell identificada.",

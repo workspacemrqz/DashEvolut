@@ -72,7 +72,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   const queryClient = useQueryClient();
 
   const { data: clients } = useQuery<Client[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const getDefaultValues = (project?: ProjectWithClient | null) => ({
@@ -97,9 +97,9 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   }, [project, form]);
 
   const createProjectMutation = useMutation({
-    mutationFn: (data: InsertProject) => apiRequest("POST", "/api/projects", data),
+    mutationFn: (data: InsertProject) => apiRequest("POST", "/api/projetos", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projetos"] });
       toast({
         title: "Projeto criado com sucesso!",
         description: "O novo projeto foi adicionado ao sistema.",
@@ -117,9 +117,9 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
   });
 
   const updateProjectMutation = useMutation({
-    mutationFn: (data: InsertProject) => apiRequest("PATCH", `/api/projects/${project!.id}`, data),
+    mutationFn: (data: InsertProject) => apiRequest("PATCH", `/api/projetos/${project!.id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projetos"] });
       toast({
         title: "Projeto atualizado com sucesso!",
         description: "As alterações foram salvas.",

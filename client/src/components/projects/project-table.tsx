@@ -70,9 +70,9 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
 
 
   const deleteProjectMutation = useMutation({
-    mutationFn: (projectId: string) => apiRequest('DELETE', `/api/projects/${projectId}`),
+    mutationFn: (projectId: string) => apiRequest('DELETE', `/api/projetos/${projectId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/projetos'] });
       toast({
         title: "Projeto removido",
         description: "O projeto foi removido com sucesso.",

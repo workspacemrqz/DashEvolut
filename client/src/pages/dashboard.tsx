@@ -9,15 +9,15 @@ export default function Dashboard() {
   const { toast } = useToast();
   
   const { data: projects, isLoading } = useQuery<ProjectWithClient[]>({
-    queryKey: ["/api/projects"],
+    queryKey: ["/api/projetos"],
   });
 
   const { data: clients } = useQuery<ClientWithStats[]>({
-    queryKey: ["/api/clients"],
+    queryKey: ["/api/clientes"],
   });
 
   const { data: subscriptions } = useQuery<SubscriptionWithClient[]>({
-    queryKey: ["/api/subscriptions"],
+    queryKey: ["/api/assinaturas"],
   });
 
 

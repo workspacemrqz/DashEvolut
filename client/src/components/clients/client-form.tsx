@@ -117,9 +117,9 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
   }, [clientToEdit, form]);
 
   const createClientMutation = useMutation({
-    mutationFn: (data: InsertClient) => apiRequest("POST", "/api/clients", data),
+    mutationFn: (data: InsertClient) => apiRequest("POST", "/api/clientes", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/clientes"] });
       toast({
         title: "Cliente criado com sucesso!",
         description: "O novo cliente foi adicionado ao sistema.",
@@ -137,9 +137,9 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
   });
 
   const updateClientMutation = useMutation({
-    mutationFn: (data: UpdateClient) => apiRequest("PATCH", `/api/clients/${clientToEdit?.id}`, data),
+    mutationFn: (data: UpdateClient) => apiRequest("PATCH", `/api/clientes/${clientToEdit?.id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/clientes"] });
       toast({
         title: "Cliente atualizado com sucesso!",
         description: "As informações do cliente foram atualizadas.",
