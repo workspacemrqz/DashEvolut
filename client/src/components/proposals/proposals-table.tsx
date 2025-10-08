@@ -108,7 +108,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
               size="sm"
               className="btn-secondary"
             >
-              <RefreshCw className="w-4 h-4 mr-2" />
+              <RefreshCw className="w-4 h-4 mr-2" style={{ color: '#F5F5F5' }} />
               Atualizar
             </Button>
           </div>
@@ -164,7 +164,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
             data-proposal-button="update"
             disabled={isLoading || isRefreshing}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} style={{ color: '#060606' }} />
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} style={{ color: '#F5F5F5' }} />
             {isRefreshing ? 'Atualizando...' : 'Atualizar'}
           </Button>
         </div>
@@ -211,7 +211,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     data-proposal-button="edit"
                     data-testid={`button-edit-${proposal.id}`}
                   >
-                    <Edit className="h-4 w-4" color="#060606" />
+                    <Edit className="h-4 w-4" style={{ color: '#F5F5F5' }} />
                     Editar
                   </Button>
                   <Button
@@ -222,7 +222,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     disabled={deleteMutation.isPending}
                     data-testid={`button-delete-${proposal.id}`}
                   >
-                    <Trash2 className="h-4 w-4" color="#060606" />
+                    <Trash2 className="h-4 w-4" style={{ color: '#F5F5F5' }} />
                     Apagar
                   </Button>
                   <Button
