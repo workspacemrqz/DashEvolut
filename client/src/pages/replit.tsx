@@ -379,7 +379,7 @@ export default function ReplitPage() {
         </Dialog>
       </div>
 
-      <Card className="container-bg border-border-secondary mb-6">
+      <Card className="kpi-card rounded-xl mb-6">
         <CardHeader>
           <CardTitle>Estatísticas por Pessoa</CardTitle>
         </CardHeader>
@@ -407,7 +407,7 @@ export default function ReplitPage() {
         </CardContent>
       </Card>
 
-      <Card className="container-bg border-border-secondary">
+      <Card className="kpi-card rounded-xl">
         <CardHeader>
           <div className="flex justify-between items-center flex-wrap gap-4">
             <CardTitle>Lista de Unidades</CardTitle>

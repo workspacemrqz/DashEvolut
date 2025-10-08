@@ -131,7 +131,7 @@ export default function Proposals() {
       <main className="flex-1 p-3 lg:p-6 overflow-auto">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Gerador de Propostas */}
-          <Card className="container-bg border-border-secondary">
+          <Card className="kpi-card rounded-xl">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 gradient-bg rounded-lg">

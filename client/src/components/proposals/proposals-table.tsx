@@ -86,7 +86,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
 
   if (error) {
     return (
-      <Card className="container-bg border-border-secondary">
+      <Card className="kpi-card rounded-xl">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
   }
 
   return (
-    <Card className="container-bg border-border-secondary">
+    <Card className="kpi-card rounded-xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
