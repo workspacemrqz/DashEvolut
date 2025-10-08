@@ -710,8 +710,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { Pool } = await import('pg');
       
       // Database connection for proposals
+      if (!process.env.DatabaseLandingPage) {
+        return res.status(500).json({ message: "DatabaseLandingPage environment variable not configured" });
+      }
+      
       const pool = new Pool({
-        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+        connectionString: process.env.DatabaseLandingPage
       });
 
       const client = await pool.connect();
@@ -748,8 +752,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { Pool } = await import('pg');
       
+      if (!process.env.DatabaseLandingPage) {
+        return res.status(500).json({ message: "DatabaseLandingPage environment variable not configured" });
+      }
+      
       const pool = new Pool({
-        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+        connectionString: process.env.DatabaseLandingPage
       });
 
       const client = await pool.connect();
@@ -780,8 +788,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { Pool } = await import('pg');
       
+      if (!process.env.DatabaseLandingPage) {
+        return res.status(500).json({ message: "DatabaseLandingPage environment variable not configured" });
+      }
+      
       const pool = new Pool({
-        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+        connectionString: process.env.DatabaseLandingPage
       });
 
       const client = await pool.connect();
@@ -855,8 +867,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { Pool } = await import('pg');
       
+      if (!process.env.DatabaseLandingPage) {
+        return res.status(500).json({ message: "DatabaseLandingPage environment variable not configured" });
+      }
+      
       const pool = new Pool({
-        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+        connectionString: process.env.DatabaseLandingPage
       });
 
       const client = await pool.connect();
@@ -911,8 +927,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { Pool } = await import('pg');
       
+      if (!process.env.DatabaseLandingPage) {
+        return res.status(500).json({ message: "DatabaseLandingPage environment variable not configured" });
+      }
+      
       const pool = new Pool({
-        connectionString: process.env.DatabaseLandingPage || 'postgres://mrqz:@Workspacen8n@easypanel.evolutionmanagerevolutia.space:5433/evolutia?sslmode=disable'
+        connectionString: process.env.DatabaseLandingPage
       });
 
       const client = await pool.connect();
