@@ -128,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User routes
-  app.get("/api/user/profile", async (req, res) => {
+  app.get("/api/usuario/perfil", async (req, res) => {
     try {
       // For now, we'll use the first user as the current user
       // In a real app, this would come from session/authentication
@@ -144,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/user/profile", async (req, res) => {
+  app.patch("/api/usuario/perfil", async (req, res) => {
     try {
       const validatedData = updateUserProfileSchema.parse(req.body);
       // For now, we'll use the first user as the current user
@@ -169,7 +169,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
   // Analytics routes
-  app.get("/api/analytics", async (req, res) => {
+  app.get("/api/analitica", async (req, res) => {
     try {
       const analytics = await storage.getLatestAnalytics();
       res.json(analytics);
@@ -179,7 +179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Clients routes
-  app.get("/api/clients", async (req, res) => {
+  app.get("/api/clientes", async (req, res) => {
     try {
       const clients = await storage.getClientsWithStats();
       res.json(clients);
@@ -188,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/clients/:id", async (req, res) => {
+  app.get("/api/clientes/:id", async (req, res) => {
     try {
       const client = await storage.getClient(req.params.id);
       if (!client) {
@@ -200,7 +200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/clients", async (req, res) => {
+  app.post("/api/clientes", async (req, res) => {
     try {
       console.log('Received request body:', JSON.stringify(req.body, null, 2));
       const validatedData = insertClientSchema.parse(req.body);
@@ -217,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/clients/:id", async (req, res) => {
+  app.patch("/api/clientes/:id", async (req, res) => {
     try {
       const updates = updateClientSchema.parse(req.body);
       const client = await storage.updateClient(req.params.id, updates);
@@ -230,7 +230,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/clients/:id", async (req, res) => {
+  app.delete("/api/clientes/:id", async (req, res) => {
     try {
       const deleted = await storage.deleteClient(req.params.id);
       if (!deleted) {
@@ -246,7 +246,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Projects routes
-  app.get("/api/projects", async (req, res) => {
+  app.get("/api/projetos", async (req, res) => {
     try {
       const projects = await storage.getProjectsWithClients();
       res.json(projects);
@@ -255,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/projects/:id", async (req, res) => {
+  app.get("/api/projetos/:id", async (req, res) => {
     try {
       const project = await storage.getProject(req.params.id);
       if (!project) {
@@ -267,7 +267,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/clients/:clientId/projects", async (req, res) => {
+  app.get("/api/clientes/:clientId/projetos", async (req, res) => {
     try {
       const projects = await storage.getProjectsByClient(req.params.clientId);
       res.json(projects);
@@ -276,7 +276,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects", async (req, res) => {
+  app.post("/api/projetos", async (req, res) => {
     try {
       // Create a schema that accepts string dates and transforms them
       const projectSchemaWithStringDates = insertProjectSchema.extend({
@@ -292,7 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/projects/:id", async (req, res) => {
+  app.patch("/api/projetos/:id", async (req, res) => {
     try {
       console.log("📝 [PATCH] Received data:", JSON.stringify(req.body, null, 2));
       
@@ -327,7 +327,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/projects/:id", async (req, res) => {
+  app.delete("/api/projetos/:id", async (req, res) => {
     try {
       const deleted = await storage.deleteProject(req.params.id);
       if (!deleted) {
@@ -342,7 +342,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Project Costs routes
-  app.get("/api/projects/:projectId/costs", async (req, res) => {
+  app.get("/api/projetos/:projectId/custos", async (req, res) => {
     try {
       const costs = await storage.getProjectCosts(req.params.projectId);
       res.json(costs);
@@ -351,7 +351,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects/:projectId/costs", async (req, res) => {
+  app.post("/api/projetos/:projectId/custos", async (req, res) => {
     try {
       const costSchemaWithStringDate = insertProjectCostSchema.extend({
         costDate: z.string().transform((val) => new Date(val)),
@@ -369,7 +369,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/projects/:projectId/costs/:costId", async (req, res) => {
+  app.patch("/api/projetos/:projectId/custos/:costId", async (req, res) => {
     try {
       const updates = updateProjectCostSchema.parse(req.body);
       const cost = await storage.updateProjectCost(req.params.costId, updates);
@@ -382,7 +382,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/projects/:projectId/costs/:costId", async (req, res) => {
+  app.delete("/api/projetos/:projectId/custos/:costId", async (req, res) => {
     try {
       const deleted = await storage.deleteProjectCost(req.params.costId);
       if (!deleted) {
@@ -395,7 +395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Interactions routes
-  app.get("/api/interactions", async (req, res) => {
+  app.get("/api/interacoes", async (req, res) => {
     try {
       const interactions = await storage.getInteractions();
       res.json(interactions);
@@ -404,7 +404,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/clients/:clientId/interactions", async (req, res) => {
+  app.get("/api/clientes/:clientId/interacoes", async (req, res) => {
     try {
       const interactions = await storage.getInteractionsByClient(req.params.clientId);
       res.json(interactions);
@@ -413,7 +413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/interactions", async (req, res) => {
+  app.post("/api/interacoes", async (req, res) => {
     try {
       const validatedData = insertInteractionSchema.parse(req.body);
       const interaction = await storage.createInteraction(validatedData);
@@ -424,7 +424,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Alerts routes
-  app.get("/api/alerts", async (req, res) => {
+  app.get("/api/alertas", async (req, res) => {
     try {
       const alerts = await storage.getAlerts();
       res.json(alerts);
@@ -433,7 +433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/alerts/unread", async (req, res) => {
+  app.get("/api/alertas/nao-lidos", async (req, res) => {
     try {
       const alerts = await storage.getUnreadAlerts();
       res.json(alerts);
@@ -442,7 +442,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/alerts/:id/read", async (req, res) => {
+  app.patch("/api/alertas/:id/lido", async (req, res) => {
     try {
       const alert = await storage.markAlertAsRead(req.params.id);
       if (!alert) {
@@ -454,7 +454,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/alerts/:id/read", async (req, res) => {
+  app.post("/api/alertas/:id/lido", async (req, res) => {
     try {
       const alert = await storage.markAlertAsRead(req.params.id);
       if (!alert) {
@@ -467,7 +467,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Notification Rules routes
-  app.get("/api/notification-rules", async (req, res) => {
+  app.get("/api/regras-notificacao", async (req, res) => {
     try {
       const rules = await storage.getNotificationRules();
       res.json(rules);
@@ -476,7 +476,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/notification-rules/active", async (req, res) => {
+  app.get("/api/regras-notificacao/ativas", async (req, res) => {
     try {
       const rules = await storage.getActiveNotificationRules();
       res.json(rules);
@@ -485,7 +485,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/notification-rules/:id", async (req, res) => {
+  app.get("/api/regras-notificacao/:id", async (req, res) => {
     try {
       const rule = await storage.getNotificationRule(req.params.id);
       if (!rule) {
@@ -497,7 +497,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/notification-rules", async (req, res) => {
+  app.post("/api/regras-notificacao", async (req, res) => {
     try {
       const validatedData = insertNotificationRuleSchema.parse(req.body);
       const rule = await storage.createNotificationRule(validatedData);
@@ -507,7 +507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/notification-rules/:id", async (req, res) => {
+  app.put("/api/regras-notificacao/:id", async (req, res) => {
     try {
       const validatedData = updateNotificationRuleSchema.parse(req.body);
       const rule = await storage.updateNotificationRule(req.params.id, validatedData);
@@ -520,7 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/notification-rules/:id", async (req, res) => {
+  app.delete("/api/regras-notificacao/:id", async (req, res) => {
     try {
       const success = await storage.deleteNotificationRule(req.params.id);
       if (!success) {
@@ -533,9 +533,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription routes
-  app.get("/api/subscriptions", async (req, res) => {
+  app.get("/api/assinaturas", async (req, res) => {
     try {
-      console.log('🌐 [API] GET /api/subscriptions called');
+      console.log('🌐 [API] GET /api/assinaturas called');
       const subscriptions = await storage.getSubscriptionsWithClients();
       console.log('🌐 [API] Returning subscriptions:', subscriptions.length, 'items');
       res.json(subscriptions);
@@ -545,7 +545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/subscriptions/:id", async (req, res) => {
+  app.get("/api/assinaturas/:id", async (req, res) => {
     try {
       const subscription = await storage.getSubscription(req.params.id);
       if (!subscription) {
@@ -557,7 +557,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/subscriptions", async (req, res) => {
+  app.post("/api/assinaturas", async (req, res) => {
     try {
       const validatedData = insertSubscriptionSchema.parse(req.body);
       const subscription = await storage.createSubscription(validatedData);
@@ -567,7 +567,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/subscriptions/:id", async (req, res) => {
+  app.patch("/api/assinaturas/:id", async (req, res) => {
     try {
       const updates = insertSubscriptionSchema.partial().parse(req.body);
       const subscription = await storage.updateSubscription(req.params.id, updates);
@@ -580,7 +580,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/subscriptions/:id", async (req, res) => {
+  app.delete("/api/assinaturas/:id", async (req, res) => {
     try {
       const deleted = await storage.deleteSubscription(req.params.id);
       if (!deleted) {
@@ -595,7 +595,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription Services routes
-  app.get("/api/subscriptions/:id/services", async (req, res) => {
+  app.get("/api/assinaturas/:id/servicos", async (req, res) => {
     try {
       const services = await storage.getSubscriptionServicesBySubscription(req.params.id);
       res.json(services);
@@ -604,7 +604,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/subscriptions/:id/services", async (req, res) => {
+  app.post("/api/assinaturas/:id/servicos", async (req, res) => {
     try {
       const validatedData = insertSubscriptionServiceSchema.parse({
         ...req.body,
@@ -617,7 +617,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/subscription-services/:id", async (req, res) => {
+  app.patch("/api/servicos-assinatura/:id", async (req, res) => {
     try {
       const updates = insertSubscriptionServiceSchema.partial().parse(req.body);
       const service = await storage.updateSubscriptionService(req.params.id, updates);
@@ -630,7 +630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/subscription-services/:id", async (req, res) => {
+  app.delete("/api/servicos-assinatura/:id", async (req, res) => {
     try {
       const deleted = await storage.deleteSubscriptionService(req.params.id);
       if (!deleted) {
@@ -643,7 +643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Payment routes
-  app.get("/api/subscriptions/:id/payments", async (req, res) => {
+  app.get("/api/assinaturas/:id/pagamentos", async (req, res) => {
     try {
       const payments = await storage.getPaymentsBySubscription(req.params.id);
       res.json(payments);
@@ -652,7 +652,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/subscriptions/:id/payments", upload.single('receipt'), async (req, res) => {
+  app.post("/api/assinaturas/:id/pagamentos", upload.single('receipt'), async (req, res) => {
     try {
       let fileId = null;
       
@@ -685,7 +685,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // File download route
-  app.get("/api/files/:id", async (req, res) => {
+  app.get("/api/arquivos/:id", async (req, res) => {
     try {
       const file = await storage.getPaymentFile(req.params.id);
       if (!file) {
@@ -705,7 +705,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Proposals routes - Connect to PostgreSQL database for proposals
-  app.get("/api/proposals", async (req, res) => {
+  app.get("/api/propostas", async (req, res) => {
     try {
       const { Pool } = await import('pg');
       
@@ -748,7 +748,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get single proposal for editing
-  app.get("/api/proposals/:id", async (req, res) => {
+  app.get("/api/propostas/:id", async (req, res) => {
     try {
       const { Pool } = await import('pg');
       
@@ -784,7 +784,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update proposal
-  app.put("/api/proposals/:id", async (req, res) => {
+  app.put("/api/propostas/:id", async (req, res) => {
     try {
       const { Pool } = await import('pg');
       
@@ -863,7 +863,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create new proposal manually
-  app.post("/api/proposals", async (req, res) => {
+  app.post("/api/propostas", async (req, res) => {
     try {
       const { Pool } = await import('pg');
       
@@ -923,7 +923,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete proposal
-  app.delete("/api/proposals/:id", async (req, res) => {
+  app.delete("/api/propostas/:id", async (req, res) => {
     try {
       const { Pool } = await import('pg');
       
@@ -959,7 +959,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Replit Units Routes
-  app.get("/api/replit-units", async (_req, res) => {
+  app.get("/api/unidades-replit", async (_req, res) => {
     try {
       const units = await storage.getReplitUnits();
       res.json(units);
@@ -969,7 +969,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/replit-units/:id", async (req, res) => {
+  app.get("/api/unidades-replit/:id", async (req, res) => {
     try {
       const unit = await storage.getReplitUnit(req.params.id);
       if (!unit) {
@@ -982,7 +982,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/replit-units", async (req, res) => {
+  app.post("/api/unidades-replit", async (req, res) => {
     try {
       const unit = await storage.createReplitUnit(req.body);
       res.status(201).json(unit);
@@ -992,7 +992,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/replit-units/:id", async (req, res) => {
+  app.put("/api/unidades-replit/:id", async (req, res) => {
     try {
       const unit = await storage.updateReplitUnit(req.params.id, req.body);
       if (!unit) {
