@@ -67,13 +67,13 @@ export default function PipelineChart({ "data-testid": testId }: PipelineChartPr
                   backgroundColor: "var(--bg-container)",
                   border: "1px solid var(--border-secondary)",
                   borderRadius: "8px",
-                  color: "#FFFFFF "
+                  color: "#F5F5F5 "
                 }}
                 labelStyle={{
-                  color: "#FFFFFF "
+                  color: "#F5F5F5 "
                 }}
                 itemStyle={{
-                  color: "#FFFFFF "
+                  color: "#F5F5F5 "
                 }}
                 formatter={(value) => [value, "Projetos"]}
               />

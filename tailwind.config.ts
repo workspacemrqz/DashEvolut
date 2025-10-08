@@ -78,7 +78,7 @@ export default {
         "light-text": "var(--light-text-color)",
         "dark-text": "var(--dark-text-color)",
         "f5f5f5": "#f5f5f5",
-        "ffffff": "#ffffff",
+        "ffffff": "#F5F5F5",
         "0b1015": "#0b1015",
         "060606": "#060606",
       },

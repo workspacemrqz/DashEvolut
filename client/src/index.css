@@ -18,7 +18,7 @@
   --accent: hsl(0, 0%, 92.16%);
   --accent-foreground: hsl(0, 0%, 0%);
   --destructive: hsl(356.3033, 90.5579%, 54.3137%);
-  --destructive-foreground: #ffffff;
+  --destructive-foreground: #F5F5F5;
   --border: #2b2b2b;
   --input: #2b2b2b;
   --ring: hsl(221.74, 13.14%, 34.31%);
@@ -62,7 +62,7 @@
   
   /* Dynamic color system variables */
   --light-bg-color: #f5f5f5;
-  --white-bg-color: #ffffff;
+  --white-bg-color: #F5F5F5;
   --dark-bg-color-1: #0b1015;
   --dark-bg-color-2: #060606;
   --light-text-color: #060606;
@@ -194,7 +194,7 @@
   .gradient-bg {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   .gradient-text {
@@ -211,7 +211,7 @@
   .btn-primary {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   .btn-secondary {
@@ -223,7 +223,7 @@
   .sidebar-active {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     border: 1px solid var(--border-primary);
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   .kpi-card {
@@ -234,10 +234,19 @@
   /* Fix button text colors inside kpi-card */
   .kpi-card .btn-primary,
   .kpi-card .btn-primary * {
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
 
   .kpi-card .btn-primary svg {
+    color: #F5F5F5 !important;
+  }
+
+  .kpi-card .btn-secondary,
+  .kpi-card .btn-secondary * {
+    color: #F5F5F5 !important;
+  }
+
+  .kpi-card .btn-secondary svg {
     color: #F5F5F5 !important;
   }
 
@@ -247,7 +256,7 @@
 
   .progress-fill {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   .status-badge {
@@ -299,7 +308,7 @@
   .dropdown-content [role="menuitem"],
   .dropdown-content [role="menuitem"] svg,
   .dropdown-content [role="menuitem"] span {
-    background-color: #ffffff;
+    background-color: #F5F5F5;
     color: #060606 !important;
   }
 
@@ -331,7 +340,7 @@
   .bg-black,
   [class*="bg-blue-"],
   [class*="bg-black"] {
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   /* Override Tailwind primary colors to be white text */
@@ -341,7 +350,7 @@
   [data-state=checked],
   [class*="data-[state=checked]"],
   [class*="bg-bg-primary"] {
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
   
   /* Specific overrides for button and badge variants */
@@ -349,7 +358,7 @@
   .border-transparent.bg-primary,
   button.bg-primary,
   [role="button"].bg-primary {
-    color: #FFFFFF ;
+    color: #F5F5F5 ;
   }
 
   .status-delivery {
@@ -536,10 +545,10 @@
   [style*="background-color: #EBEBEB"] *,
   [style*="background-color: white"],
   [style*="background-color: white"] *,
-  [style*="background-color: #ffffff"],
-  [style*="background-color: #ffffff"] *,
-  [style*="background-color: #FFFFFF"],
-  [style*="background-color: #FFFFFF"] *,
+  [style*="background-color: #F5F5F5"],
+  [style*="background-color: #F5F5F5"] *,
+  [style*="background-color: #F5F5F5"],
+  [style*="background-color: #F5F5F5"] *,
   [style*="background: #f5f5f5"],
   [style*="background: #f5f5f5"] *,
   [style*="background: #F5F5F5"],
@@ -550,10 +559,10 @@
   [style*="background: #EBEBEB"] *,
   [style*="background: white"],
   [style*="background: white"] *,
-  [style*="background: #ffffff"],
-  [style*="background: #ffffff"] *,
-  [style*="background: #FFFFFF"],
-  [style*="background: #FFFFFF"] * {
+  [style*="background: #F5F5F5"],
+  [style*="background: #F5F5F5"] *,
+  [style*="background: #F5F5F5"],
+  [style*="background: #F5F5F5"] * {
     color: #060606 !important;
   }
 
@@ -595,7 +604,7 @@
   [role="button"][class*="bg-gray-"],
   [role="button"][class*="bg-black"],
   [role="button"][class*="bg-slate-"] {
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
 
   /* MAXIMUM PRIORITY: Force white text and icons on ALL dark background buttons */
@@ -611,7 +620,7 @@
   [role="button"][class*="bg-"],
   [role="button"][class*="bg-"] *,
   [role="button"][class*="bg-"] svg {
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
 
   /* Specific override for light backgrounds to keep dark text */
@@ -664,10 +673,10 @@
   button[style*="background-color: #EBEBEB"] *,
   button[style*="background-color: white"],
   button[style*="background-color: white"] *,
-  button[style*="background-color: #ffffff"],
-  button[style*="background-color: #ffffff"] *,
-  button[style*="background-color: #FFFFFF"],
-  button[style*="background-color: #FFFFFF"] *,
+  button[style*="background-color: #F5F5F5"],
+  button[style*="background-color: #F5F5F5"] *,
+  button[style*="background-color: #F5F5F5"],
+  button[style*="background-color: #F5F5F5"] *,
   button.bg-secondary,
   button.bg-secondary *,
   .btn-light,
@@ -695,18 +704,18 @@
   input[style*="background-color: #f5f5f5"],
   input[style*="background-color: #F5F5F5"],
   input[style*="background-color: white"],
-  input[style*="background-color: #ffffff"],
-  input[style*="background-color: #FFFFFF"],
+  input[style*="background-color: #F5F5F5"],
+  input[style*="background-color: #F5F5F5"],
   textarea[style*="background-color: #f5f5f5"],
   textarea[style*="background-color: #F5F5F5"],
   textarea[style*="background-color: white"],
-  textarea[style*="background-color: #ffffff"],
-  textarea[style*="background-color: #FFFFFF"],
+  textarea[style*="background-color: #F5F5F5"],
+  textarea[style*="background-color: #F5F5F5"],
   select[style*="background-color: #f5f5f5"],
   select[style*="background-color: #F5F5F5"],
   select[style*="background-color: white"],
-  select[style*="background-color: #ffffff"],
-  select[style*="background-color: #FFFFFF"],
+  select[style*="background-color: #F5F5F5"],
+  select[style*="background-color: #F5F5F5"],
   .input-light,
   .textarea-light,
   .select-light {
@@ -740,10 +749,10 @@
   .tag[style*="background-color: #EBEBEB"] *,
   .tag[style*="background-color: white"],
   .tag[style*="background-color: white"] *,
-  .tag[style*="background-color: #ffffff"],
-  .tag[style*="background-color: #ffffff"] *,
-  .tag[style*="background-color: #FFFFFF"],
-  .tag[style*="background-color: #FFFFFF"] *,
+  .tag[style*="background-color: #F5F5F5"],
+  .tag[style*="background-color: #F5F5F5"] *,
+  .tag[style*="background-color: #F5F5F5"],
+  .tag[style*="background-color: #F5F5F5"] *,
   .badge[style*="background-color: #f5f5f5"],
   .badge[style*="background-color: #f5f5f5"] *,
   .badge[style*="background-color: #F5F5F5"],
@@ -754,10 +763,10 @@
   .badge[style*="background-color: #EBEBEB"] *,
   .badge[style*="background-color: white"],
   .badge[style*="background-color: white"] *,
-  .badge[style*="background-color: #ffffff"],
-  .badge[style*="background-color: #ffffff"] *,
-  .badge[style*="background-color: #FFFFFF"],
-  .badge[style*="background-color: #FFFFFF"] *,
+  .badge[style*="background-color: #F5F5F5"],
+  .badge[style*="background-color: #F5F5F5"] *,
+  .badge[style*="background-color: #F5F5F5"],
+  .badge[style*="background-color: #F5F5F5"] *,
   .badge.bg-secondary,
   .badge.bg-secondary *,
   .tag-light,
@@ -888,7 +897,7 @@
   button.bg-primary,
   button.bg-primary *,
   .btn-primary {
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
 
   .btn-secondary,
@@ -904,13 +913,13 @@
 
   /* Dark background buttons need white text */
   button.bg-secondary {
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
 
   /* Specific overrides for proposal buttons in dark containers */
   .container-bg .btn-primary {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) !important;
-    color: #FFFFFF !important;
+    color: #F5F5F5 !important;
   }
   
   .container-bg .btn-secondary {
@@ -1222,7 +1231,7 @@ button[type="submit"].w-full svg {
 .rdp-day_selected,
 .rdp-day_selected:hover {
   background-color: #3b82f6 !important;
-  color: #FFFFFF !important;
+  color: #F5F5F5 !important;
 }
 
 /* Today */
