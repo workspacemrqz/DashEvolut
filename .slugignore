@@ -1,0 +1,46 @@
+# Source files (já compilados em dist/)
+client/src
+server/*.ts
+server/**/*.ts
+
+# Build tools e configs de desenvolvimento
+vite.config.ts
+tsconfig.json
+tailwind.config.ts
+postcss.config.js
+build.js
+
+# Scripts e ferramentas de desenvolvimento
+cleanup.ps1
+start.sh
+
+# Documentação
+*.md
+docs/
+
+# Assets de desenvolvimento
+attached_assets/
+
+# Arquivos de teste
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Cache e temporários
+.cache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+.gitattributes
