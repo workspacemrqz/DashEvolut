@@ -54,7 +54,7 @@ export default function Sidebar() {
     return (
       <>
         {/* Mobile Top Navigation Bar */}
-        <div className="fixed top-0 left-0 right-0 h-14 bg-bg-secondary border-b border-border-secondary z-50 lg:hidden">
+        <div className="fixed top-0 left-0 right-0 h-14 bg-bg-secondary border-b border-border-secondary z-40 lg:hidden">
           <div className="h-full flex items-center px-4">
             {/* Menu Button */}
             <button
@@ -76,7 +76,7 @@ export default function Sidebar() {
         {/* Mobile Overlay */}
         {isOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden"
             onClick={() => setIsOpen(false)}
           />
         )}
@@ -84,7 +84,7 @@ export default function Sidebar() {
         {/* Mobile Sidebar Menu */}
         <div 
           id="mobile-sidebar"
-          className={`fixed left-0 top-0 h-full w-72 container-bg border-r border-border-secondary flex flex-col z-40 transition-transform duration-300 lg:hidden ${
+          className={`fixed left-0 top-0 h-full w-72 container-bg border-r border-border-secondary flex flex-col z-50 transition-transform duration-300 lg:hidden ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
