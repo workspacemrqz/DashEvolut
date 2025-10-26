@@ -93,9 +93,9 @@ export default function Sidebar() {
               const Icon = item.icon;
               
               return (
-                <Link key={item.name} href={item.href}>
+                <Link key={item.name} href={item.href} className="focus:outline-none focus:ring-0">
                   <div
-                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer focus:outline-none focus:ring-0 ${
                       isActive 
                         ? "sidebar-active text-text-primary" 
                         : "text-text-secondary"
@@ -133,9 +133,9 @@ export default function Sidebar() {
           const Icon = item.icon;
           
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href} className="focus:outline-none focus:ring-0">
               <div
-                className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer focus:outline-none focus:ring-0 ${
                   isActive 
                     ? "sidebar-active text-text-primary" 
                     : "text-text-secondary"
