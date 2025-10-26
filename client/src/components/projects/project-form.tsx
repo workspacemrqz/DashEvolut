@@ -184,7 +184,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
 
         <Form {...form}>
           <form id="project-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -253,7 +253,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="status"
@@ -305,7 +305,7 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="startDate"

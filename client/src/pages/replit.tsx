@@ -517,14 +517,14 @@ export default function ReplitPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <Table>
+              <Table className="min-w-[800px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Descrição</TableHead>
                     <TableHead>Valor</TableHead>
                     <TableHead>Periodicidade</TableHead>
-                    <TableHead>Categoria</TableHead>
-                    <TableHead>Data de Início</TableHead>
+                    <TableHead className="hidden md:table-cell">Categoria</TableHead>
+                    <TableHead className="hidden md:table-cell">Data de Início</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
@@ -541,10 +541,10 @@ export default function ReplitPage() {
                       <TableCell data-testid={`text-frequency-${expense.id}`}>
                         {FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency}
                       </TableCell>
-                      <TableCell data-testid={`text-category-${expense.id}`}>
+                      <TableCell className="hidden md:table-cell" data-testid={`text-category-${expense.id}`}>
                         {expense.category || "-"}
                       </TableCell>
-                      <TableCell data-testid={`text-start-date-${expense.id}`}>
+                      <TableCell className="hidden md:table-cell" data-testid={`text-start-date-${expense.id}`}>
                         {formatDate(expense.startDate)}
                       </TableCell>
                       <TableCell data-testid={`text-status-${expense.id}`}>

@@ -209,7 +209,7 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
 
         <Form {...form}>
           <form id="client-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -249,7 +249,7 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="email"
@@ -290,7 +290,7 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="sector"

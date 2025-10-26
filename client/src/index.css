@@ -497,6 +497,20 @@
     color: #060606 !important;
   }
 
+  /* Responsive images and videos */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure images in containers respect margins */
+  .container-bg img,
+  .kpi-card img,
+  [role="dialog"] img {
+    max-width: 100%;
+    height: auto;
+  }
+
   /* Mobile responsiveness improvements */
   @media (max-width: 768px) {
     /* Reduce sidebar width when open on mobile */
@@ -526,6 +540,17 @@
     .form-buttons {
       flex-direction: column;
       gap: 8px;
+    }
+
+    /* Minimum touch target sizes for accessibility */
+    button, [role="button"], .btn-primary, .btn-secondary {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Inputs also need adequate height for touch */
+    input, textarea, select {
+      min-height: 44px;
     }
   }
 
