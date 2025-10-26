@@ -553,10 +553,9 @@ export default function SubscriptionTable({
                             </p>
                           </div>
                           <Button
-                            variant="outline"
                             size="sm"
                             onClick={() => handleDownloadFile(file.id)}
-                            className="btn-secondary flex-shrink-0"
+                            className="btn-primary flex-shrink-0"
                             data-testid={`button-download-file-${file.id}`}
                           >
                             <Download className="h-4 w-4" />

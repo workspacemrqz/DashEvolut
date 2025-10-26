@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import { insertSubscriptionSchema, type InsertSubscription, type SubscriptionWithClient, type ClientWithStats, type SubscriptionCredential, type SubscriptionFile, type InsertSubscriptionCredential } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -748,10 +749,9 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                             <div className="flex gap-1">
                               <Button
                                 type="button"
-                                variant="ghost"
                                 size="sm"
                                 onClick={() => handleDownloadFile(file.id)}
-                                className="h-8 px-2"
+                                className="btn-primary h-8 px-2"
                                 data-testid={`button-download-file-${file.id}`}
                               >
                                 <Download className="w-4 h-4" />
