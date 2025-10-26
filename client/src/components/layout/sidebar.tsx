@@ -46,43 +46,23 @@ export default function Sidebar() {
     }
   }, [isOpen, isMobile]);
 
-  // Mobile menu button - only shown on mobile
+  // Mobile menu - only shown on mobile
   if (isMobile) {
     return (
       <>
-        {/* Modern Mobile Header */}
-        <header className="fixed top-0 left-0 right-0 h-16 z-50 lg:hidden">
-          <div className="h-full gradient-bg shadow-lg">
-            <div className="h-full flex items-center justify-between px-4">
-              {/* Menu Button */}
-              <button
-                id="mobile-menu-button"
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                data-testid="mobile-menu-toggle"
-              >
-                {isOpen ? (
-                  <X className="w-6 h-6 text-white" />
-                ) : (
-                  <Menu className="w-6 h-6 text-white" />
-                )}
-              </button>
-
-              {/* Logo */}
-              <div className="flex-1 flex justify-center px-4">
-                <img 
-                  src="/assets/LOGO Evolut IA com texto na horizontal.png" 
-                  alt="Evolut IA Logo" 
-                  className="h-8 w-auto"
-                  data-testid="mobile-header-logo"
-                />
-              </div>
-
-              {/* Placeholder for balance (same width as menu button for centering) */}
-              <div className="w-10"></div>
-            </div>
-          </div>
-        </header>
+        {/* Menu Toggle Button */}
+        <button
+          id="mobile-menu-button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="fixed top-4 left-4 z-50 p-3 gradient-bg rounded-xl shadow-lg lg:hidden transition-transform hover:scale-105"
+          data-testid="mobile-menu-toggle"
+        >
+          {isOpen ? (
+            <X className="w-6 h-6 text-white" />
+          ) : (
+            <Menu className="w-6 h-6 text-white" />
+          )}
+        </button>
 
         {/* Mobile Overlay */}
         {isOpen && (
@@ -92,22 +72,24 @@ export default function Sidebar() {
           />
         )}
 
-        {/* Mobile Sidebar */}
+        {/* Mobile Sidebar Menu */}
         <div 
           id="mobile-sidebar"
           className={`fixed left-0 top-0 h-full w-80 container-bg border-r border-border-secondary flex flex-col z-40 transition-transform duration-300 lg:hidden ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="h-16 gradient-bg flex items-center px-6">
+          {/* Sidebar Header with Gradient */}
+          <div className="gradient-bg px-6 py-6 shadow-md">
             <img 
               src="/assets/LOGO Evolut IA com texto na horizontal.png" 
               alt="Evolut IA Logo" 
-              className="h-8 w-auto"
+              className="h-10 w-auto"
               data-testid="logo"
             />
           </div>
           
+          {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = location === item.href;
