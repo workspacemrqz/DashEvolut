@@ -739,10 +739,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/assinaturas/:id/arquivos", uploadSubscriptionAttachment.single('file'), async (req, res) => {
+  app.post("/api/assinaturas/:id/arquivos", (req, res, next) => {
+    uploadSubscriptionAttachment.single('file')(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: "Arquivo muito grande. Tamanho máximo: 50MB" });
+        }
+        return res.status(400).json({ message: `Erro no upload: ${err.message}` });
+      } else if (err) {
+        return res.status(400).json({ message: `Erro no upload: ${err.message}` });
+      }
+      next();
+    });
+  }, async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ message: "No file uploaded" });
+        return res.status(400).json({ message: "Nenhum arquivo foi enviado ou o tipo de arquivo não é permitido" });
       }
 
       const subscriptionFile = await storage.createSubscriptionFile({
@@ -756,7 +768,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(201).json(subscriptionFile);
     } catch (error) {
-      res.status(400).json({ message: "Failed to upload file" });
+      console.error('Error creating subscription file:', error);
+      res.status(400).json({ message: "Falha ao salvar arquivo no banco de dados" });
     }
   });
 

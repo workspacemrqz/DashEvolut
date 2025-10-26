@@ -219,11 +219,16 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
           const formData = new FormData();
           formData.append('file', file);
           
-          await fetch(`/api/assinaturas/${subscriptionId}/arquivos`, {
+          const uploadResponse = await fetch(`/api/assinaturas/${subscriptionId}/arquivos`, {
             method: "POST",
             body: formData,
             credentials: 'include'
           });
+          
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json().catch(() => ({}));
+            throw new Error(errorData.message || `Erro ao fazer upload do arquivo ${file.name}`);
+          }
         }
         
         queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
@@ -241,9 +246,10 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         setFilesToDelete([]);
         onOpenChange(false);
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "A assinatura foi salva, mas houve erro ao processar credenciais ou arquivos.";
         toast({
           title: "Erro ao processar credenciais/arquivos",
-          description: "A assinatura foi salva, mas houve erro ao processar credenciais ou arquivos.",
+          description: errorMessage,
           variant: "destructive",
         });
       }
