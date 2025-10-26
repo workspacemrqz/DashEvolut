@@ -123,7 +123,7 @@ export default function Sidebar() {
         <img 
           src="/assets/LOGO Evolut IA com texto na horizontal.png" 
           alt="Evolut IA Logo" 
-          className={`${isCollapsed ? 'h-8' : 'h-10'} w-auto cursor-pointer transition-all duration-300`}
+          className={`${isCollapsed ? 'h-8 max-w-[48px] object-contain' : 'h-10 w-auto'} cursor-pointer transition-all duration-300`}
           data-testid="logo"
           onClick={() => setIsCollapsed(!isCollapsed)}
           title={isCollapsed ? "Expandir menu" : "Colapsar menu"}
