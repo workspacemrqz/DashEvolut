@@ -48,21 +48,30 @@ export default function Sidebar() {
 
   // Mobile menu - only shown on mobile
   if (isMobile) {
+    // Get current page name
+    const currentPage = navigation.find(item => item.href === location)?.name || "Dashboard";
+    
     return (
       <>
-        {/* Menu Toggle Button */}
-        <button
-          id="mobile-menu-button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-4 left-4 z-50 p-3 gradient-bg rounded-xl shadow-lg lg:hidden transition-transform hover:scale-105"
-          data-testid="mobile-menu-toggle"
-        >
-          {isOpen ? (
-            <X className="w-6 h-6 text-white" />
-          ) : (
-            <Menu className="w-6 h-6 text-white" />
-          )}
-        </button>
+        {/* Mobile Top Navigation Bar */}
+        <div className="fixed top-0 left-0 right-0 h-14 bg-bg-secondary border-b border-border-secondary z-50 lg:hidden">
+          <div className="h-full flex items-center px-4">
+            {/* Menu Button */}
+            <button
+              id="mobile-menu-button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 -ml-2 hover:bg-bg-primary rounded-lg transition-colors"
+              data-testid="mobile-menu-toggle"
+            >
+              <Menu className="w-6 h-6 text-text-primary" />
+            </button>
+
+            {/* Page Title */}
+            <h1 className="ml-3 text-lg font-semibold text-text-primary truncate">
+              {currentPage}
+            </h1>
+          </div>
+        </div>
 
         {/* Mobile Overlay */}
         {isOpen && (
@@ -75,22 +84,22 @@ export default function Sidebar() {
         {/* Mobile Sidebar Menu */}
         <div 
           id="mobile-sidebar"
-          className={`fixed left-0 top-0 h-full w-80 container-bg border-r border-border-secondary flex flex-col z-40 transition-transform duration-300 lg:hidden ${
+          className={`fixed left-0 top-0 h-full w-72 container-bg border-r border-border-secondary flex flex-col z-40 transition-transform duration-300 lg:hidden ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          {/* Sidebar Header with Gradient */}
-          <div className="gradient-bg px-6 py-6 shadow-md">
+          {/* Sidebar Header with Logo */}
+          <div className="px-6 py-5 border-b border-border-secondary">
             <img 
               src="/assets/LOGO Evolut IA com texto na horizontal.png" 
               alt="Evolut IA Logo" 
-              className="h-10 w-auto"
+              className="h-9 w-auto"
               data-testid="logo"
             />
           </div>
           
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = location === item.href;
               const Icon = item.icon;
@@ -98,15 +107,15 @@ export default function Sidebar() {
               return (
                 <Link key={item.name} href={item.href} className="focus:outline-none focus:ring-0">
                   <div
-                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer focus:outline-none focus:ring-0 ${
+                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors cursor-pointer focus:outline-none focus:ring-0 ${
                       isActive 
-                        ? "sidebar-active text-text-primary" 
-                        : "text-text-secondary hover:bg-bg-primary/50"
+                        ? "bg-[hsl(203.89,88.28%,53.14%)] text-white" 
+                        : "text-text-secondary hover:bg-bg-primary"
                     }`}
                     data-testid={`nav-${item.name.toLowerCase()}`}
                   >
-                    <Icon className="w-5 h-5 mr-3" />
-                    {item.name}
+                    <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                    <span className="truncate">{item.name}</span>
                   </div>
                 </Link>
               );

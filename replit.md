@@ -5,15 +5,15 @@ The Evolutia Dashboard is a comprehensive full-stack web application designed fo
 ## Recent Changes (October 26, 2025)
 
 ### Mobile Responsiveness Improvements
-- **Clean Mobile Menu**: Single elegant floating button (gradient background, rounded-xl, hover scale effect) that opens sidebar overlay
-- **Unified Sidebar Design**: Mobile sidebar includes gradient header with logo - no duplicate headers
-- **Page Containers**: All pages use `overflow-x-hidden`, `min-w-0` to prevent horizontal scrolling, `pl-16` for menu button clearance
+- **Mobile Top Navigation Bar**: Fixed header bar at top (56px/h-14) showing current page title and integrated menu button
+- **Clean Integrated Menu**: Menu button positioned within the top bar (no floating elements) with subtle hover effect
+- **Smart Title Display**: Page titles shown in top bar on mobile, hidden in page headers to avoid duplication
+- **Sidebar Design**: Clean sidebar (288px/w-72) with logo header and simplified navigation items
+- **Active State**: Navigation items use brand blue background when active for clear visual feedback
+- **Page Containers**: All pages use `pt-14` on mobile to accommodate fixed top bar, `overflow-x-hidden` and `min-w-0` to prevent horizontal scrolling
 - **KPI Cards**: Adjusted padding from `p-6` to `p-4 sm:p-6` for better mobile spacing
-- **Typography**: Implemented responsive text sizes (e.g., `text-lg sm:text-xl lg:text-2xl`)
-- **Button Actions**: Simplified button structure in headers, removed unnecessary wrapper divs
+- **Typography**: Implemented responsive text sizes with mobile-specific adjustments
 - **Filter Controls**: Using responsive pattern `w-full sm:w-[Xpx]` across all pages
-- **Gestão Financeira Page**: Completely refactored to match the standard Header pattern used in other pages
-- **Sidebar Enhancement**: Mobile sidebar includes gradient header with logo, smooth slide-in animation
 
 # User Preferences
 

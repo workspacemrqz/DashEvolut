@@ -226,10 +226,10 @@ export default function ReplitPage() {
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
-      <div className="container-bg border-b border-border-secondary px-3 py-6 pl-16 sm:px-6 lg:pl-6">
+      <div className="container-bg border-b border-border-secondary px-4 py-4 sm:px-6 sm:py-6 lg:pl-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="min-w-0 flex-1">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold break-words" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }}>Gestão Financeira</h1>
+            <h1 className="text-base sm:text-xl lg:text-2xl font-bold break-words lg:block hidden" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }}>Gestão Financeira</h1>
             <p className="text-text-secondary mt-1 text-xs sm:text-sm lg:text-base break-words">Controle de despesas e custos operacionais</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
