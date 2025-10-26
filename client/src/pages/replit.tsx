@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -29,108 +29,122 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Download } from "lucide-react";
-import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
+import { Plus, Pencil, Trash2, Download, DollarSign } from "lucide-react";
+import type { Expense, InsertExpense, UpdateExpense } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import * as XLSX from "xlsx";
 
+const FREQUENCY_OPTIONS = [
+  { value: "mensal", label: "Mensal" },
+  { value: "anual", label: "Anual" },
+  { value: "semanal", label: "Semanal" },
+  { value: "unico", label: "Único" },
+];
+
 const STATUS_OPTIONS = [
-  { value: "Limpo", bgColor: "bg-[#277677]", textColor: "text-white" },
-  { value: "Solicitado", bgColor: "bg-yellow-500", textColor: "text-black" },
-  { value: "Concluído", bgColor: "bg-green-500", textColor: "text-white" },
-  { value: "Negado", bgColor: "bg-red-500", textColor: "text-white" },
-  { value: "Reenviado", bgColor: "bg-blue-500", textColor: "text-white" },
+  { value: "ativo", label: "Ativo" },
+  { value: "inativo", label: "Inativo" },
 ];
 
 export default function ReplitPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingUnit, setEditingUnit] = useState<ReplitUnit | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-  const [nameFilter, setNameFilter] = useState<"Todos" | "Camargo" | "Marquez" | "Dividido">("Todos");
-  const [emailFilter, setEmailFilter] = useState("");
-  const [dataHorarioValue, setDataHorarioValue] = useState("");
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const [frequencyFilter, setFrequencyFilter] = useState<string>("Todos");
+  const [statusFilter, setStatusFilter] = useState<string>("Todos");
+  const [searchFilter, setSearchFilter] = useState("");
 
-  const { data: units = [], isLoading } = useQuery<ReplitUnit[]>({
-    queryKey: ["/api/unidades-replit"],
+  const { data: expenses = [], isLoading } = useQuery<Expense[]>({
+    queryKey: ["/api/despesas"],
   });
 
-  const filteredUnits = units.filter(unit => {
-    const matchesName = nameFilter === "Todos" || unit.nome === nameFilter;
-    const matchesEmail = unit.email.toLowerCase().includes(emailFilter.toLowerCase());
-    return matchesName && matchesEmail;
+  const filteredExpenses = expenses.filter(expense => {
+    const matchesFrequency = frequencyFilter === "Todos" || expense.frequency === frequencyFilter.toLowerCase();
+    const matchesStatus = statusFilter === "Todos" || expense.status === statusFilter.toLowerCase();
+    const matchesSearch = expense.description.toLowerCase().includes(searchFilter.toLowerCase());
+    return matchesFrequency && matchesStatus && matchesSearch;
   });
 
   const stats = {
-    camargo: {
-      total: units.filter(u => u.nome === "Camargo").reduce((sum, u) => sum + u.valor, 0),
-      count: units.filter(u => u.nome === "Camargo").length,
+    mensal: {
+      total: expenses.filter(e => e.frequency === "mensal").reduce((sum, e) => sum + e.amount, 0),
+      count: expenses.filter(e => e.frequency === "mensal").length,
     },
-    marquez: {
-      total: units.filter(u => u.nome === "Marquez").reduce((sum, u) => sum + u.valor, 0),
-      count: units.filter(u => u.nome === "Marquez").length,
+    anual: {
+      total: expenses.filter(e => e.frequency === "anual").reduce((sum, e) => sum + e.amount, 0),
+      count: expenses.filter(e => e.frequency === "anual").length,
     },
-    dividido: {
-      total: units.filter(u => u.nome === "Dividido").reduce((sum, u) => sum + u.valor, 0),
-      count: units.filter(u => u.nome === "Dividido").length,
+    semanal: {
+      total: expenses.filter(e => e.frequency === "semanal").reduce((sum, e) => sum + e.amount, 0),
+      count: expenses.filter(e => e.frequency === "semanal").length,
+    },
+    unico: {
+      total: expenses.filter(e => e.frequency === "unico").reduce((sum, e) => sum + e.amount, 0),
+      count: expenses.filter(e => e.frequency === "unico").length,
     },
   };
 
   const chartData = [
     {
-      name: "Camargo",
-      "Valor Investido (R$)": stats.camargo.total,
-      "Unidades": stats.camargo.count,
+      name: "Mensal",
+      "Valor Total (R$)": stats.mensal.total,
+      "Quantidade": stats.mensal.count,
     },
     {
-      name: "Marquez",
-      "Valor Investido (R$)": stats.marquez.total,
-      "Unidades": stats.marquez.count,
+      name: "Anual",
+      "Valor Total (R$)": stats.anual.total,
+      "Quantidade": stats.anual.count,
     },
     {
-      name: "Dividido",
-      "Valor Investido (R$)": stats.dividido.total,
-      "Unidades": stats.dividido.count,
+      name: "Semanal",
+      "Valor Total (R$)": stats.semanal.total,
+      "Quantidade": stats.semanal.count,
+    },
+    {
+      name: "Único",
+      "Valor Total (R$)": stats.unico.total,
+      "Quantidade": stats.unico.count,
     },
   ];
 
   const createMutation = useMutation({
-    mutationFn: (data: InsertReplitUnit) =>
-      apiRequest("POST", "/api/unidades-replit", data),
+    mutationFn: (data: InsertExpense) =>
+      apiRequest("POST", "/api/despesas", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/despesas"] });
       setIsDialogOpen(false);
       toast({
         title: "Sucesso",
-        description: "Unidade criada com sucesso!",
+        description: "Despesa criada com sucesso!",
       });
     },
     onError: () => {
       toast({
         title: "Erro",
-        description: "Erro ao criar unidade",
+        description: "Erro ao criar despesa",
         variant: "destructive",
       });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<InsertReplitUnit> }) =>
-      apiRequest("PUT", `/api/unidades-replit/${id}`, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateExpense }) =>
+      apiRequest("PATCH", `/api/despesas/${id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/despesas"] });
       setIsDialogOpen(false);
-      setEditingUnit(null);
+      setEditingExpense(null);
       toast({
         title: "Sucesso",
-        description: "Unidade atualizada com sucesso!",
+        description: "Despesa atualizada com sucesso!",
       });
     },
     onError: () => {
       toast({
         title: "Erro",
-        description: "Erro ao atualizar unidade",
+        description: "Erro ao atualizar despesa",
         variant: "destructive",
       });
     },
@@ -138,18 +152,18 @@ export default function ReplitPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      apiRequest("DELETE", `/api/unidades-replit/${id}`),
+      apiRequest("DELETE", `/api/despesas/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/unidades-replit"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/despesas"] });
       toast({
         title: "Sucesso",
-        description: "Unidade excluída com sucesso!",
+        description: "Despesa excluída com sucesso!",
       });
     },
     onError: () => {
       toast({
         title: "Erro",
-        description: "Erro ao excluir unidade",
+        description: "Erro ao excluir despesa",
         variant: "destructive",
       });
     },
@@ -159,47 +173,38 @@ export default function ReplitPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    const data: InsertReplitUnit = {
-      valor: parseFloat(formData.get("valor") as string),
-      email: formData.get("email") as string,
-      nome: formData.get("nome") as "Camargo" | "Marquez",
-      dataHorario: formData.get("dataHorario") as string,
-      status: selectedStatus,
+    const data: InsertExpense = {
+      description: formData.get("description") as string,
+      amount: parseFloat(formData.get("amount") as string),
+      frequency: formData.get("frequency") as "mensal" | "anual" | "semanal" | "unico",
+      category: formData.get("category") as string || undefined,
+      startDate: new Date(formData.get("startDate") as string),
+      status: formData.get("status") as "ativo" | "inativo",
+      notes: formData.get("notes") as string || undefined,
     };
 
-    if (editingUnit) {
-      updateMutation.mutate({ id: editingUnit.id, data });
+    if (editingExpense) {
+      updateMutation.mutate({ id: editingExpense.id, data });
     } else {
       createMutation.mutate(data);
     }
   };
 
-  const handleEdit = (unit: ReplitUnit) => {
-    setEditingUnit(unit);
-    setSelectedStatus(unit.status || []);
-    // Garante que o valor seja formatado ao carregar para edição
-    setDataHorarioValue(formatDataHorario(unit.dataHorario));
+  const handleEdit = (expense: Expense) => {
+    setEditingExpense(expense);
     setIsDialogOpen(true);
   };
 
-  const handleStatusToggle = (status: string) => {
-    setSelectedStatus(prev =>
-      prev.includes(status)
-        ? prev.filter(s => s !== status)
-        : [...prev, status]
-    );
-  };
-
   const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
+    if (confirm("Tem certeza que deseja excluir esta despesa?")) {
+      deleteMutation.mutate(id);
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
     setIsDialogOpen(open);
     if (!open) {
-      setEditingUnit(null);
-      setSelectedStatus([]);
-      setDataHorarioValue("");
+      setEditingExpense(null);
     }
   };
 
@@ -210,63 +215,32 @@ export default function ReplitPage() {
     }).format(value);
   };
 
-  const formatDataHorario = (value: string) => {
-    // Remove tudo que não for número
-    const numbers = value.replace(/\D/g, '');
-    
-    // Limita a 14 dígitos (DDMMYYYYHHMM)
-    const limited = numbers.slice(0, 14);
-    
-    // Aplica a formatação progressiva
-    if (limited.length <= 2) {
-      return limited; // DD
-    } else if (limited.length <= 4) {
-      return `${limited.slice(0, 2)}/${limited.slice(2)}`; // DD/MM
-    } else if (limited.length <= 8) {
-      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4)}`; // DD/MM/YYYY
-    } else if (limited.length <= 10) {
-      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4, 8)} ${limited.slice(8)}`; // DD/MM/YYYY HH
-    } else {
-      return `${limited.slice(0, 2)}/${limited.slice(2, 4)}/${limited.slice(4, 8)} ${limited.slice(8, 10)}:${limited.slice(10)}`; // DD/MM/YYYY HH:MM
-    }
+  const formatDate = (date: Date | string) => {
+    const d = new Date(date);
+    return d.toLocaleDateString('pt-BR');
   };
 
-  const handleDataHorarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatDataHorario(e.target.value);
-    setDataHorarioValue(formatted);
-  };
-
-  const getStatusStyle = (status: string) => {
-    const option = STATUS_OPTIONS.find(opt => opt.value === status);
-    return option 
-      ? { bgColor: option.bgColor, textColor: option.textColor }
-      : { bgColor: "bg-gray-500", textColor: "text-white" };
-  };
-
-  const sortStatuses = (statuses: string[]) => {
-    if (!statuses || statuses.length === 0) return statuses;
-    const order = STATUS_OPTIONS.map(opt => opt.value);
-    return [...statuses].sort((a, b) => {
-      const indexA = order.indexOf(a);
-      const indexB = order.indexOf(b);
-      return indexA - indexB;
-    });
+  const formatDateForInput = (date: Date | string) => {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
   };
 
   const handleExportToExcel = () => {
-    const exportData = filteredUnits.map(unit => ({
-      "Valor (R$)": unit.valor,
-      "Email": unit.email,
-      "Nome": unit.nome,
-      "Data & Horário": formatDataHorario(unit.dataHorario),
-      "Status": unit.status?.join(", ") || ""
+    const exportData = filteredExpenses.map(expense => ({
+      "Descrição": expense.description,
+      "Valor (R$)": expense.amount,
+      "Periodicidade": FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency,
+      "Categoria": expense.category || "",
+      "Data de Início": formatDate(expense.startDate),
+      "Status": expense.status === "ativo" ? "Ativo" : "Inativo",
+      "Observações": expense.notes || ""
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Unidades Replit");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Despesas");
 
-    const fileName = `unidades-replit-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`;
+    const fileName = `despesas-financeiras-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`;
     XLSX.writeFile(workbook, fileName);
 
     toast({
@@ -278,107 +252,124 @@ export default function ReplitPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-foreground">Unidades Replit</h1>
+        <h1 className="text-3xl font-bold text-foreground">Gestão Financeira</h1>
         <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Button 
               className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-              data-testid="button-add-unit"
+              data-testid="button-add-expense"
             >
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Nova Unidade</span>
+              <span className="hidden sm:inline">Nova Despesa</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {editingUnit ? "Editar Unidade" : "Nova Unidade"}
+                {editingExpense ? "Editar Despesa" : "Nova Despesa"}
               </DialogTitle>
               <DialogDescription>
-                {editingUnit
-                  ? "Edite os dados da unidade Replit"
-                  : "Adicione uma nova unidade Replit"}
+                {editingExpense
+                  ? "Edite os dados da despesa"
+                  : "Adicione uma nova despesa financeira"}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="valor">Valor (R$)</Label>
+                <Label htmlFor="description">Descrição *</Label>
                 <Input
-                  id="valor"
-                  name="valor"
+                  id="description"
+                  name="description"
+                  type="text"
+                  defaultValue={editingExpense?.description || ""}
+                  required
+                  data-testid="input-description"
+                  placeholder="Ex: Aluguel do escritório"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="amount">Valor (R$) *</Label>
+                <Input
+                  id="amount"
+                  name="amount"
                   type="number"
                   step="0.01"
-                  defaultValue={editingUnit?.valor || ""}
+                  defaultValue={editingExpense?.amount || ""}
                   required
-                  data-testid="input-valor"
+                  data-testid="input-amount"
+                  placeholder="0.00"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  defaultValue={editingUnit?.email || ""}
-                  required
-                  data-testid="input-email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="nome">Nome</Label>
+                <Label htmlFor="frequency">Periodicidade *</Label>
                 <Select
-                  name="nome"
-                  defaultValue={editingUnit?.nome || "Camargo"}
+                  name="frequency"
+                  defaultValue={editingExpense?.frequency || "mensal"}
                   required
                 >
-                  <SelectTrigger data-testid="select-nome">
-                    <SelectValue placeholder="Selecione o nome" />
+                  <SelectTrigger data-testid="select-frequency">
+                    <SelectValue placeholder="Selecione a periodicidade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Camargo">Camargo</SelectItem>
-                    <SelectItem value="Marquez">Marquez</SelectItem>
-                    <SelectItem value="Dividido">Dividido</SelectItem>
+                    {FREQUENCY_OPTIONS.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dataHorario">Data & Horário</Label>
+                <Label htmlFor="category">Categoria</Label>
                 <Input
-                  id="dataHorario"
-                  name="dataHorario"
+                  id="category"
+                  name="category"
                   type="text"
-                  value={dataHorarioValue}
-                  onChange={handleDataHorarioChange}
-                  placeholder="Digite 14 números (ex: 01012025 1430)"
-                  required
-                  data-testid="input-data-horario"
-                  maxLength={16}
+                  defaultValue={editingExpense?.category || ""}
+                  data-testid="input-category"
+                  placeholder="Ex: Infraestrutura, Marketing, etc."
                 />
               </div>
               <div className="space-y-2">
-                <Label>Status</Label>
-                <div className="space-y-2">
-                  {STATUS_OPTIONS.map((option) => (
-                    <div key={option.value} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`status-${option.value}`}
-                        checked={selectedStatus.includes(option.value)}
-                        onCheckedChange={() => handleStatusToggle(option.value)}
-                        data-testid={`checkbox-${option.value}`}
-                      />
-                      <label
-                        htmlFor={`status-${option.value}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                      >
-                        <span 
-                          className={`px-2 py-1 rounded-md text-xs font-semibold ${option.bgColor} ${option.textColor}`}
-                        >
-                          {option.value}
-                        </span>
-                      </label>
-                    </div>
-                  ))}
-                </div>
+                <Label htmlFor="startDate">Data de Início *</Label>
+                <Input
+                  id="startDate"
+                  name="startDate"
+                  type="date"
+                  defaultValue={editingExpense ? formatDateForInput(editingExpense.startDate) : ""}
+                  required
+                  data-testid="input-start-date"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Status *</Label>
+                <Select
+                  name="status"
+                  defaultValue={editingExpense?.status || "ativo"}
+                  required
+                >
+                  <SelectTrigger data-testid="select-status">
+                    <SelectValue placeholder="Selecione o status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="notes">Observações</Label>
+                <Textarea
+                  id="notes"
+                  name="notes"
+                  defaultValue={editingExpense?.notes || ""}
+                  data-testid="textarea-notes"
+                  placeholder="Observações adicionais sobre a despesa"
+                  rows={3}
+                />
               </div>
               <div className="flex justify-end gap-2">
                 <Button
@@ -393,8 +384,9 @@ export default function ReplitPage() {
                   type="submit" 
                   className="btn-primary"
                   data-testid="button-submit"
+                  disabled={createMutation.isPending || updateMutation.isPending}
                 >
-                  {editingUnit ? "Atualizar" : "Criar"}
+                  {editingExpense ? "Atualizar" : "Criar"}
                 </Button>
               </div>
             </form>
@@ -402,9 +394,68 @@ export default function ReplitPage() {
         </Dialog>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card className="kpi-card rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Mensal</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold" data-testid="text-mensal-total">
+              {formatCurrency(stats.mensal.total)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {stats.mensal.count} despesa{stats.mensal.count !== 1 ? 's' : ''}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="kpi-card rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Anual</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold" data-testid="text-anual-total">
+              {formatCurrency(stats.anual.total)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {stats.anual.count} despesa{stats.anual.count !== 1 ? 's' : ''}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="kpi-card rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Semanal</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold" data-testid="text-semanal-total">
+              {formatCurrency(stats.semanal.total)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {stats.semanal.count} despesa{stats.semanal.count !== 1 ? 's' : ''}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="kpi-card rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Único</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold" data-testid="text-unico-total">
+              {formatCurrency(stats.unico.total)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {stats.unico.count} despesa{stats.unico.count !== 1 ? 's' : ''}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="kpi-card rounded-xl mb-6">
         <CardHeader>
-          <CardTitle>Estatísticas por Pessoa</CardTitle>
+          <CardTitle>Despesas por Periodicidade</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px]">
@@ -422,8 +473,8 @@ export default function ReplitPage() {
                   }}
                 />
                 <Legend />
-                <Bar dataKey="Valor Investido (R$)" fill="#10b981" />
-                <Bar dataKey="Unidades" fill="#3b82f6" />
+                <Bar dataKey="Valor Total (R$)" fill="#10b981" />
+                <Bar dataKey="Quantidade" fill="#3b82f6" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -433,15 +484,15 @@ export default function ReplitPage() {
       <Card className="kpi-card rounded-xl">
         <CardHeader>
           <div className="flex justify-between items-center flex-wrap gap-4">
-            <CardTitle>Lista de Unidades</CardTitle>
+            <CardTitle>Lista de Despesas</CardTitle>
             <div className="flex gap-2 flex-wrap">
               <Input
                 type="text"
-                placeholder="Buscar..."
-                value={emailFilter}
-                onChange={(e) => setEmailFilter(e.target.value)}
+                placeholder="Buscar por descrição..."
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
                 className="w-[200px]"
-                data-testid="input-email-filter"
+                data-testid="input-search-filter"
               />
               <Button
                 variant="outline"
@@ -452,37 +503,85 @@ export default function ReplitPage() {
                 <Download className="w-4 h-4" />
                 Exportar Excel
               </Button>
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap mt-4">
+            <div className="flex gap-2 flex-wrap">
+              <span className="text-sm text-muted-foreground self-center">Periodicidade:</span>
               <Button
-                variant={nameFilter === "Todos" ? "default" : "outline"}
-                onClick={() => setNameFilter("Todos")}
-                data-testid="filter-todos"
-                className={nameFilter === "Todos" ? "btn-primary" : ""}
+                variant={frequencyFilter === "Todos" ? "default" : "outline"}
+                onClick={() => setFrequencyFilter("Todos")}
+                data-testid="filter-frequency-todos"
+                className={frequencyFilter === "Todos" ? "btn-primary" : ""}
+                size="sm"
               >
                 Todos
               </Button>
               <Button
-                variant={nameFilter === "Camargo" ? "default" : "outline"}
-                onClick={() => setNameFilter("Camargo")}
-                data-testid="filter-camargo"
-                className={nameFilter === "Camargo" ? "btn-primary" : ""}
+                variant={frequencyFilter === "Mensal" ? "default" : "outline"}
+                onClick={() => setFrequencyFilter("Mensal")}
+                data-testid="filter-frequency-mensal"
+                className={frequencyFilter === "Mensal" ? "btn-primary" : ""}
+                size="sm"
               >
-                Camargo
+                Mensal
               </Button>
               <Button
-                variant={nameFilter === "Marquez" ? "default" : "outline"}
-                onClick={() => setNameFilter("Marquez")}
-                data-testid="filter-marquez"
-                className={nameFilter === "Marquez" ? "btn-primary" : ""}
+                variant={frequencyFilter === "Anual" ? "default" : "outline"}
+                onClick={() => setFrequencyFilter("Anual")}
+                data-testid="filter-frequency-anual"
+                className={frequencyFilter === "Anual" ? "btn-primary" : ""}
+                size="sm"
               >
-                Marquez
+                Anual
               </Button>
               <Button
-                variant={nameFilter === "Dividido" ? "default" : "outline"}
-                onClick={() => setNameFilter("Dividido")}
-                data-testid="filter-dividido"
-                className={nameFilter === "Dividido" ? "btn-primary" : ""}
+                variant={frequencyFilter === "Semanal" ? "default" : "outline"}
+                onClick={() => setFrequencyFilter("Semanal")}
+                data-testid="filter-frequency-semanal"
+                className={frequencyFilter === "Semanal" ? "btn-primary" : ""}
+                size="sm"
               >
-                Dividido
+                Semanal
+              </Button>
+              <Button
+                variant={frequencyFilter === "Único" ? "default" : "outline"}
+                onClick={() => setFrequencyFilter("Único")}
+                data-testid="filter-frequency-unico"
+                className={frequencyFilter === "Único" ? "btn-primary" : ""}
+                size="sm"
+              >
+                Único
+              </Button>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <span className="text-sm text-muted-foreground self-center">Status:</span>
+              <Button
+                variant={statusFilter === "Todos" ? "default" : "outline"}
+                onClick={() => setStatusFilter("Todos")}
+                data-testid="filter-status-todos"
+                className={statusFilter === "Todos" ? "btn-primary" : ""}
+                size="sm"
+              >
+                Todos
+              </Button>
+              <Button
+                variant={statusFilter === "Ativo" ? "default" : "outline"}
+                onClick={() => setStatusFilter("Ativo")}
+                data-testid="filter-status-ativo"
+                className={statusFilter === "Ativo" ? "btn-primary" : ""}
+                size="sm"
+              >
+                Ativo
+              </Button>
+              <Button
+                variant={statusFilter === "Inativo" ? "default" : "outline"}
+                onClick={() => setStatusFilter("Inativo")}
+                data-testid="filter-status-inativo"
+                className={statusFilter === "Inativo" ? "btn-primary" : ""}
+                size="sm"
+              >
+                Inativo
               </Button>
             </div>
           </div>
@@ -492,76 +591,75 @@ export default function ReplitPage() {
             <div className="text-center py-8 text-muted-foreground">
               Carregando...
             </div>
-          ) : filteredUnits.length === 0 ? (
+          ) : filteredExpenses.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              {units.length === 0 ? "Nenhuma unidade cadastrada" : "Nenhuma unidade encontrada com este filtro"}
+              {expenses.length === 0 ? "Nenhuma despesa cadastrada" : "Nenhuma despesa encontrada com este filtro"}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Valor</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Data & Horário</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUnits.map((unit) => (
-                  <TableRow key={unit.id} data-testid={`row-unit-${unit.id}`}>
-                    <TableCell data-testid={`text-valor-${unit.id}`}>
-                      {formatCurrency(unit.valor)}
-                    </TableCell>
-                    <TableCell data-testid={`text-email-${unit.id}`}>
-                      {unit.email}
-                    </TableCell>
-                    <TableCell data-testid={`text-nome-${unit.id}`}>
-                      {unit.nome}
-                    </TableCell>
-                    <TableCell data-testid={`text-data-${unit.id}`}>
-                      {formatDataHorario(unit.dataHorario)}
-                    </TableCell>
-                    <TableCell data-testid={`text-status-${unit.id}`}>
-                      <div className="flex flex-wrap gap-1">
-                        {unit.status && sortStatuses(unit.status).map((status, index) => {
-                          const style = getStatusStyle(status);
-                          return (
-                            <span 
-                              key={index} 
-                              className={`px-2 py-1 rounded-md text-xs font-semibold ${style.bgColor} ${style.textColor}`}
-                            >
-                              {status}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(unit)}
-                          data-testid={`button-edit-${unit.id}`}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(unit.id)}
-                          data-testid={`button-delete-${unit.id}`}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Descrição</TableHead>
+                    <TableHead>Valor</TableHead>
+                    <TableHead>Periodicidade</TableHead>
+                    <TableHead>Categoria</TableHead>
+                    <TableHead>Data de Início</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredExpenses.map((expense) => (
+                    <TableRow key={expense.id} data-testid={`row-expense-${expense.id}`}>
+                      <TableCell data-testid={`text-description-${expense.id}`}>
+                        {expense.description}
+                      </TableCell>
+                      <TableCell data-testid={`text-amount-${expense.id}`}>
+                        {formatCurrency(expense.amount)}
+                      </TableCell>
+                      <TableCell data-testid={`text-frequency-${expense.id}`}>
+                        {FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency}
+                      </TableCell>
+                      <TableCell data-testid={`text-category-${expense.id}`}>
+                        {expense.category || "-"}
+                      </TableCell>
+                      <TableCell data-testid={`text-start-date-${expense.id}`}>
+                        {formatDate(expense.startDate)}
+                      </TableCell>
+                      <TableCell data-testid={`text-status-${expense.id}`}>
+                        <Badge 
+                          variant={expense.status === "ativo" ? "default" : "secondary"}
+                          className={expense.status === "ativo" ? "bg-green-500 hover:bg-green-600" : "bg-gray-500 hover:bg-gray-600"}
+                        >
+                          {expense.status === "ativo" ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEdit(expense)}
+                            data-testid={`button-edit-${expense.id}`}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(expense.id)}
+                            data-testid={`button-delete-${expense.id}`}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
