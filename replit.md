@@ -6,6 +6,25 @@ The application follows a modern full-stack architecture with a React frontend, 
 
 # Recent Changes
 
+## Oct 26, 2025 - Complete Transformation: Replit Units → Financial Expense Management
+- **Major Refactoring**: Completely transformed the Replit Units tracking page into a comprehensive Financial Expense Management system
+  - **Database Schema**: Created new `expenses` table with fields: description, amount, frequency (mensal/anual/semanal/unico), category, startDate, status (ativo/inativo), notes
+  - **Backend Updates**:
+    - Replaced all ReplitUnit types with Expense types in storage interface (server/storage.ts)
+    - Implemented PostgresStorage methods: getExpenses(), getExpense(), createExpense(), updateExpense(), deleteExpense()
+    - Created API routes at /api/despesas (replacing /api/unidades-replit) with proper validation and date conversion
+  - **Database Migration**: Created expenses table and removed old replit_units table via Node.js migration script
+  - **Frontend Refactoring** (client/src/pages/replit.tsx):
+    - Page title: "Unidades Replit" → "Gestão Financeira"
+    - Form fields completely redesigned: Descrição, Valor (R$), Periodicidade, Categoria, Data de Início, Status, Observações
+    - Statistics cards: Show expense totals grouped by frequency (Mensal, Anual, Semanal, Único)
+    - Chart visualization: Expense breakdown by frequency with total amounts and quantities
+    - Filters: Replaced name filters with frequency (Mensal/Anual/Semanal/Único) and status (Ativo/Inativo) filters
+    - Table columns: Descrição | Valor | Periodicidade | Categoria | Data de Início | Status | Ações
+    - Excel export: Updated to "despesas-financeiras-{date}.xlsx" with all expense fields
+  - **Navigation**: Sidebar updated from "Servidores" to "Gestão Financeira" with DollarSign icon
+  - **Data Preservation**: All date formatting in pt-BR locale (DD/MM/YYYY), currency in R$, proper ISO date conversion for API calls
+
 ## Oct 26, 2025 - Subscription Form UI Refactor with Collapsible Sections
 - **UX Improvement**: Refactored "Nova Assinatura" (New Subscription) popup to use collapsible sections for better organization
   - **Four organized sections**:
@@ -86,7 +105,7 @@ Language: Brazilian Portuguese
   - Interactions: Client communication history
   - Alerts: System notifications for business events
   - Notification Rules: Configurable business rule engine
-  - Replit Units: Tracking of Replit unit purchases with value, email, assignee (Camargo/Marquez), and timestamp
+  - Expenses: Financial expense tracking with description, amount, frequency (mensal/anual/semanal/unico), category, start date, and status
 
 ## Authentication & Authorization
 - Currently uses a simple user system without complex authentication
@@ -100,7 +119,7 @@ Language: Brazilian Portuguese
 - **Subscription Billing**: Recurring payment management with service checklists. Enhanced client selection in subscription form with searchable sheet interface for better UX when selecting clients from the database.
 - **Proposal Generation**: Integration with external webhook for automated proposal creation
 - **Notification System**: Rule-based alerting for delayed projects, payment reminders, and upselling opportunities
-- **Replit Units Management**: Full CRUD operations for managing Replit unit purchases with monetary values (Brazilian Real), email tracking, assignee selection, and datetime stamps
+- **Financial Expense Management**: Complete expense tracking system with CRUD operations, categorization by frequency (monthly/annual/weekly/one-time), category filtering, status management (active/inactive), visual analytics with charts showing expense breakdown, and Excel export capabilities
 
 ## External Dependencies
 
