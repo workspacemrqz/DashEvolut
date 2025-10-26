@@ -222,7 +222,6 @@
 
   .sidebar-active {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-    border: 1px solid var(--border-primary);
     color: #F5F5F5 ;
   }
 
