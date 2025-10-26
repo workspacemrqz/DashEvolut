@@ -54,7 +54,7 @@ export default function Sidebar() {
     return (
       <>
         {/* Mobile Top Navigation Bar */}
-        <div className="fixed top-0 left-0 right-0 h-14 bg-bg-secondary border-b border-border-secondary z-40 lg:hidden">
+        <div className="fixed top-0 left-0 right-0 h-14 border-b border-border-secondary z-40 lg:hidden" style={{ backgroundColor: '#060606' }}>
           <div className="h-full flex items-center px-4">
             {/* Menu Button */}
             <button
