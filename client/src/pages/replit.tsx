@@ -458,25 +458,25 @@ export default function ReplitPage() {
 
       <Card className="kpi-card rounded-xl">
         <CardHeader>
-          <div className="flex justify-between items-center flex-wrap gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <CardTitle>Lista de Despesas</CardTitle>
             <Input
               type="text"
               placeholder="Buscar por descrição..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="w-[200px]"
+              className="w-full sm:w-[200px]"
               data-testid="input-search-filter"
             />
           </div>
-          <div className="flex gap-4 flex-wrap mt-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground font-medium">Periodicidade:</span>
+          <div className="flex flex-col sm:flex-row gap-3 mt-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+              <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">Periodicidade:</span>
               <Select
                 value={frequencyFilter}
                 onValueChange={setFrequencyFilter}
               >
-                <SelectTrigger className="w-[150px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-frequency-filter">
+                <SelectTrigger className="w-full sm:w-[150px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-frequency-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">
@@ -488,13 +488,13 @@ export default function ReplitPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground font-medium">Status:</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+              <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">Status:</span>
               <Select
                 value={statusFilter}
                 onValueChange={setStatusFilter}
               >
-                <SelectTrigger className="w-[130px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-status-filter">
+                <SelectTrigger className="w-full sm:w-[130px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-status-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">

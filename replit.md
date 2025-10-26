@@ -10,7 +10,7 @@ Language: Brazilian Portuguese
 # System Architecture
 
 ## UI/UX Decisions
-- **Mobile-First Responsive Design**: Full mobile responsiveness with card layouts for tables and KPIs, single-column forms on mobile, and appropriate touch targets. All tables (subscriptions, clients, projects, expenses) convert to vertical card layouts on mobile. Proposal list cards stack buttons vertically on mobile for zero horizontal scrolling.
+- **Mobile-First Responsive Design**: Full mobile responsiveness with card layouts for tables and KPIs, single-column forms on mobile, and appropriate touch targets. All tables (subscriptions, clients, projects, expenses) convert to vertical card layouts on mobile. Proposal list cards stack buttons vertically on mobile. All filter dropdowns and search inputs use full-width on mobile (w-full) and fixed widths only on larger screens (sm:w-[Xpx]) to prevent horizontal overflow.
 - **Dark Theme Design System**: Utilizes Tailwind CSS with custom CSS variables for a consistent dark theme.
 - **Clean Visuals**: Removal of default focus outlines for a cleaner aesthetic.
 - **Collapsible Sidebar**: Desktop sidebar toggles between collapsed (icon-only) and expanded states with smooth transitions.

@@ -90,13 +90,13 @@ export default function Clients() {
 
         {/* Filter Dropdown */}
         <div className="mb-4 lg:mb-6">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <label className="text-sm font-medium text-text-secondary whitespace-nowrap">
               Status:
             </label>
             <Select value={filter} onValueChange={setFilter}>
               <SelectTrigger 
-                className="w-[180px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50"
+                className="w-full sm:w-[180px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50"
                 data-testid="filter-status"
               >
                 <SelectValue placeholder="Selecione..." />
