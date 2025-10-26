@@ -1,5 +1,5 @@
-import { SubscriptionWithClient, SubscriptionService, PaymentWithFile } from "@shared/schema";
-import { Eye, DollarSign, Calendar, MoreHorizontal, CreditCard, Edit, Pause, Play, X, CheckSquare, FileText, Trash2 } from "lucide-react";
+import { SubscriptionWithClient, SubscriptionService, PaymentWithFile, SubscriptionCredential, SubscriptionFile } from "@shared/schema";
+import { Eye, DollarSign, Calendar, MoreHorizontal, CreditCard, Edit, Pause, Play, X, CheckSquare, FileText, Trash2, Download, Key, FolderArchive } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,6 +70,18 @@ export default function SubscriptionTable({
     enabled: !!selectedSubscription?.id,
   });
 
+  // Buscar credenciais da assinatura selecionada
+  const { data: subscriptionCredentials, isLoading: isLoadingCredentials } = useQuery<SubscriptionCredential[]>({
+    queryKey: [`/api/assinaturas/${selectedSubscription?.id}/credenciais`],
+    enabled: !!selectedSubscription?.id,
+  });
+
+  // Buscar arquivos da assinatura selecionada
+  const { data: subscriptionFiles, isLoading: isLoadingFiles } = useQuery<SubscriptionFile[]>({
+    queryKey: [`/api/assinaturas/${selectedSubscription?.id}/arquivos`],
+    enabled: !!selectedSubscription?.id,
+  });
+
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: "active" | "paused" | "cancelled" }) => 
       apiRequest("PATCH", `/api/assinaturas/${id}`, { status }),
@@ -92,6 +104,10 @@ export default function SubscriptionTable({
   const handleViewSubscription = (subscription: SubscriptionWithClient) => {
     setSelectedSubscription(subscription);
     setShowSubscriptionDetails(true);
+  };
+
+  const handleDownloadFile = (fileId: string) => {
+    window.open(`/api/subscription-files/${fileId}`, '_blank');
   };
 
   const handleStatusChange = (id: string, status: "active" | "paused" | "cancelled") => {
@@ -439,63 +455,124 @@ export default function SubscriptionTable({
                   </div>
                 </div>
 
-                {/* Credenciais e Arquivos */}
-                {(selectedSubscription.plataforma || selectedSubscription.login || selectedSubscription.senha || selectedSubscription.secrets || selectedSubscription.file) && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-text-primary border-b border-border-secondary pb-2">
+                {/* Credenciais */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-border-secondary pb-2">
+                    <h3 className="text-lg font-semibold text-text-primary flex items-center">
+                      <Key className="h-5 w-5 mr-2" />
                       Credenciais de Acesso
                     </h3>
-                    
-                    <div className="space-y-3 text-sm">
-                      {selectedSubscription.plataforma && (
-                        <div>
-                          <span className="text-text-secondary">Plataforma:</span>
-                          <p className="font-medium text-text-primary">{selectedSubscription.plataforma}</p>
-                        </div>
-                      )}
-                      {selectedSubscription.login && (
-                        <div>
-                          <span className="text-text-secondary">Login:</span>
-                          <p className="font-medium text-text-primary">{selectedSubscription.login}</p>
-                        </div>
-                      )}
-                      {selectedSubscription.senha && (
-                        <div>
-                          <span className="text-text-secondary">Senha:</span>
-                          <p className="font-medium text-text-primary font-mono">{selectedSubscription.senha}</p>
-                        </div>
-                      )}
-                      {selectedSubscription.secrets && (
-                        <div>
-                          <span className="text-text-secondary">Secrets:</span>
-                          <p className="font-medium text-text-primary bg-bg-tertiary p-3 rounded mt-1 whitespace-pre-wrap font-mono text-xs">
-                            {selectedSubscription.secrets}
-                          </p>
-                        </div>
-                      )}
-                      {selectedSubscription.file && (
-                        <div>
-                          <span className="text-text-secondary">Arquivo Anexo:</span>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => window.open(`/api/subscription-files/${selectedSubscription.attachmentFileId}`, '_blank')}
-                              data-testid="button-download-attachment"
-                              className="btn-secondary"
-                            >
-                              <FileText className="h-4 w-4 mr-2" />
-                              {selectedSubscription.file.originalName}
-                            </Button>
-                            <span className="text-xs text-text-secondary">
-                              ({(selectedSubscription.file.size / 1024).toFixed(2)} KB)
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
                   </div>
-                )}
+                  
+                  {isLoadingCredentials ? (
+                    <div className="space-y-3">
+                      {[...Array(2)].map((_, i) => (
+                        <div key={i} className="animate-pulse bg-bg-tertiary p-4 rounded-lg">
+                          <div className="h-4 bg-border-secondary rounded w-1/3 mb-2"></div>
+                          <div className="h-3 bg-border-secondary rounded w-1/2"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : subscriptionCredentials && subscriptionCredentials.length > 0 ? (
+                    <div className="space-y-3">
+                      {subscriptionCredentials.map((credential) => (
+                        <div key={credential.id} className="bg-bg-tertiary p-4 rounded-lg border border-border-secondary space-y-3">
+                          <div>
+                            <span className="text-text-secondary text-xs font-medium">Plataforma:</span>
+                            <p className="font-semibold text-text-primary mt-1" data-testid={`text-credential-plataforma-${credential.id}`}>
+                              {credential.plataforma}
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-text-secondary text-xs font-medium">Login:</span>
+                            <p className="font-medium text-text-primary mt-1 font-mono text-sm" data-testid={`text-credential-login-${credential.id}`}>
+                              {credential.login}
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-text-secondary text-xs font-medium">Senha:</span>
+                            <p className="font-medium text-text-primary font-mono text-sm mt-1" data-testid={`text-credential-senha-${credential.id}`}>
+                              {credential.senha}
+                            </p>
+                          </div>
+                          {credential.secrets && (
+                            <div>
+                              <span className="text-text-secondary text-xs font-medium">Secrets:</span>
+                              <p className="font-medium text-text-primary bg-bg-primary p-3 rounded mt-1 whitespace-pre-wrap font-mono text-xs border border-border-secondary" data-testid={`text-credential-secrets-${credential.id}`}>
+                                {credential.secrets}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 bg-bg-tertiary rounded-lg border border-border-secondary border-dashed">
+                      <Key className="h-12 w-12 mx-auto text-text-secondary opacity-50 mb-2" />
+                      <p className="text-text-secondary text-sm" data-testid="text-no-credentials">
+                        Nenhuma credencial adicionada
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Arquivos */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-border-secondary pb-2">
+                    <h3 className="text-lg font-semibold text-text-primary flex items-center">
+                      <FolderArchive className="h-5 w-5 mr-2" />
+                      Arquivos
+                    </h3>
+                  </div>
+                  
+                  {isLoadingFiles ? (
+                    <div className="space-y-2">
+                      {[...Array(2)].map((_, i) => (
+                        <div key={i} className="animate-pulse bg-bg-tertiary p-3 rounded-lg flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="h-4 bg-border-secondary rounded w-2/3 mb-2"></div>
+                            <div className="h-3 bg-border-secondary rounded w-1/3"></div>
+                          </div>
+                          <div className="h-8 w-8 bg-border-secondary rounded"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : subscriptionFiles && subscriptionFiles.length > 0 ? (
+                    <div className="space-y-2">
+                      {subscriptionFiles.map((file) => (
+                        <div key={file.id} className="bg-bg-tertiary p-3 rounded-lg border border-border-secondary flex items-center justify-between">
+                          <div className="flex-1 min-w-0 mr-3">
+                            <div className="flex items-center space-x-2">
+                              <FileText className="h-4 w-4 text-text-secondary flex-shrink-0" />
+                              <p className="font-medium text-text-primary text-sm truncate" data-testid={`text-file-name-${file.id}`}>
+                                {file.originalName}
+                              </p>
+                            </div>
+                            <p className="text-xs text-text-secondary mt-1" data-testid={`text-file-size-${file.id}`}>
+                              {(file.size / 1024).toFixed(2)} KB • {format(new Date(file.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                            </p>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownloadFile(file.id)}
+                            className="btn-secondary flex-shrink-0"
+                            data-testid={`button-download-file-${file.id}`}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 bg-bg-tertiary rounded-lg border border-border-secondary border-dashed">
+                      <FolderArchive className="h-12 w-12 mx-auto text-text-secondary opacity-50 mb-2" />
+                      <p className="text-text-secondary text-sm" data-testid="text-no-files">
+                        Nenhum arquivo enviado
+                      </p>
+                    </div>
+                  )}
+                </div>
 
                 {/* Serviços */}
                 {selectedSubscription.services && selectedSubscription.services.length > 0 && (

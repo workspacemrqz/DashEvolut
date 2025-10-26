@@ -12,6 +12,8 @@ import {
   insertInteractionSchema,
   insertSubscriptionSchema,
   insertSubscriptionServiceSchema,
+  insertSubscriptionCredentialSchema,
+  insertSubscriptionFileSchema,
   insertPaymentSchema,
   insertPaymentFileSchema,
   insertNotificationRuleSchema,
@@ -601,25 +603,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/assinaturas/:id", uploadSubscriptionAttachment.single('attachment'), async (req, res) => {
+  app.patch("/api/assinaturas/:id", async (req, res) => {
     try {
-      let fileId = null;
-      
-      if (req.file) {
-        const subscriptionFile = await storage.createSubscriptionFile({
-          filename: req.file.filename,
-          originalName: req.file.originalname,
-          mimeType: req.file.mimetype,
-          size: req.file.size,
-          filePath: req.file.path
-        });
-        fileId = subscriptionFile.id;
-      }
-
-      const updates = insertSubscriptionSchema.partial().parse({
-        ...req.body,
-        attachmentFileId: fileId || req.body.attachmentFileId
-      });
+      const updates = insertSubscriptionSchema.partial().parse(req.body);
       
       const subscription = await storage.updateSubscription(req.params.id, updates);
       if (!subscription) {
@@ -690,6 +676,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete service" });
+    }
+  });
+
+  // Subscription Credentials routes
+  app.get("/api/assinaturas/:id/credenciais", async (req, res) => {
+    try {
+      const credentials = await storage.getSubscriptionCredentialsBySubscription(req.params.id);
+      res.json(credentials);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch credentials" });
+    }
+  });
+
+  app.post("/api/assinaturas/:id/credenciais", async (req, res) => {
+    try {
+      const validatedData = insertSubscriptionCredentialSchema.parse({
+        ...req.body,
+        subscriptionId: req.params.id
+      });
+      const credential = await storage.createSubscriptionCredential(validatedData);
+      res.status(201).json(credential);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid credential data" });
+    }
+  });
+
+  app.patch("/api/credenciais-assinatura/:id", async (req, res) => {
+    try {
+      const updates = insertSubscriptionCredentialSchema.partial().parse(req.body);
+      const credential = await storage.updateSubscriptionCredential(req.params.id, updates);
+      if (!credential) {
+        return res.status(404).json({ message: "Credential not found" });
+      }
+      res.json(credential);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  app.delete("/api/credenciais-assinatura/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteSubscriptionCredential(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Credential not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete credential" });
+    }
+  });
+
+  // Subscription Files routes
+  app.get("/api/assinaturas/:id/arquivos", async (req, res) => {
+    try {
+      const files = await storage.getSubscriptionFilesBySubscription(req.params.id);
+      res.json(files);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch files" });
+    }
+  });
+
+  app.post("/api/assinaturas/:id/arquivos", uploadSubscriptionAttachment.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const subscriptionFile = await storage.createSubscriptionFile({
+        subscriptionId: req.params.id,
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        filePath: req.file.path
+      });
+
+      res.status(201).json(subscriptionFile);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to upload file" });
+    }
+  });
+
+  app.delete("/api/arquivos-assinatura/:id", async (req, res) => {
+    try {
+      const file = await storage.getSubscriptionFile(req.params.id);
+      if (!file) {
+        return res.status(404).json({ message: "File not found" });
+      }
+
+      if (fs.existsSync(file.filePath)) {
+        fs.unlinkSync(file.filePath);
+      }
+
+      const deleted = await storage.deleteSubscriptionFile(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: "File not found" });
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete file" });
     }
   });
 
