@@ -480,11 +480,11 @@ export default function ReplitPage() {
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="rounded-lg border-border/50">
-                  <SelectItem value="Todos" className="rounded-md">Todos</SelectItem>
-                  <SelectItem value="Mensal" className="rounded-md">Mensal</SelectItem>
-                  <SelectItem value="Anual" className="rounded-md">Anual</SelectItem>
-                  <SelectItem value="Semanal" className="rounded-md">Semanal</SelectItem>
-                  <SelectItem value="Único" className="rounded-md">Único</SelectItem>
+                  <SelectItem value="Todos" className="rounded-md focus:outline-none focus:ring-0">Todos</SelectItem>
+                  <SelectItem value="Mensal" className="rounded-md focus:outline-none focus:ring-0">Mensal</SelectItem>
+                  <SelectItem value="Anual" className="rounded-md focus:outline-none focus:ring-0">Anual</SelectItem>
+                  <SelectItem value="Semanal" className="rounded-md focus:outline-none focus:ring-0">Semanal</SelectItem>
+                  <SelectItem value="Único" className="rounded-md focus:outline-none focus:ring-0">Único</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -498,9 +498,9 @@ export default function ReplitPage() {
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="rounded-lg border-border/50">
-                  <SelectItem value="Todos" className="rounded-md">Todos</SelectItem>
-                  <SelectItem value="Ativo" className="rounded-md">Ativo</SelectItem>
-                  <SelectItem value="Inativo" className="rounded-md">Inativo</SelectItem>
+                  <SelectItem value="Todos" className="rounded-md focus:outline-none focus:ring-0">Todos</SelectItem>
+                  <SelectItem value="Ativo" className="rounded-md focus:outline-none focus:ring-0">Ativo</SelectItem>
+                  <SelectItem value="Inativo" className="rounded-md focus:outline-none focus:ring-0">Inativo</SelectItem>
                 </SelectContent>
               </Select>
             </div>
