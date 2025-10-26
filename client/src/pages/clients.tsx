@@ -6,13 +6,12 @@ import ClientForm from "@/components/clients/client-form";
 import { ClientWithStats } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export default function Clients() {
@@ -89,27 +88,51 @@ export default function Clients() {
           
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex space-x-2 lg:space-x-4 mb-4 lg:mb-6 overflow-x-auto pb-2">
-          {[
-            { key: "all", label: "Todos" },
-            { key: "active", label: "Ativos" },
-            { key: "prospect", label: "Prospects" },
-            { key: "inactive", label: "Inativos" }
-          ].map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                filter === tab.key 
-                  ? 'btn-primary' 
-                  : 'btn-secondary'
-              }`}
-              data-testid={`filter-${tab.key}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* Filter Dropdown */}
+        <div className="mb-4 lg:mb-6">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-text-secondary whitespace-nowrap">
+              Status:
+            </label>
+            <Select value={filter} onValueChange={setFilter}>
+              <SelectTrigger 
+                className="w-[180px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50"
+                data-testid="filter-status"
+              >
+                <SelectValue placeholder="Selecione..." />
+              </SelectTrigger>
+              <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">
+                <SelectItem 
+                  value="all" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-all"
+                >
+                  Todos
+                </SelectItem>
+                <SelectItem 
+                  value="active" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-active"
+                >
+                  Ativos
+                </SelectItem>
+                <SelectItem 
+                  value="prospect" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-prospect"
+                >
+                  Prospects
+                </SelectItem>
+                <SelectItem 
+                  value="inactive" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-inactive"
+                >
+                  Inativos
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Clients Table */}

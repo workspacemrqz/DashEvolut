@@ -9,13 +9,12 @@ import { ProjectCostsForm } from "@/components/projects/project-costs-form";
 import { ProjectWithClient } from "@shared/schema";
 import { Plus, Filter } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export default function Projects() {
@@ -128,30 +127,72 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex space-x-2 lg:space-x-4 mb-4 lg:mb-6 overflow-x-auto pb-2">
-          {[
-            { key: "all", label: "Todos" },
-            { key: "discovery", label: "Discovery" },
-            { key: "development", label: "Desenvolvimento" },
-            { key: "delivery", label: "Entrega" },
-            { key: "post_sale", label: "Pós-venda" },
-            { key: "completed", label: "Concluído" },
-            { key: "cancelled", label: "Cancelado" }
-          ].map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                filter === tab.key 
-                  ? 'btn-primary' 
-                  : 'btn-secondary'
-              }`}
-              data-testid={`filter-${tab.key}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* Filter Dropdown */}
+        <div className="mb-4 lg:mb-6">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-text-secondary whitespace-nowrap">
+              Status:
+            </label>
+            <Select value={filter} onValueChange={setFilter}>
+              <SelectTrigger 
+                className="w-[200px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50"
+                data-testid="filter-status"
+              >
+                <SelectValue placeholder="Selecione..." />
+              </SelectTrigger>
+              <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">
+                <SelectItem 
+                  value="all" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-all"
+                >
+                  Todos
+                </SelectItem>
+                <SelectItem 
+                  value="discovery" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-discovery"
+                >
+                  Discovery
+                </SelectItem>
+                <SelectItem 
+                  value="development" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-development"
+                >
+                  Desenvolvimento
+                </SelectItem>
+                <SelectItem 
+                  value="delivery" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-delivery"
+                >
+                  Entrega
+                </SelectItem>
+                <SelectItem 
+                  value="post_sale" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-post_sale"
+                >
+                  Pós-venda
+                </SelectItem>
+                <SelectItem 
+                  value="completed" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-completed"
+                >
+                  Concluído
+                </SelectItem>
+                <SelectItem 
+                  value="cancelled" 
+                  className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0"
+                  data-testid="filter-cancelled"
+                >
+                  Cancelado
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Projects Table */}
