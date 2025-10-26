@@ -35,13 +35,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -807,17 +800,17 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         </CustomDialogContent>
       </Dialog>
 
-      {/* Client Selection Sheet */}
-      <Sheet open={showClientSheet} onOpenChange={setShowClientSheet}>
-        <SheetContent className="w-full sm:max-w-2xl bg-bg-container border-border-secondary overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle className="text-text-primary">Selecionar Cliente</SheetTitle>
-            <SheetDescription className="text-text-secondary">
+      {/* Client Selection Dialog */}
+      <Dialog open={showClientSheet} onOpenChange={setShowClientSheet}>
+        <CustomDialogContent className="sm:max-w-2xl container-bg border-border-secondary max-h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="gradient-text">Selecionar Cliente</DialogTitle>
+            <DialogDescription className="text-text-secondary">
               Escolha um cliente da lista abaixo para criar a assinatura.
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
 
-          <div className="mt-6 space-y-4">
+          <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary" />
               <Input
@@ -829,7 +822,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-y-auto flex-1 pr-2">
               {loadingClients ? (
                 <div className="text-center py-8 text-text-secondary">
                   Carregando clientes...
@@ -882,8 +875,8 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
               )}
             </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </CustomDialogContent>
+      </Dialog>
 
       {/* Credential Dialog */}
       <Dialog open={showCredentialDialog} onOpenChange={setShowCredentialDialog}>
