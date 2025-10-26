@@ -1,0 +1,11 @@
+*.md
+.git
+.gitignore
+/client/
+/server/
+tsconfig.json
+vite.config.ts
+tailwind.config.ts
+postcss.config.js
+*.ps1
+replit.md

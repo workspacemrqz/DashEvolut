@@ -53,4 +53,8 @@ Language: Brazilian Portuguese
 - **Landing Page Database**: Separate PostgreSQL database (configured via `DatabaseLandingPage` environment variable)
 - **File Storage**: Local file system (`/uploads` directory)
 - **Fonts**: Google Fonts (Inter, Architects Daughter, DM Sans, Fira Code, Geist Mono)
-- **Deployment**: Easypanel hosting with Heroku buildpacks
+- **Deployment**: Easypanel hosting with Heroku buildpacks (heroku/builder:24)
+  - Procfile configured for web process
+  - heroku-postbuild script for automatic compilation
+  - .slugignore for optimized deployment
+  - app.json with buildpack configuration

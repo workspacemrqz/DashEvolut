@@ -1,0 +1,26 @@
+{
+  "name": "Evolutia Dashboard",
+  "description": "Business management dashboard with CRM and project management",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL database URL",
+      "required": true
+    },
+    "SESSION_SECRET": {
+      "description": "Secret key for session encryption",
+      "generator": "secret"
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run db:push"
+  }
+}
