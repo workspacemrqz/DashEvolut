@@ -92,6 +92,8 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
     queryKey: ["/api/clientes"],
   });
 
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
+
   const form = useForm<InsertSubscription>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -100,16 +102,48 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
       amount: subscription?.amount || 0,
       notes: subscription?.notes || "",
       status: subscription?.status || "active",
+      plataforma: subscription?.plataforma || "",
+      login: subscription?.login || "",
+      senha: subscription?.senha || "",
+      secrets: subscription?.secrets || "",
+      attachmentFileId: subscription?.attachmentFileId || "",
     },
   });
 
   const subscriptionMutation = useMutation({
-    mutationFn: (data: InsertSubscription) => {
-      if (subscription) {
-        return apiRequest("PATCH", `/api/assinaturas/${subscription.id}`, data);
-      } else {
-        return apiRequest("POST", "/api/assinaturas", data);
+    mutationFn: async (data: InsertSubscription) => {
+      const formData = new FormData();
+      
+      // Add all subscription data
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          formData.append(key, value.toString());
+        }
+      });
+      
+      // Add file if present
+      if (attachmentFile) {
+        formData.append('attachment', attachmentFile);
       }
+      
+      const url = subscription 
+        ? `/api/assinaturas/${subscription.id}` 
+        : "/api/assinaturas";
+      
+      const method = subscription ? "PATCH" : "POST";
+      
+      // Use fetch directly for FormData
+      const response = await fetch(url, {
+        method,
+        body: formData,
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/assinaturas"] });
@@ -118,6 +152,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         description: subscription ? "As alterações foram salvas com sucesso." : "A nova assinatura foi adicionada ao sistema.",
       });
       form.reset();
+      setAttachmentFile(null);
       onOpenChange(false);
     },
     onError: () => {
@@ -138,6 +173,11 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         amount: subscription.amount,
         notes: subscription.notes || "",
         status: subscription.status,
+        plataforma: subscription.plataforma || "",
+        login: subscription.login || "",
+        senha: subscription.senha || "",
+        secrets: subscription.secrets || "",
+        attachmentFileId: subscription.attachmentFileId || "",
       });
     } else {
       form.reset({
@@ -146,8 +186,14 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         amount: 0,
         notes: "",
         status: "active",
+        plataforma: "",
+        login: "",
+        senha: "",
+        secrets: "",
+        attachmentFileId: "",
       });
     }
+    setAttachmentFile(null);
   }, [subscription, form]);
 
   const onSubmit = (data: InsertSubscription) => {
@@ -314,6 +360,120 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                 </FormItem>
               )}
             />
+
+            {/* Credenciais Section */}
+            <div className="space-y-4 border-t border-border-secondary pt-4 mt-4">
+              <h3 className="text-md font-semibold text-text-primary">Credenciais de Acesso</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="plataforma"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-text-primary">Plataforma</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Nome da plataforma"
+                          className="input-field"
+                          data-testid="input-plataforma"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="login"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-text-primary">Login</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Usuário/Email"
+                          className="input-field"
+                          data-testid="input-login"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="senha"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-text-primary">Senha</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Senha de acesso"
+                          className="input-field"
+                          data-testid="input-senha"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="secrets"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-text-primary">Secrets</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Informações adicionais de segurança, tokens, chaves de API, etc..."
+                        className="input-field min-h-[100px]"
+                        data-testid="textarea-secrets"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                <FormLabel className="text-text-primary">Arquivo Anexo</FormLabel>
+                <Input
+                  type="file"
+                  accept=".json,.zip,.txt,.pdf,.doc,.docx,.xls,.xlsx,image/*"
+                  className="input-field mt-2"
+                  data-testid="input-attachment"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setAttachmentFile(file);
+                    }
+                  }}
+                />
+                {attachmentFile && (
+                  <p className="text-sm text-text-secondary mt-1">
+                    Arquivo selecionado: {attachmentFile.name}
+                  </p>
+                )}
+                {subscription?.file && !attachmentFile && (
+                  <p className="text-sm text-text-secondary mt-1">
+                    Arquivo atual: {subscription.file.originalName}
+                  </p>
+                )}
+              </div>
+            </div>
 
           </form>
         </Form>
