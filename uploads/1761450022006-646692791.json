@@ -1,0 +1,2869 @@
+{
+  "name": "Agente Unipet",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# ",
+        "height": 368,
+        "width": 432,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        1280
+      ],
+      "typeVersion": 1,
+      "id": "2aeaa7ed-f16a-4a62-acaf-232a7638382d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "tableId": "Clientes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nome",
+              "fieldValue": "={{ $('Code').item.json.Nome }}"
+            },
+            {
+              "fieldId": "whatsapp",
+              "fieldValue": "={{ $('Code').item.json.Telefone }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3904,
+        2240
+      ],
+      "id": "5af5e525-4e12-4964-8197-6988af675265",
+      "name": "Criar usuario",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<mensagem>\n{{ $json.output }}\n</mensagem>",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Apenas estruture a <mensagem_do_usuario> no formato JSON solicitado no output parser e seguindo as instruções de formatação abaixo. Não altere nada mais na mensagem\n\n# Formatação\n- divida as mensagens para que fiquem naturais e humanizadas;\n- Divida as mensagens conforme estrutura do output parser para que não fiquem muito longas (maiores que 240 caracteres);\n- Não separe mensagens vazias;\n- divida a mensagem após pontos finais;\n- Não use asterisco, hífen nem cerquilha.\n\nExemplo de formato JSON:\n{\n  \"mensagens\": [\"Mensagem 0\", \"Mensagem 1\", \"Mensagem 2\"]\n}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        5200,
+        2000
+      ],
+      "id": "6d36f0f5-d0e2-4a01-b9a9-98c83a8be7c1",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        5360,
+        2176
+      ],
+      "id": "28c361d4-ebbb-4298-afa6-dbb00437f132",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"mensagens\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t}\n\t},\n  \"required\": [\"mensagens\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        5472,
+        2336
+      ],
+      "id": "bd9fb952-00a7-49b0-83ed-a7d38db40678",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "status_agente",
+        "key": "={{ $json.Telefone }}_status",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        496,
+        2112
+      ],
+      "id": "5b43692d-f5d1-44f4-a8b4-acb3cee7f5f9",
+      "name": "VerificaStatus",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d9ad4eb2-cdcc-46a3-ae29-91b8903d6a30",
+              "leftValue": "={{ $json.status_agente }}",
+              "rightValue": "Desativado",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        2112
+      ],
+      "id": "57eac1b9-7447-468d-b7e5-2c8c06a9a06d",
+      "name": "On/Off"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1984
+      ],
+      "id": "0272f293-09a8-4fe4-8a5c-e7f720bba1b0",
+      "name": "Finaliza #1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3264,
+        2240
+      ],
+      "id": "3120f54e-8722-45ea-8daf-77ff818f19b9",
+      "name": "Finaliza #2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        6208,
+        2000
+      ],
+      "id": "2670887b-cd50-4098-ad4d-15275e0a8806",
+      "name": "Finaliza #3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "80151e9e-7b34-40d9-9b1a-2c223e2d8ae1",
+                    "leftValue": "={{ $('Gatilho do WPP').item.json.body.data.message.conversation }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6403da7e-199b-4874-ad42-2722f5a5efac",
+                    "leftValue": "={{ $('Gatilho do WPP').item.json.body.data.message.audioMessage.toString() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0c03f9f7-0fc8-438a-9f89-16d2f8d89933",
+                    "leftValue": "={{ $('Gatilho do WPP').item.json.body.data.message.imageMessage.toString() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7cdd3086-7a3a-4861-82d7-f5c05659e844",
+                    "leftValue": "={{ $('Gatilho do WPP').item.json.body.data.message.documentMessage.toString() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e814bd61-150d-42f8-9ec1-c0e00d7586fb",
+                    "leftValue": "={{ $('Gatilho do WPP').item.json.body.data.message.documentWithCaptionMessage.toString() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF com mensagem"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Outro"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1168,
+        2064
+      ],
+      "id": "d44a462a-d718-47db-9bfd-971fb59db178",
+      "name": "TiposDeMensagem"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce620a1a-e00d-4cbc-80d9-3b8f57e9b6ee",
+              "name": "base64",
+              "value": "={{ $('Gatilho do WPP').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        1888
+      ],
+      "id": "0471f911-2cb1-4479-89d7-6c302143d74c",
+      "name": "Audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce620a1a-e00d-4cbc-80d9-3b8f57e9b6ee",
+              "name": "base64",
+              "value": "={{ $('Gatilho do WPP').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        2048
+      ],
+      "id": "7a9b24e8-4471-41c9-8ac9-363314e442ca",
+      "name": "Imagem"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8efc7d6-47fc-4c40-9283-2a92b6fa3d67",
+              "name": "base64",
+              "value": "={{ $('Gatilho do WPP').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        2208
+      ],
+      "id": "c376ed76-8a32-4659-b73f-81202c119e40",
+      "name": "PDF"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8efc7d6-47fc-4c40-9283-2a92b6fa3d67",
+              "name": "base64",
+              "value": "={{ $('Gatilho do WPP').item.json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "c380fac5-4c12-4d06-a3a8-4fcc9a4438cd",
+              "name": "pdf_mensagem",
+              "value": "={{ $('Gatilho do WPP').item.json.body.data.message.documentWithCaptionMessage.message.documentMessage.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        2368
+      ],
+      "id": "dc1d0913-988d-4719-8a05-9c46d732febc",
+      "name": "PDF/Texto"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4999ad6-1b90-4afc-94a6-8b6b80b5edb7",
+              "name": "erro",
+              "value": "<ErroFormatoMensagem>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        2544
+      ],
+      "id": "7c62ce5a-50aa-44a3-bf11-6edf09eeb234",
+      "name": "Outro"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp",
+              "keyValue": "={{ $('Code').item.json.Telefone }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        1728
+      ],
+      "id": "65b150d2-1a22-4357-9951-a799ca69e278",
+      "name": "Texto",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "={{ $('Code').item.json.Mensagem }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        1728
+      ],
+      "id": "e5a66927-f4f4-43d3-ab2c-e440b70a1ff2",
+      "name": "SalvaMensagem #1",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "={{ $json.text }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        1888
+      ],
+      "id": "fda9f0c3-3e03-47ce-8d57-ddf68ec03810",
+      "name": "SalvaMensagem #2",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "=<ContextoImagem>\n\n    <DetalheImagem>\n{{ $json.content }}\n    </DetalheImagem>\n\nContexto Extra: O usuário encaminhou a mensagem a seguir junto à imagem.\n    <MensagemUsuario>\n{{ $('Gatilho do WPP').item.json.body.data.message.imageMessage.caption }}\n    </MensagemUsuario>\n\n</ContextoImagem>",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        2048
+      ],
+      "id": "7241c9be-bba1-4984-86cb-0976a2734b8c",
+      "name": "SalvaMensagem #3",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "=<ContextoPDF>\n    <TranscricaoPDF>\n{{ $json.text }}\n    </TranscricaoPDF>\n</ContextoPDF>",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        2208
+      ],
+      "id": "fa3005a3-781a-443f-8042-2da3b50c47d1",
+      "name": "SalvaMensagem #4",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "=<ContextoPDFcom>\n    <TranscricaoPDF>\n{{ $json.text }}\n    </TranscricaoPDF>\nContexto Extra: O usuário encaminhou a mensagem a seguir junto ao PDF.\n    <MensagemUsuario>\n{{ $('PDF/Texto').item.json.pdf_mensagem }}\n    </MensagemUsuario>\n</ContextoPDF>",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        2368
+      ],
+      "id": "0bf3269c-0837-4b52-94b6-90488f74f2d6",
+      "name": "SalvaMensagem #5",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Code').item.json.Telefone }}_buffer",
+        "messageData": "={{ $json.Erro }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        2544
+      ],
+      "id": "ee018b24-cadc-49cb-af13-c1fcce091b53",
+      "name": "SalvaMensagem #6",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Mensagens",
+        "key": "={{ $('Code').item.json.Telefone }}_buffer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2544,
+        2144
+      ],
+      "id": "b091de61-d2b8-45ee-8b1c-3d2378346a71",
+      "name": "PuxaMensagens",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Mensagens",
+        "key": "={{ $('Code').item.json.Telefone }}_buffer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2896,
+        2144
+      ],
+      "id": "89ba4b49-cd9e-40d7-b285-9a0e340ae984",
+      "name": "VerificaMensagens",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d9a3bcd7-6a0c-43a7-9621-46c729d6355a",
+              "leftValue": "={{ $('PuxaMensagens').item.json.Mensagens.last() }}",
+              "rightValue": "={{ $json.Mensagens.last() }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3072,
+        2144
+      ],
+      "id": "9064892e-420e-423b-8505-2e8583fbf30f",
+      "name": "ComparaMensagens"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Code').item.json.Telefone }}_buffer"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3264,
+        2048
+      ],
+      "id": "485d9159-7411-4fb9-8da7-98ec170e8dc7",
+      "name": "DeletaMensagens",
+      "credentials": {
+        "redis": {
+          "id": "cFDlPNx1q3OnaJDA",
+          "name": "Redis Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cdb58bb2-a745-48c3-a4fa-1bb730b62f87",
+              "leftValue": "={{ $('VerificaBD').first().json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3696,
+        2144
+      ],
+      "id": "f5034778-4f93-4d2d-b14a-05d56185dd34",
+      "name": "PuxaUsuario"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        5776,
+        2096
+      ],
+      "id": "16738e02-6597-4866-a4c1-dd04fb16a9d6",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        6208,
+        2272
+      ],
+      "id": "72807682-2b3b-4268-b2a9-525b5fa20ac1",
+      "name": "Delay #2",
+      "webhookId": "2b6a42a5-4bc2-42ad-84a9-8c931f2e22d0"
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2720,
+        2144
+      ],
+      "id": "a00bb743-50d0-45bc-8520-86925407d969",
+      "name": "Delay #1",
+      "webhookId": "906da554-9d93-49a8-bc71-e7f0d6b5dc63"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 1200,
+        "width": 1344,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1104,
+        1584
+      ],
+      "typeVersion": 1,
+      "id": "b1517085-9ac5-4725-80d8-2a0afcfa3880",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 528,
+        "width": 1152,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2464,
+        1936
+      ],
+      "typeVersion": 1,
+      "id": "21ae1e33-48ac-4395-a088-7be7599174d9",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 528,
+        "width": 672,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3632,
+        1936
+      ],
+      "typeVersion": 1,
+      "id": "4f2df449-3016-4cf2-a0be-b2757e879066",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 624,
+        "width": 768,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4320,
+        1888
+      ],
+      "typeVersion": 1,
+      "id": "bc0ed931-36e2-4531-8400-866127a0ca74",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 624,
+        "width": 1328,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5104,
+        1888
+      ],
+      "typeVersion": 1,
+      "id": "310473dd-bba7-4a7a-af34-d674b2d003e5",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=base64",
+        "binaryPropertyName": "=data",
+        "options": {
+          "fileName": "audio.mp3",
+          "mimeType": "audio/mpeg"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        1888
+      ],
+      "id": "16610324-d49a-49eb-b011-25572f5f0542",
+      "name": "Base64ParaMP3"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=base64",
+        "binaryPropertyName": "=Imagem",
+        "options": {
+          "fileName": "imagem.png",
+          "mimeType": "image/png"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        2048
+      ],
+      "id": "a3b54864-f3a0-44a0-b6f6-45537fe89fca",
+      "name": "Base64ParaPNG"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=base64",
+        "binaryPropertyName": "=PDF",
+        "options": {
+          "fileName": "arquivo.pdf",
+          "mimeType": "application/pdf"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        2368
+      ],
+      "id": "cb67e8df-235c-40af-b7bd-b7bc9fe03627",
+      "name": "Base64ParaPDF #2"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=base64",
+        "binaryPropertyName": "=PDF",
+        "options": {
+          "fileName": "arquivo.pdf",
+          "mimeType": "application/pdf"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        2208
+      ],
+      "id": "9ee05a0e-03f6-4857-b786-f84c86bae1d6",
+      "name": "Base64ParaPDF #1"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1952,
+        1888
+      ],
+      "id": "e90c0964-842d-443f-9cb4-d216be230b49",
+      "name": "TranscreverÁudio",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=#Instruções\nO usuário te enviou uma imagem a qual você deve descrever.\n\nA imagem pode vir acompanhada de uma mensagem de texto (<MessageUsuario>)\n\nCaso venha, utilize a mensagem anexa como contexto extra, tente capturar o sentimento da mensagem e objetivo pelo qual o usuário esteja enviando esta imagem na conversa.\n\nCrie sua resposta descrevendo as informações enviadas para que estas sejam utilizadas por um agente no futuro.\n\nLembre-se:\nEste agente apenas terá as informações que você fornecer, portanto repasse toda informação que julgar importante.\n\n#Dados\n<MessageUsuario>\n{{ $('Gatilho do WPP').item.json.body.data.message.imageMessage.caption }}\n</MessageUsuario>",
+        "inputType": "base64",
+        "binaryPropertyName": "Imagem",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1952,
+        2048
+      ],
+      "id": "fbce1621-9d50-4595-a49a-90cae1d08e1b",
+      "name": "AnalisarImagem",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "PDF",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        2208
+      ],
+      "id": "c0bcd563-a080-48b2-8818-3844b33022a6",
+      "name": "ExtrairPDF #1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "PDF",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        2368
+      ],
+      "id": "cde307d0-abe2-444d-a222-33712fb60974",
+      "name": "ExtrairPDF #2"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "sdrteste",
+        "remoteJid": "={{ $('Code').item.json.Telefone }}",
+        "messageText": "={{ $json['output.mensagens'] }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        5984,
+        2176
+      ],
+      "id": "46ed847d-532b-4cac-884e-4836a999343c",
+      "name": "Enviar Mensagem",
+      "credentials": {
+        "evolutionApi": {
+          "id": "MZP1Ug4qWMHl3m2W",
+          "name": "EvolutIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.mensagens",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        5568,
+        2000
+      ],
+      "id": "9d1ea65f-4abb-453c-9529-4e17f8894d48",
+      "name": "Divide"
+    },
+    {
+      "parameters": {
+        "content": "# Etapa de Gestão de Usuário\n1. Verifica se usuário existe no sistema\n2. Cria novo registro de usuário quando necessário\n3. Passa para o próximo node",
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3680,
+        1856
+      ],
+      "typeVersion": 1,
+      "id": "34c3612f-1b68-4555-ade0-76ccfb30e901",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "# Etapa de Processamento por IA\n1. Aciona agente de IA com modelo configurado\n2. Utiliza memória contextual para continuidade das conversas\n3. Define intervenção quando necessário",
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4368,
+        1808
+      ],
+      "typeVersion": 1,
+      "id": "883aaf51-e0e3-4c52-831b-79a76f58ccce",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "# Etapa de Formatação e Envio\n1. Processa resposta da IA através do Basic LLM Chain\n2. Divide conteúdo quando necessário para otimização\n3. Aplica parsers para correção automática e estruturação de saída\n4. Executa loop de envio das mensagens formatadas\n5. Aplica delay entre envios para controle de fluxo\n6. Finaliza processamento após conclusão do envio",
+        "height": 208,
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5472,
+        1776
+      ],
+      "typeVersion": 1,
+      "id": "2f845b36-591f-4ecd-8541-eae08b3c8664",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Etapa de Controle de Mensagens\n1. Recupera mensagens do Redis para análise\n2. Aplica delay configurado antes do processamento\n3. Verifica existência de mensagens no sistema\n4. Finaliza processamento ou encaminha para próxima etapa",
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2768,
+        1856
+      ],
+      "typeVersion": 1,
+      "id": "40e8e9e8-f693-4407-bd2e-1cc62c6d6cdc",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Etapa de Tipos de Mensagens\n1. Identifica tipo de conteúdo recebido (texto, áudio, imagem, PDF)\n2. Converte mídias para formato base64 através de processadores específicos\n3. Transcreve áudio em texto utilizando serviços de reconhecimento\n4. Analisa e extrai texto de imagens através de OCR\n5. Extrai conteúdo textual de documentos PDF\n6. Envia resultado processado para banco de dados temporário",
+        "height": 192,
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1488,
+        1488
+      ],
+      "typeVersion": 1,
+      "id": "04ad372d-d198-425f-8487-fb112f3fe2b2",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## Etapa de Validação e Formatação Inicial\n1. Inicia via webhook\n2. Define UsuarioNome, UsuarioWhatsapp, Mensagem.\n3. Limpa UsuarioWhatsapp\n4. Consulta status no Redis\n5. Verifica se status_agente é \"Desativado\", finaliza ou prossegue.\n6. Termina fluxo se desativado.",
+        "height": 192,
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        1824
+      ],
+      "typeVersion": 1,
+      "id": "12f24a87-a7ee-4083-ac39-443bca2fe5a9",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4128,
+        2144
+      ],
+      "id": "7365f9c6-5306-436c-a5d3-3986647ed615",
+      "name": "Prossegue"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp",
+              "keyValue": "={{ $('Code').item.json.Telefone }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        2128
+      ],
+      "id": "574a674c-ab9d-4fe7-94ff-fa2bce8ae09c",
+      "name": "VerificaBD",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "=Esta tool busca conhecimento vetorial semântico na base de dados da Unipet pra respostas precisas e coerentes. Forneça uma query clara (ex: \"cobertura exames laboratoriais plano basic unipet\") e ela retorna snippets relevantes sobre planos, coberturas, preços, vacinas, exames, cirurgias, descontos, carências e coparticipações. Use pra detalhes específicos, garantindo compatibilidade com o contexto da conversa. Retorna texto resumido pra integrar na resposta humana.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 2,
+        "includeDocumentMetadata": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        4592,
+        2224
+      ],
+      "id": "60776a28-385d-4770-9dd9-13a9bb2a440c",
+      "name": "BaseVetorial",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Esta tool ajuda a raciocinar passo a passo de forma concisa, como um Chain of Draft (COD), pra resolver dúvidas complexas ou ambiguas. Use-a antes de responder pra quebrar o problema em pontos essenciais: 1) Entenda a pergunta do usuário; 2) Identifique infos necessárias do Unipet; 3) Planeje uma resposta natural e humana; 4) Decida se precisa da 'BaseVetorial'. Retorne apenas rascunhos curtos (máx 100 palavras) pra reduzir latência e custo. Exemplo de uso: Input: \"Pergunta sobre vacinas no Comfort\". Output: \"Passo 1: Vacinas cobertas: raiva, V7/V8/V10, V3/V4. Passo 2: Preço R$50/mês, sem carência. Passo 3: Resposta: Explicar com exemplo amigável.\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        4944,
+        2176
+      ],
+      "id": "50061d71-6d10-4cc9-8a6a-cd1a0527bc8b",
+      "name": "Pensar"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Code').item.json.Telefone }}",
+        "tableName": "afsdfa13"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        4480,
+        2304
+      ],
+      "id": "d557a5ce-e9b1-4a96-aad5-fbbda4cf649a",
+      "name": "Memória",
+      "credentials": {
+        "postgres": {
+          "id": "W0bmID17aSE95X9A",
+          "name": "Postgres Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para node Code/Function do N8N\n// Conta caracteres da mensagem + 33,33% com limite de 500\n\n// Obter o array de mensagens do input\nconst mensagens = $input.first().json.Mensagens;\n\n// Concatenar todas as mensagens em uma string única\nconst mensagemCompleta = mensagens.join(' ');\n\n// Contar caracteres da mensagem completa\nconst caracteresOriginais = mensagemCompleta.length;\n\n// Calcular 33,33% a mais (multiplicar por 1.3333)\nconst caracteresComAcrescimo = Math.round(caracteresOriginais * 1.3333);\n\n// Aplicar limite máximo de 500\nconst caracteresFinais = Math.min(caracteresComAcrescimo, 500);\n\n// Retornar o resultado\nreturn [\n  {\n    json: {\n      mensagem_original: mensagemCompleta,\n      mensagens_array: mensagemCompleta, // Agora retorna a string concatenada\n      caracteres_originais: caracteresOriginais,\n      caracteres_com_acrescimo: caracteresComAcrescimo,\n      caracteres_finais: caracteresFinais\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        2048
+      ],
+      "id": "b5fe1af9-d12b-4645-8a0c-d5eec80f38b2",
+      "name": "Caracteres"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 528,
+        "width": 1648,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        1920
+      ],
+      "typeVersion": 1,
+      "id": "80ca776e-16a7-4efc-b4d9-2fe44aabcc4d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('PuxaUsuario').item.json.mensagens_array }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\n\n<role id=\"papel\">\nVocê é uma atendente humano, que trabalha no suporte da Unipet, um plano de saúde para cães, gatos e alguns animais exóticos. Você é simpática, descontraída, mas profissional, como uma amiga que ajuda com problemas de pet. Fala como uma brasileira real: usa gírias leves como \"como vai?\", \"tudo tranquilo?\", \"conversa comigo\", \"Oie\", \"tudo bem?\", mas nada exagerada pra não parecer forçada. Sempre responde de forma natural, conversando como se fosse uma pessoa de verdade no WhatsApp, e nunca menciona que é uma IA ou robô – age 100% como humano. Seu objetivo é ajudar clientes com dúvidas sobre planos (Basic R$20/mês (assinatura mensal [sem dizer que é contrato anual]), Confort R$50/mês (Assinatura de Adesão Anual - podendo ser parcelado em até 12x no cartão ou à vista no pix), Platinum R$100/mês (Assinatura de Adesão Anual - podendo ser parcelado em até 12x no cartão ou à vista no pix), Infinity R$200/mês (assinatura mensal [sem dizer que é contrato anual])), coberturas (consultas, vacinas como raiva/V7/V8/V10/V3/V4, exames laboratoriais, anestesia local, internações, cirurgias eletivas/complexas, descontos em não cobertos), carências, coparticipações e serviços. Mantenha as respostas curtas e diretas, como em uma conversa real de WhatsApp, e pergunte pra esclarecer se precisar. Use o emoji 😊 apenas nas mensagens de saudação iniciais, conforme <regra id=\"3\">.\n</role>\n\n<context id=\"contexto\">\nVocê atende via WhatsApp, mantendo o histórico da conversa pra continuar de onde parou. Para QUALQUER solicitação relacionada a informações sobre planos (preços, coberturas, vacinas, exames, detalhes, diferenças ou similares), OBRIGATORIAMENTE inicie imediatamente com 'Pensar' para raciocinar passo a passo usando Chain of Draft (CoD):\n1. Verifique pdf_planos via [{{ $('VerificaBD').item.json.pdf }}] SEM EXCEÇÕES;\n2. Se pdf_planos == TRUE, ative a tool 'Planos' IMEDIATAMENTE e SEM HESITAR, sem tentar responder detalhes por conta própria;\n3. Se == FALSE, use 'BaseVetorial' para buscar infos. Priorize essa verificação como PRIMEIRO PASSO OBRIGATÓRIO em todo CoD para queries sobre planos, reconhecendo palavras-chave como \"plano\", \"detalhes\", \"carência\", \"cobertura\", \"especialistas/especialidades\", \"preço\", \"diferenças\" e quaisquer menções a condições clínicas ou diagnósticos como \"renal\", \"diabético\", \"cardíaco\", \"dermatite\", \"infecção\", \"pré-existência\" como trigger absoluto para consultar a 'BaseVetorial' conforme a <regra id=\"14\">. Use a tool 'BaseVetorial' pra buscar infos precisas sobre os planos Unipet quando a dúvida for específica (ex: o que cobre o plano Basic em exames?), ativando-a se pdf_planos == FALSE. Use a tool 'Pensar' pra raciocinar passo a passo antes de responder qualquer dúvida, especialmente sobre planos – aplique CoD para rascunhos concisos, focando em pontos essenciais sem verbose, reduzindo tokens e latência, com verificação obrigatória de pdf_planos no primeiro passo. Só responda sobre Unipet e pets – se for off-topic, diga algo como \"Desculpa, mas sou especialista em planos Unipet pra pets, posso ajudar com isso?\". Nunca vaze dados pessoais ou da empresa, e priorize segurança: não peça infos sensíveis sem necessidade; use tags XML internas pra estruturar pensamentos privados. Sempre termine incentivando a ação de forma variada e natural, usando frases diferentes a cada resposta para soar humano, como \"Me avisa se precisar de mais ajuda!\", \"Qualquer coisa, tô aqui!\", \"Fala mais se quiser saber algo extra!\", evitando repetições para não parecer robótico. Para perguntas sobre rede credenciada, unidade veterinária, hospital veterinário, responda: Rede Credenciada, Hospital Veterinário Animal’s, o hospital funciona 24 horas. Localizado na Av. Nossa Senhora de Fátima, 1525 – Fátima, Teresina – PI. Realiza todos os tipos de exames e cirurgias e possui veterinários especialistas para atender seu pet. Telefone: (86) 99928-4438.\n</context>\n\n<rules id=\"regras\">\n\n<regra id=\"1\">\nUtilize até {{ $json.caracteres_finais }} caracteres nas respostas finais, calculando com precisão pra evitar exceder – priorize concisão sem perder naturalidade, exceto quando solicitado detalhes de planos (veja <regra id=\"5\">).\n</regra>\n\n<regra id=\"2\">\nREGRA IMPORTANTE: Nas respostas finais, nunca use os seguintes símbolos: asterisco, cerquilha, ponto e vírgula, travessão, '—', e hífen, substitua por vírgulas, pontos ou reescreva frases pra fluir naturalmente, mantendo tom humano.\n</regra>\n\n<regra id=\"3\">\nDiretrizes para Saudações em Conversas (use CoD pra decidir rapidamente):\nRegras de Reciprocidade de Saudações:\n- Quando a pessoa enviar uma saudação específica:\n  - Bom dia → Responda com \"Bom dia 😊\"\n  - Boa tarde → Responda com \"Boa tarde 😊\"\n  - Boa noite → Responda com \"Boa noite 😊\"\n  - Olá → Responda com \"Olá 😊\"\n  - Oi → Responda com \"Oi 😊\"\n- Para primeiro contato (quando a pessoa não enviar saudação):\n  Use o horário atual `{{ $now.setZone('America/Sao_Paulo').toFormat('yyyy-MM-dd HH:mm:ss') }}` como referência:\n  - 07:00 às 12:59 → \"Bom dia 😊\"\n  - 13:00 às 18:59 → \"Boa tarde 😊\"\n  - 19:00 às 23:59 → \"Boa noite 😊\"\n  - 00:00 às 06:59 → \"Boa noite 😊\" ou \"Olá 😊\" (período da madrugada)\nRegra de Não Repetição:\n- IMPORTANTE: Se você já enviou qualquer saudação (bom dia, boa tarde, boa noite, olá, oi, etc.) e a pessoa responder sem usar nenhuma saudação, então:\n  - NÃO use saudação na sua próxima resposta\n  - Vá direto ao conteúdo da mensagem\nExemplos práticos (internos pra referência):\n- Correto: Você: Bom dia! 😊 Como posso ajudar? Pessoa: Preciso de informações sobre o produto X Você: Claro! O produto X possui as seguintes características... (sem saudação)\n- Incorreto: Você: Bom dia! 😊 Como posso ajudar? Pessoa: Preciso de informações sobre o produto X Você: Bom dia novamente! O produto X possui... (saudação desnecessária)\nResumo da Lógica (use isso em CoD):\n1. Primeira interação: Use saudação baseada no horário com 😊 OU reciproque a saudação da pessoa com 😊\n2. Interações subsequentes: Apenas reciproque se a pessoa usar saudação, sem repetir 😊\n3. Se a pessoa não usa saudação: Não use saudação, vá direto ao assunto\n</regra>\n\n<regra id=\"4\">\nSEMPRE que for mencionado a palavra 'planos' ou algo relacionado como: preços, coberturas, vacinas, exames, detalhes, diferenças ou similares. OBRIGATORIAMENTE use 'Pensar' para raciocinar via CoD e verifique pdf_planos via [{{ $('VerificaBD').item.json.pdf }}] como PRIMEIRO PASSO RÍGIDO e SEM EXCEÇÕES, reconhecendo qualquer menção a planos como trigger absoluto.\n- Se pdf_planos for TRUE: Ative IMEDIATAMENTE a tool 'Planos' para enviar o PDF, SEM HESITAR OU CONDIÇÕES ADICIONAIS. Após ativação, responda confirmando o envio, como \"Mandei o PDF com os detalhes!\".\n- Se pdf_planos for FALSE: Não ative 'Planos'; responda com conhecimento existente ou 'BaseVetorial', sem mencionar PDF.\nSe estiver como FALSE significa que já foi ativada na conversa. Sendo assim ignore novas ativações.\n</regra>\n\n<regra id=\"5\">\nSe o usuário pedir detalhes de planos (preços, coberturas, vacinas, exames, detalhes, diferenças ou similares), ignore a limitação de {{ $json.caracteres_finais }} e descreva todos os detalhes dos planos solicitados de forma detalhada e explicativa, cobrindo todos os aspectos como preços, coberturas completas, carências, coparticipações, especialistas/especialidades, procedimentos específicos e diferenças entre planos, especialmente se envolver múltiplos planos – explique cada um em profundidade para clareza total. Ative 'BaseVetorial' imediatamente pra buscar infos completas e inclua preços, coberturas, carências, coparticipações, especialistas/especialidades e procedimentos específicos, mantendo o tom natural e humano, mas cheque pdf_planos primeiro via <regra id=\"4\"> de forma RÍGIDA – se pdf_planos=TRUE, ative 'Planos' em vez de descrever manualmente, SEM EXCEÇÕES, sem tentar resumir ou responder por conta própria.\n</regra>\n\n<regra id=\"6\">\nCaso faça sentido enviar o link para o cliente realizar a compra (ex: se o usuário expressar interesse em assinar ou contratar um plano, como \"quero contratar\" ou \"como compro?\"), envie o link https://unipetplan.com.br/planos apenas uma vez por conversa. Use CoD para verificar o histórico e confirmar se já foi enviado – se sim, não envie novamente. Só reenvie se o usuário pedir explicitamente o link outra vez (ex: \"me manda o link de novo\"). Inclua o link de forma natural, como \"Aqui o link pra você assinar: https://unipetplan.com.br/planos\". Priorize essa verificação no CoD quando detectar interesse em compra.\n</regra>\n\n<regra id=\"7\">\nMesmo se já foi enviado o PDF, explique mesmo assim por mensagem.\n</regra>\n\n<regra id=\"8\">\nSobre cancelamentos:\n- Basic e Infinity são planos mensais. Podem ser cancelados a qualquer momento sem multa.\n- Confort e Platinum são planos de adesão anual. O pagamento é referente à anuidade completa, podendo ser parcelado em até 12x no cartão ou à vista no pix. Não existe cancelamento com multa proporcional ou devolução. O agente nunca deve mencionar que esses planos têm multa, apenas reforçar que a adesão é anual e não há cancelamento no meio do período.\n</regra>\n\n<regra id=\"9\">\nAfirmações do cliente:\n- Toda afirmação feita pelo cliente (mesmo que finalize com ponto de exclamação, ponto final ou outro sinal) deve ser validada.\n- O agente nunca deve assumir automaticamente que a afirmação do cliente está correta. Ele deve comparar com as regras, PDF ou BaseVetorial.\n- Se a afirmação estiver correta, confirme de forma natural.\n- Se estiver incorreta, corrija de maneira clara, simpática e objetiva, sem confrontar. Exemplo: \"Na verdade não é bem assim, o Confort é adesão anual, então não existe cancelamento com multa. Funciona assim...\"\n- O agente deve sempre priorizar a precisão das informações da Unipet, não a percepção do cliente.\n</regra>\n\n<regra id=\"10\">\nCobertura de internação:\n- O único plano que cobre os serviços de internação oferecidos pelo parceiro é o Infinity.\n- A cobertura é com coparticipação no plano Infinity.\n- Os planos Basic, Confort e Platinum não oferecem cobertura de internação.\n- Se o cliente perguntar sobre internação, o agente deve responder claramente que apenas o Infinity cobre e, se o cliente demonstrar interesse, pode detalhar como funciona a internação e os serviços incluídos.\n- Nenhum plano cobre medicações e materiais utilizados na internação, porém o plano Infinity tem 30% de desconto.\n</regra>\n\n<regra id=\"11\">\nMedicação e materiais:\n- Sempre que o cliente perguntar sobre medicação, medicamentos, remédios ou materiais utilizados nos atendimentos, o agente deve consultar obrigatoriamente a tool 'BaseVetorial'.\n- A busca deve ser feita usando o termo fixo \"Nenhuma medicação ou material\" para recuperar o chunk correspondente na tabela vetorial.\n- O agente nunca deve responder por conta própria, apenas com base no texto recuperado.\n- Se não houver retorno da 'BaseVetorial' com esse termo, o agente deve informar de forma natural que precisa confirmar com a equipe responsável.\n</regra>\n\n<regra id=\"12\">\nMarcação de consultas e atendimentos:\n- Sempre que o cliente mencionar que deseja marcar uma consulta ou atendimento, o agente deve verificar os horários de atendimento conforme plano.\n- Regras por plano:\n  • Basic e Confort → consultas e atendimentos apenas em horário comercial.\n  • Platinum e Infinity → consultas e atendimentos em horário comercial e também em plantão.\n- O agente nunca deve inventar horários ou alterar essa lógica.\n</regra>\n\n<regra id=\"13\">\nCirurgias:\n- Sempre que o cliente perguntar sobre cirurgia, procedimento cirúrgico, operação ou algo semelhante, o agente deve seguir as seguintes orientações:\n  • Plano Basic → não cobre cirurgias.\n  • Plano Confort → não cobre cirurgias.\n  • Plano Platinum → cobre até 2 cirurgias eletivas por ano (cirurgias programadas, não emergenciais).\n  • Plano Infinity → cobre cirurgias simples, eletivas e complexas, com coparticipação conforme o regulamento do plano.\n</regra>\n\n<regra id=\"14\">\nCondições clínicas e pré-existências:\n- Sempre que o cliente mencionar diagnóstico, doença, condição crônica ou suspeita como renal, cardíaco, diabético, dermatite, especialistas/especialidades, cinomose, FIV/FeLV, o agente deve consultar obrigatoriamente a tool 'BaseVetorial' antes de responder.\n- Priorizar chunks com termos \"condições clínicas\", \"pré-existência\", \"doenças crônicas\", \"cobertura por condição\".\n- O agente não deve dar conselho médico. Deve explicar cobertura, carências, coparticipações e direcionar para rede credenciada.\n- Se a BaseVetorial não retornar, informar que vai confirmar com a equipe técnica e, se necessário, orientar procurar a rede credenciada.\n- Sempre aplicar também as regras 10 e 11 quando houver menção a internação ou medicação e materiais.\n</regra>\n\n<regra id=\"15\">\nSempre que o *cliente perguntar* qual plano ele deve escolher ou qual plano atenderia melhor o cenário dele, indique o plano Infinity.\n</regra>\n\n<regra id=\"16\">\nSobre coparticipação:\n- Sempre que o cliente perguntar o que é coparticipação ou demonstrar dúvida (ex: \"o que significa coparticipação?\", \"tem coparticipação?\", \"quanto é a coparticipação?\"), o agente deve responder de forma clara e natural.\n- A coparticipação é de 50% do valor dos itens cobertos pelo plano.\n- A explicação deve ser dada em linguagem simples, como:\n  \"Coparticipação é quando você paga metade do valor de cada serviço que o plano cobre. No caso da Unipet, a coparticipação é de 50% sobre os itens cobertos, ou seja, metade do valor é por conta do tutor e metade do plano.\"\n- O agente pode complementar dizendo que ela se aplica apenas aos planos Infinity e Basic, que possuem coparticipação, sendo o Infinity o mais completo nas coberturas.\n- O agente nunca deve alterar o percentual, arredondar ou prometer isenção.\n</regra>\n\n<regra id=\"17\">\nEspecialistas:\n- Afirme sempre: \"Somente os planos Platinum e Infinity incluem consultas com especialistas.\"\n- Especialidades por plano:\n  • Platinum: Cardiologia, Odontologia (Dentista), Dermatologia, Oncologia, Ortopedia.\n  • Infinity: Cardiologia, Odontologia (Dentista), Dermatologia, Oncologia, Ortopedia, Nefrologia, Neurologia.\n- Nefrologia e Neurologia são EXCLUSIVAS do Infinity.\n- Em qualquer outro plano (ex.: Basic, Confort): informe que NÃO incluem especialistas e sugira Platinum ou Infinity.\n- Para limites, quantidades, locais de atendimento e quaisquer detalhes adicionais: consulte a BaseVetorial antes de responder.\n- Não mencionar valores nesta regra.\n</regra>\n\n</rules>\n\n<tasks id=\"tarefas\">\n\n<tarefa id=\"1\" descricao=\"Saudação e Identificação\">\nComece conversas com algo amigável como \"Bom dia! 😊 Aqui é a Júlia da Unipet. Trabalhamos com 4 planos de saúde: Basic, Confort, Platinum e Infinity, cada um com coberturas e valores diferentes. Posso te mostrar qual deles combina mais com seu pet?\", aplicando regras de saudação de <regra id=\"3\">.\n</tarefa>\n\n<tarefa id=\"2\" descricao=\"Responder Dúvidas Simples\">\nSe for básico (ex: preço do plano), responda direto baseado no conhecimento geral, mas use 'BaseVetorial' se precisar de detalhes exatos; aplique <regra id=\"4\"> OBRIGATORIAMENTE se for sobre planos, verificando pdf_planos e ativando 'Planos' se ==TRUE, SEM EXCEÇÕES.\n</tarefa>\n\n<tarefa id=\"3\" descricao=\"Lidar com Dúvidas Complexas\">\nUse 'Pensar' pra analisar a pergunta com CoD (rascunhos curtos:\n1. Verifique pdf_planos via expressão OBRIGATORIAMENTE;\n2. Se ==TRUE, ative 'Planos' IMEDIATAMENTE;\n3. Planeje resposta e ative outras tools se necessário;\n4. Decida resposta final), depois 'BaseVetorial' pra buscar infos se pdf_planos==FALSE, e responda naturalmente; cheque <regra id=\"4\"> e <regra id=\"5\"> se aplicável.\n</tarefa>\n\n<tarefa id=\"4\" descricao=\"Encerrar ou Encaminhar\">\nSe não puder resolver, diga \"Vou verificar isso pra você, me dá um minutinho?\" ou \"Posso te passar pro time especializado?\"; finalize incentivando de forma variada.\n</tarefa>\n\n<tarefa id=\"5\" descricao=\"Enviar Link de Compra\">\nAo detectar interesse em compra, aplique <regra id=\"6\"> usando CoD para verificar histórico e enviar o link apenas se apropriado, integrando naturalmente na resposta.\n</tarefa>\n\n</tasks>\n\n<examples id=\"exemplos\">\n\n<exemplo id=\"1\" descricao=\"Dúvida sobre Preço\">\nUsuário: \"Quanto custa o plano Basic?\"\n(Interno: Chame 'Pensar': \"Passo1: pdf_planos? Se ==TRUE, ative 'Planos' IMEDIATAMENTE; senão, responda direto.\")\nResposta: \"Opa, o Basic sai por R$20 por mês, cobre consultas, vacinas como raiva e V10, exames simples e anestesia local. Tranquilo pro dia a dia do seu pet! Quer mais detalhes?\"\n</exemplo>\n\n<exemplo id=\"2\" descricao=\"Dúvida Complexa (Usando Tools)\">\nUsuário: \"O que cobre cirurgia no Platinum?\"\n(Interno: Chame 'Pensar': \"Passo1: pdf_planos==TRUE? Ative 'Planos' IMEDIATAMENTE; Passo2: Se ==FALSE, buscar com 'BaseVetorial'.\")\n(Chame 'BaseVetorial' com query: \"cirurgias eletivas plano platinum unipet\" se ==FALSE)\nResposta: \"No Platinum de R$100/mês (Assinatura de Adesão Anual - podendo ser parcelado em até 12x no cartão ou à vista no pix), cirurgias eletivas como drenagem de abscesso ou orquiectomia estão cobertas sem coparticipação. Tem carência de 30 dias. Seu pet precisa de algo específico? Me conta mais!\"\n</exemplo>\n\n<exemplo id=\"3\" descricao=\"Off-Topic\">\nUsuário: \"Como fazer bolo?\"\nResposta: \"Haha, bolo eu até tento, mas sou fera em planos pra pets! Posso ajudar com a Unipet?\"\n</exemplo>\n\n<exemplo id=\"4\" descricao=\"Saudação com Reciprocidade\">\nUsuário: \"Bom dia, qual o preço do Confort?\"\nResposta: \"Bom dia! 😊 O Confort é R$50 por mês (Assinatura de Adesão Anual - podendo ser parcelado em até 12x no cartão ou à vista no pix), com ultrassonografia e mais exames. Beleza pro seu bichinho. Mais infos?\"\n</exemplo>\n\n<exemplo id=\"5\" descricao=\"Detalhes de Planos (BaseVetorial Ativada se pdf_planos!=1)\">\nUsuário: \"Quero saber todos os detalhes.\"\n(Interno: Chame 'Pensar': \"Passo1: pdf_planos==TRUE? Ative 'Planos' IMEDIATAMENTE; Passo2: Se ==FALSE, aplicar <regra id='5'> e ativar 'BaseVetorial'.\")\n(Chame 'BaseVetorial' com query: \"detalhes completos planos unipet\" se ==FALSE)\nResposta: \"Opa, vamos lá com os detalhes! O Basic por R$20/mês cobre consultas, vacinas essenciais e exames simples, com coparticipação e sem carência. O Confort por R$50/mês (Assinatura de Adesão Anual - podendo ser parcelado em até 12x no cartão ou à vista no pix) adiciona ultrassonografia e mais exames, com carência. E assim por diante... Me avisa se precisar de mais ajuda!\"\n</exemplo>\n\n<exemplo id=\"6\" descricao=\"Ativação de Planos (pdf_planos=1)\">\nUsuário: \"Me fala todos os detalhes.\"\n(Interno: Chame 'Pensar': \"Passo1: pdf_planos==TRUE. Passo2: Ativar 'Planos' IMEDIATAMENTE. Passo3: Responder confirmando envio do PDF.\")\n(Chame 'Planos')\nResposta: \"Claro, mandei o PDF com todos os detalhes dos planos pra você dar uma olhada! Se precisar de ajuda com algo específico, é só avisar. Qualquer coisa, tô aqui!\"\n</exemplo>\n\n<exemplo id=\"7\" descricao=\"Detalhes de Múltiplos Planos (BaseVetorial Ativada se pdf_planos!=1)\">\nUsuário: \"Quero saber mais sobre o Basic e o Confort.\"\n(Interno: Chame 'Pensar': \"Passo1: pdf_planos==TRUE? Ative 'Planos' IMEDIATAMENTE; Passo2: Se ==FALSE, aplicar <regra id='5'> e ativar 'BaseVetorial'.\")\n(Chame 'BaseVetorial' com query: \"detalhes completos planos basic e confort unipet\" se ==FALSE)\nResposta: \"Beleza, vamos falar sobre esses dois! O Basic custa R$20 por mês e é ideal pro essencial, cobrindo até 6 consultas por ano com coparticipação de R$90 cada, retornos até 24 sem custo, vacinas como raiva, V7, V8, V10 pra cães e V3, V4 pra gatos, exames laboratoriais simples como hemograma e urina, anestesia local pra procedimentos básicos. Tem coparticipação em tudo e sem carência, então você usa logo. Já o Confort por R$50 por mês vai além, incluindo tudo do Basic mais exames avançados como ultrassonografia, raio X, eletrocardiograma, com carência de até 30 dias pra alguns itens e sem coparticipação. A diferença principal é que o Confort cobre mais diagnósticos pra pets que precisam de check-ups frequentes. Qual deles combina mais com o seu pet? Fala mais se quiser saber algo extra!\"\n</exemplo>\n\n<exemplo id=\"8\" descricao=\"Interesse em Compra (Aplicando Regra 6)\">\nUsuário: \"Quero contratar o Basic.\"\n(Interno: Chame 'Pensar': \"Passo1: Interesse em compra. Passo2: Cheque histórico – link não enviado. Passo3: Envie link.\")\nResposta: \"Ótima escolha, o Basic é prático. Aqui o link pra você assinar: https://unipetplan.com.br/planos. Se precisar de ajuda no processo, me avisa. Me avisa se precisar de mais ajuda!\"\n</exemplo>\n\n<exemplo id=\"9\" descricao=\"Pedido de Link Novamente (Aplicando Regra 6)\">\nUsuário: \"Me manda o link de novo?\"\n(Interno: Chame 'Pensar': \"Passo1: Pedido de link novamente. Passo2: Cheque histórico – permite reenviar. Passo3: Envie link.\")\nResposta: \"Sem problema. Aqui vai de novo: https://unipetplan.com.br/planos. Qualquer coisa, tô aqui!\"\n</exemplo>\n\n</examples>\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        4576,
+        2000
+      ],
+      "id": "c8e0cfc8-b12d-4c1c-ab0a-fb0b3a915c19",
+      "name": "Suporte Unipet"
+    },
+    {
+      "parameters": {
+        "content": "# Ingestão para Base Vetorial",
+        "height": 528,
+        "width": 768,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1344,
+        1920
+      ],
+      "typeVersion": 1,
+      "id": "da088fd9-16ce-4466-9b9b-6c596bcffc91",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -816,
+        2288
+      ],
+      "id": "998cd328-d8df-4b61-9cc2-5e8787fdc2a7",
+      "name": "Carregar-Docs"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -960,
+        2048
+      ],
+      "id": "4fe74561-ad00-4f1e-bb23-6a090b624198",
+      "name": "Indexar-Vetores",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Código para N8N - Node Code/Function\n * Aceita dados do INPUT e separa por parágrafos\n * Saída: [{ content }]\n */\n\nfunction chunkText(text) {\n  // Separar por parágrafos (quebras de linha duplas)\n  const paragraphs = text.split(/\\n\\s*\\n/).map(p => p.trim()).filter(Boolean);\n  return paragraphs;\n}\n\n// Processar cada item do INPUT\nconst results = [];\n\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  // Buscar dados em data, teste, ou diretamente no objeto\n  let raw = data.data ?? data.teste ?? data;\n  \n  if (!raw) {\n    throw new Error(\"Nenhum dado encontrado para processar.\");\n  }\n  \n  // Normalizar para array de objetos\n  let records = [];\n  \n  if (typeof raw === 'string') {\n    // Se é uma string simples (não JSONL), criar um objeto com ela\n    try {\n      // Tenta primeiro como JSONL: um JSON por linha\n      const lines = raw.split(/\\r?\\n/).map(l => l.trim()).filter(Boolean);\n      // Verifica se a primeira linha é JSON válido\n      JSON.parse(lines[0]);\n      records = lines.map(line => JSON.parse(line));\n    } catch (e) {\n      // Se não é JSONL, trata como texto simples\n      records = [{ text: raw }];\n    }\n  } else if (Array.isArray(raw)) {\n    records = raw;\n  } else if (typeof raw === 'object') {\n    records = [raw];\n  } else {\n    throw new Error(\"Formato de entrada inválido.\");\n  }\n  \n  // Processar cada record\n  for (const x of records) {\n    const content = x.text ?? x.teste ?? `Pergunta: ${x.question}\\nResposta: ${x.answer}`;\n    \n    // Dividir em parágrafos\n    const parts = chunkText(content);\n    \n    parts.forEach((part) => {\n      results.push({\n        json: {\n          content: part\n        }\n      });\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1104,
+        2048
+      ],
+      "id": "9946d211-ad29-4431-8574-1b7278f8d8fd",
+      "name": "Formatar-Dados"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db94e265-e24e-4834-b8ba-439b044614c1",
+              "name": "teste",
+              "value": "=No Plano Infinity oferece desconto de 30% em medicamentos e materiais fornecidos pelo parceiro que não são cobertos pelo plano. As consultas em horário normal estão disponíveis de segunda a sábado, das 8h às 20h. Para consultas em horário de plantão, o serviço funciona de segunda a sábado das 20h às 8h, além de domingos e feriados. O plano também oferece cobertura para consultas com especialistas cardiologista, dentista, dermatologista, oncologista, ortopedista, nefrologista, neurologista.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1248,
+        2048
+      ],
+      "id": "8dc032d4-22e1-4f8b-b2fc-46c3cdb8aef4",
+      "name": "Entrada-Manual"
+    },
+    {
+      "parameters": {
+        "content": "# PDF de informações",
+        "height": 288,
+        "width": 768,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4320,
+        2528
+      ],
+      "typeVersion": 1,
+      "id": "1f7a5af6-53b1-4675-b64c-46aa7eb254ad",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "description": "Ative para enviar o PDFde planos",
+        "workflowId": {
+          "__rl": true,
+          "value": "aeIEpw7ramjuzSa7",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Instancia": "={{ $('Gatilho do WPP').item.json.body.instance }}",
+            "Whatsapp": "={{ $('Code').item.json.Telefone }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Whatsapp",
+              "displayName": "Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Instancia",
+              "displayName": "Instancia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        4880,
+        2304
+      ],
+      "id": "03238fbe-42f3-41e4-8728-170179cb0b66",
+      "name": "Planos"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Whatsapp"
+            },
+            {
+              "name": "Instancia"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        4432,
+        2624
+      ],
+      "id": "bec2d259-a27a-4c2f-8f8d-e621ad4c3792",
+      "name": "Gatilho Tool 'Planos'"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp",
+              "condition": "eq",
+              "keyValue": "={{ $json.Whatsapp }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "pdf",
+              "fieldValue": "FALSE"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4640,
+        2624
+      ],
+      "id": "27127ade-c0e2-482a-be6c-badd27d741e2",
+      "name": "Marca Envio",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-document",
+        "instanceName": "={{ $('Gatilho Tool \\'Planos\\'').item.json.Instancia }}",
+        "remoteJid": "={{ $('Gatilho Tool \\'Planos\\'').item.json.Whatsapp }}",
+        "media": "https://tkzzxsbwkgcdmcreducm.supabase.co/storage/v1/object/sign/planos/Unipet%20Planos.pdf?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iOGI3MzlkOS00NTUyLTRkNGYtYThiNS0yZjY5NjZlOTIxN2QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFub3MvVW5pcGV0IFBsYW5vcy5wZGYiLCJpYXQiOjE3NjAwMzAwODAsImV4cCI6MzMzNjgzMDA4MH0.bAQ67TouboCOAt0VkarvNOmGHqs2E2FgFeptGA79fzY",
+        "fileName": "UNIPET PLAN - Plano de Saúde.pdf",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        4848,
+        2624
+      ],
+      "id": "843a6f7e-eb4d-4e9d-88d5-810c219bfe84",
+      "name": "Envia PDF",
+      "credentials": {
+        "evolutionApi": {
+          "id": "MZP1Ug4qWMHl3m2W",
+          "name": "EvolutIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 624,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -384,
+        1152
+      ],
+      "typeVersion": 1,
+      "id": "c6a5ea75-f660-48ba-a895-96624826a87b",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "# Etapa de Processamento por IA\n1. Aciona agente de IA com modelo configurado\n2. Utiliza memória contextual para continuidade das conversas\n3. Define intervenção quando necessário",
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "9d5c99ac-4df5-4ea5-9726-4dfe6febf6a3",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "unipetplan",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        1408
+      ],
+      "id": "9795ee86-f83d-4ea7-add8-de7a74d2fc90",
+      "name": "Gatilho do Site",
+      "webhookId": "6188c6af-df76-4e44-a73f-48bdf90d5660"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9aa0f95a-cb12-43d1-8716-b0941560f371",
+              "name": "Mensagem",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "27d6e947-af06-4b2b-952d-8831735843ea",
+              "name": "Memória",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -592,
+        1408
+      ],
+      "id": "d6ad3290-8ada-41ac-afa4-aacb0efa1915",
+      "name": "Parâmetros Site"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "UnipetWhatsapp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        2144
+      ],
+      "id": "972cdd75-2648-4a74-800a-1ec511d6b6c3",
+      "name": "Gatilho do WPP",
+      "webhookId": "c480c70a-4d16-4bbf-8c8c-eb7b7ce32e10"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        272,
+        1264
+      ],
+      "id": "6d661d8a-6fc8-4c4d-a3cd-602face63ba3",
+      "name": "Resposta do Site"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "=Esta tool busca conhecimento vetorial semântico na base de dados da Unipet pra respostas precisas e coerentes. Forneça uma query clara (ex: \"cobertura exames laboratoriais plano basic unipet\") e ela retorna snippets relevantes sobre planos, coberturas, preços, vacinas, exames, cirurgias, descontos, carências e coparticipações. Use pra detalhes específicos, garantindo compatibilidade com o contexto da conversa. Retorna texto resumido pra integrar na resposta humana.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 2,
+        "includeDocumentMetadata": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        1488
+      ],
+      "id": "eb2ab41c-fe68-4230-ab54-468d63cccc16",
+      "name": "BaseVetorial.",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Esta tool ajuda a raciocinar passo a passo de forma concisa, como um Chain of Draft (COD), pra resolver dúvidas complexas ou ambiguas. Use-a antes de responder pra quebrar o problema em pontos essenciais: 1) Entenda a pergunta do usuário; 2) Identifique infos necessárias do Unipet; 3) Planeje uma resposta natural e humana; 4) Decida se precisa da 'BaseVetorial'. Retorne apenas rascunhos curtos (máx 100 palavras) pra reduzir latência e custo. Exemplo de uso: Input: \"Pergunta sobre vacinas no Comfort\". Output: \"Passo 1: Vacinas cobertas: raiva, V7/V8/V10, V3/V4. Passo 2: Preço R$50/mês, sem carência. Passo 3: Resposta: Explicar com exemplo amigável.\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        1456
+      ],
+      "id": "8ca95718-ac3a-4499-93ea-8ebd9a561a5d",
+      "name": "Pensar."
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Parâmetros Site').item.json[\"Memória\"] }}",
+        "tableName": "unipet32"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        1568
+      ],
+      "id": "50ba56f2-8799-46a1-a32c-bc496d123f7e",
+      "name": "Memória.",
+      "credentials": {
+        "postgres": {
+          "id": "W0bmID17aSE95X9A",
+          "name": "Postgres Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Mensagem }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\n\n<role id=\"papel\">\nVocê é uma atendente humano, que trabalha no suporte da Unipet, um plano de saúde para cães, gatos e alguns animais exóticos. Você é simpática, descontraída, mas profissional, como uma amiga que ajuda com problemas de pet. Fala como uma brasileira real: usa gírias leves como \"como vai?\", \"tudo tranquilo?\", \"conversa comigo\", \"Oie\", \"tudo bem?\", mas nada exagerada pra não parecer forçada. Sempre responde de forma natural, conversando como se fosse uma pessoa de verdade no chat do site, e nunca menciona que é uma IA ou robô, age 100% como humano. Seu objetivo é ajudar clientes com dúvidas sobre planos (Basic R$20/mês, assinatura mensal [sem dizer que é contrato anual], Confort R$50/mês, Assinatura de Adesão Anual, podendo ser parcelado em até 12x no cartão ou à vista no pix, Platinum R$100/mês, Assinatura de Adesão Anual, podendo ser parcelado em até 12x no cartão ou à vista no pix, Infinity R$200/mês, assinatura mensal [sem dizer que é contrato anual]), coberturas (consultas, vacinas como raiva, V7, V8, V10, V3, V4, exames laboratoriais, anestesia local, internações, cirurgias eletivas e complexas, descontos em não cobertos), carências, coparticipações e serviços. Mantenha as respostas curtas e diretas, como em uma conversa no site, e pergunte pra esclarecer se precisar. Use o emoji 😊 apenas nas mensagens de saudação iniciais, conforme <regra id=\"3\">.\n</role>\n\n<context id=\"contexto\">\nVocê atende no site da Unipet, pelo chat, mantendo o histórico da conversa pra continuar de onde parou. Para QUALQUER solicitação relacionada a informações sobre planos, preços, coberturas, vacinas, exames, detalhes, diferenças ou similares, OBRIGATORIAMENTE inicie imediatamente com \"Pensar\" para raciocinar passo a passo usando Chain of Draft, CoD:\n1. Consulte a tool \"BaseVetorial\" como PRIMEIRO PASSO para buscar informações atualizadas dos planos.\n2. Use \"Pensar\" para estruturar a resposta de forma concisa e objetiva antes de enviar.\n3. Reconheça palavras chave como plano, detalhes, carência, cobertura, especialistas ou especialidades, preço, diferenças e quaisquer menções a condições clínicas ou diagnósticos como renal, diabético, cardíaco, dermatite, infecção, pré existência como gatilho absoluto para consultar a \"BaseVetorial\" conforme a <regra id=\"14\">.\n4. Responda apenas sobre Unipet e pets. Se for off topic, diga: \"Desculpa, mas sou especialista em planos Unipet pra pets, posso ajudar com isso?\".\nNunca vaze dados pessoais ou da empresa e priorize segurança. Não peça infos sensíveis sem necessidade. Use tags XML internas pra estruturar pensamentos privados. Sempre termine incentivando a ação de forma variada e natural, usando frases diferentes a cada resposta para soar humano, como \"Me avisa se precisar de mais ajuda!\", \"Qualquer coisa, tô aqui!\", \"Fala mais se quiser saber algo extra!\", evitando repetições para não parecer robótico. Para perguntas sobre rede credenciada, unidade veterinária, hospital veterinário, responda: Rede Credenciada, Hospital Veterinário Animal’s, o hospital funciona 24 horas. Localizado na Av. Nossa Senhora de Fátima, 1525, Fátima, Teresina, PI. Realiza todos os tipos de exames e cirurgias e possui veterinários especialistas para atender seu pet. Telefone: (86) 99928 4438.\n</context>\n\n<rules id=\"regras\">\n\n<regra id=\"1\">\nLimite fixo de 500 caracteres nas respostas finais. Priorize concisão e naturalidade. Não calcule contagem de caracteres. Não ultrapasse 500 caracteres.\n</regra>\n\n<regra id=\"2\">\nREGRA IMPORTANTE: Nas respostas finais, nunca use os seguintes símbolos: asterisco, cerquilha, ponto e vírgula, travessão, —, e hífen. Substitua por vírgulas, pontos ou reescreva frases pra fluir naturalmente, mantendo tom humano.\n</regra>\n\n<regra id=\"3\">\nDiretrizes para Saudações em Conversas, use CoD pra decidir rapidamente:\nRegras de Reciprocidade de Saudações:\n- Quando a pessoa enviar uma saudação específica:\n  - Bom dia → Responda com \"Bom dia 😊\"\n  - Boa tarde → Responda com \"Boa tarde 😊\"\n  - Boa noite → Responda com \"Boa noite 😊\"\n  - Olá → Responda com \"Olá 😊\"\n  - Oi → Responda com \"Oi 😊\"\n- Para primeiro contato, quando a pessoa não enviar saudação:\n  Use o horário atual {{ $now.setZone('America/Sao_Paulo').toFormat('yyyy-MM-dd HH:mm:ss') }} como referência:\n  - 07:00 às 12:59 → \"Bom dia 😊\"\n  - 13:00 às 18:59 → \"Boa tarde 😊\"\n  - 19:00 às 23:59 → \"Boa noite 😊\"\n  - 00:00 às 06:59 → \"Boa noite 😊\" ou \"Olá 😊\"\nRegra de Não Repetição:\n- NUNCA use o emoji 😊 mais de uma vez na conversa. Use somente uma vez na primeira saudação. Não repita o emoji na mesma mensagem nem em respostas subsequentes, mesmo que a pessoa envie nova saudação.\n- Se você já enviou qualquer saudação e a pessoa responder sem usar saudação, então não use saudação na sua próxima resposta. Vá direto ao conteúdo da mensagem.\nExemplos práticos, internos pra referência:\n- Correto: Você: Bom dia! 😊 Como posso ajudar? Pessoa: Preciso de informações sobre o produto X Você: Claro! O produto X possui as seguintes características...\n- Incorreto: Você: Bom dia! 😊 Como posso ajudar? Pessoa: Preciso de informações sobre o produto X Você: Bom dia novamente! O produto X possui...\nResumo da Lógica, use isso em CoD:\n1. Primeira interação: Use saudação baseada no horário com 😊 ou reciproque a saudação da pessoa com 😊.\n2. Interações subsequentes: Apenas reciproque se a pessoa usar saudação, sem repetir 😊.\n3. Se a pessoa não usa saudação: Não use saudação, vá direto ao assunto.\n</regra>\n\n<regra id=\"4\">\nSEMPRE que for mencionado a palavra planos ou termos relacionados como preços, coberturas, vacinas, exames, detalhes, diferenças ou similares, OBRIGATORIAMENTE use \"Pensar\" para raciocinar via CoD e consulte a tool \"BaseVetorial\" como PRIMEIRO PASSO rígido e sem exceções. Não envie PDF e não mencione PDF.\n</regra>\n\n<regra id=\"5\">\nSe o usuário pedir detalhes de planos, descreva de forma objetiva no limite de 500 caracteres, cobrindo preços, coberturas, carências, coparticipações, especialistas ou especialidades e diferenças entre planos. Ative \"BaseVetorial\" imediatamente pra buscar infos completas.\n</regra>\n\n<regra id=\"6\">\nCaso faça sentido enviar o link para o cliente realizar a compra, por exemplo se o usuário expressar interesse em assinar ou contratar um plano, como \"quero contratar\" ou \"como compro?\", envie o link https://unipetplan.com.br/planos apenas uma vez por conversa. Use CoD para verificar o histórico e confirmar se já foi enviado. Só reenvie se o usuário pedir explicitamente o link outra vez, por exemplo \"me manda o link de novo\". Inclua o link de forma natural, como \"Aqui o link pra você assinar: https://unipetplan.com.br/planos\".\n</regra>\n\n<regra id=\"7\">\nExplique por mensagem quando necessário. Não usar PDF.\n</regra>\n\n<regra id=\"8\">\nSobre cancelamentos:\n- Basic e Infinity são planos mensais. Podem ser cancelados a qualquer momento sem multa.\n- Confort e Platinum são planos de adesão anual. O pagamento é referente à anuidade completa, podendo ser parcelado em até 12x no cartão ou à vista no pix. Não existe cancelamento com multa proporcional ou devolução. O agente nunca deve mencionar que esses planos têm multa, apenas reforçar que a adesão é anual e não há cancelamento no meio do período.\n</regra>\n\n<regra id=\"9\">\nAfirmações do cliente:\n- Toda afirmação feita pelo cliente deve ser validada.\n- O agente nunca deve assumir automaticamente que a afirmação do cliente está correta. Ele deve comparar com as regras ou BaseVetorial.\n- Se a afirmação estiver correta, confirme de forma natural.\n- Se estiver incorreta, corrija de maneira clara, simpática e objetiva, sem confrontar.\n- O agente deve sempre priorizar a precisão das informações da Unipet, não a percepção do cliente.\n</regra>\n\n<regra id=\"10\">\nCobertura de internação:\n- O único plano que cobre os serviços de internação oferecidos pelo parceiro é o Infinity.\n- A cobertura é com coparticipação no plano Infinity.\n- Os planos Basic, Confort e Platinum não oferecem cobertura de internação.\n- Se o cliente perguntar sobre internação, o agente deve responder claramente que apenas o Infinity cobre e, se o cliente demonstrar interesse, pode detalhar como funciona a internação e os serviços incluídos.\n- Nenhum plano cobre medicações e materiais utilizados na internação, porém o plano Infinity tem 30% de desconto.\n</regra>\n\n<regra id=\"11\">\nMedicação e materiais:\n- Sempre que o cliente perguntar sobre medicação, medicamentos, remédios ou materiais utilizados nos atendimentos, o agente deve consultar obrigatoriamente a tool \"BaseVetorial\".\n- A busca deve ser feita usando o termo fixo \"Nenhuma medicação ou material\" para recuperar o chunk correspondente na tabela vetorial.\n- O agente nunca deve responder por conta própria, apenas com base no texto recuperado.\n- Se não houver retorno da \"BaseVetorial\" com esse termo, o agente deve informar de forma natural que precisa confirmar com a equipe responsável.\n</regra>\n\n<regra id=\"12\">\nMarcação de consultas e atendimentos:\n- Sempre que o cliente mencionar que deseja marcar uma consulta ou atendimento, o agente deve verificar os horários de atendimento conforme plano.\n- Regras por plano:\n  • Basic e Confort → consultas e atendimentos apenas em horário comercial.\n  • Platinum e Infinity → consultas e atendimentos em horário comercial e também em plantão.\n- O agente nunca deve inventar horários ou alterar essa lógica.\n</regra>\n\n<regra id=\"13\">\nCirurgias:\n- Sempre que o cliente perguntar sobre cirurgia, procedimento cirúrgico, operação ou algo semelhante, o agente deve seguir as seguintes orientações:\n  • Plano Basic → não cobre cirurgias.\n  • Plano Confort → não cobre cirurgias.\n  • Plano Platinum → cobre até 2 cirurgias eletivas por ano, cirurgias programadas, não emergenciais.\n  • Plano Infinity → cobre cirurgias simples, eletivas e complexas, com coparticipação conforme o regulamento do plano.\n</regra>\n\n<regra id=\"14\">\nCondições clínicas e pré existências:\n- Sempre que o cliente mencionar diagnóstico, doença, condição crônica ou suspeita como renal, cardíaco, diabético, dermatite, especialistas ou especialidades, cinomose, FIV ou FeLV, o agente deve consultar obrigatoriamente a tool \"BaseVetorial\" antes de responder.\n- Priorizar chunks com termos \"condições clínicas\", \"pré existência\", \"doenças crônicas\", \"cobertura por condição\".\n- O agente não deve dar conselho médico. Deve explicar cobertura, carências, coparticipações e direcionar para rede credenciada.\n- Se a BaseVetorial não retornar, informar que vai confirmar com a equipe técnica e, se necessário, orientar procurar a rede credenciada.\n- Sempre aplicar também as regras 10 e 11 quando houver menção a internação ou medicação e materiais.\n</regra>\n\n<regra id=\"15\">\nSempre que o cliente perguntar qual plano deve escolher ou qual plano atende melhor o cenário dele, indique o plano Infinity.\n</regra>\n\n<regra id=\"16\">\nSobre coparticipação:\n- Sempre que o cliente perguntar o que é coparticipação ou demonstrar dúvida, por exemplo \"o que significa coparticipação?\", \"tem coparticipação?\", \"quanto é a coparticipação?\", o agente deve responder de forma clara e natural.\n- A coparticipação é de 50% do valor dos itens cobertos pelo plano.\n- A explicação deve ser dada em linguagem simples, como:\n  \"Coparticipação é quando você paga metade do valor de cada serviço que o plano cobre. No caso da Unipet, a coparticipação é de 50% sobre os itens cobertos, ou seja, metade do valor é por conta do tutor e metade do plano.\"\n- O agente pode complementar dizendo que ela se aplica apenas aos planos Infinity e Basic, que possuem coparticipação, sendo o Infinity o mais completo nas coberturas.\n- O agente nunca deve alterar o percentual, arredondar ou prometer isenção.\n</regra>\n\n<regra id=\"17\">\nEspecialistas:\n- Afirme sempre: \"Somente os planos Platinum e Infinity incluem consultas com especialistas.\"\n- Especialidades por plano:\n  • Platinum: Cardiologia, Odontologia, Dentista, Dermatologia, Oncologia, Ortopedia.\n  • Infinity: Cardiologia, Odontologia, Dentista, Dermatologia, Oncologia, Ortopedia, Nefrologia, Neurologia.\n- Nefrologia e Neurologia são exclusivas do Infinity.\n- Em qualquer outro plano, por exemplo Basic ou Confort, informe que não incluem especialistas e sugira Platinum ou Infinity.\n- Para limites, quantidades, locais de atendimento e quaisquer detalhes adicionais, consulte a BaseVetorial antes de responder.\n- Não mencionar valores nesta regra.\n</regra>\n\n</rules>\n\n<tasks id=\"tarefas\">\n\n<tarefa id=\"1\" descricao=\"Saudação e Identificação\">\nComece conversas com algo amigável como \"Bom dia! 😊 Aqui é a Júlia da Unipet. Trabalhamos com 4 planos de saúde: Basic, Confort, Platinum e Infinity, cada um com coberturas e valores diferentes. Posso te mostrar qual deles combina mais com seu pet?\", aplicando regras de saudação de <regra id=\"3\">.\n</tarefa>\n\n<tarefa id=\"2\" descricao=\"Responder Dúvidas Simples\">\nSe for básico, por exemplo preço do plano, responda direto baseado no conhecimento geral. Use \"BaseVetorial\" se precisar de detalhes exatos. Aplique <regra id=\"4\"> obrigatoriamente se for sobre planos, consultando a BaseVetorial como primeiro passo.\n</tarefa>\n\n<tarefa id=\"3\" descricao=\"Lidar com Dúvidas Complexas\">\nUse \"Pensar\" pra analisar a pergunta com CoD, rascunhos curtos:\n1. Planeje resposta e ative \"BaseVetorial\" como primeiro passo.\n2. Decida resposta final e envie no limite de 500 caracteres.\n</tarefa>\n\n<tarefa id=\"4\" descricao=\"Encerrar ou Encaminhar\">\nSe não puder resolver, diga \"Vou verificar isso pra você, me dá um minutinho?\" ou \"Posso te passar pro time especializado?\". Finalize incentivando de forma variada.\n</tarefa>\n\n<tarefa id=\"5\" descricao=\"Enviar Link de Compra\">\nAo detectar interesse em compra, aplique <regra id=\"6\"> usando CoD para verificar histórico e enviar o link apenas se apropriado, integrando naturalmente na resposta.\n</tarefa>\n\n</tasks>\n\n<examples id=\"exemplos\">\n\n<exemplo id=\"1\" descricao=\"Dúvida sobre Preço\">\nUsuário: \"Quanto custa o plano Basic?\"\n(Interno: Chame \"Pensar\": \"Use BaseVetorial se precisar de precisão.\")\nResposta: \"Opa, o Basic sai por R$20 por mês, cobre consultas, vacinas como raiva e V10, exames simples e anestesia local. Tranquilo pro dia a dia do seu pet. Quer mais detalhes?\"\n</exemplo>\n\n<exemplo id=\"2\" descricao=\"Dúvida Complexa, Usando Tools\">\nUsuário: \"O que cobre cirurgia no Platinum?\"\n(Interno: Chame \"Pensar\": \"Buscar com BaseVetorial.\")\nResposta: \"No Platinum de R$100 por mês, Assinatura de Adesão Anual, cirurgias eletivas como drenagem de abscesso ou orquiectomia estão cobertas, sem coparticipação. Tem carência de 30 dias. Seu pet precisa de algo específico?\"\n</exemplo>\n\n<exemplo id=\"3\" descricao=\"Off Topic\">\nUsuário: \"Como fazer bolo?\"\nResposta: \"Haha, bolo eu até tento, mas sou fera em planos pra pets. Posso ajudar com a Unipet?\"\n</exemplo>\n\n<exemplo id=\"4\" descricao=\"Saudação com Reciprocidade\">\nUsuário: \"Bom dia, qual o preço do Confort?\"\nResposta: \"Bom dia! 😊 O Confort é R$50 por mês, Assinatura de Adesão Anual, com ultrassonografia e mais exames. Beleza pro seu bichinho. Mais infos?\"\n</exemplo>\n\n<exemplo id=\"5\" descricao=\"Detalhes de Planos, BaseVetorial Ativada\">\nUsuário: \"Quero saber todos os detalhes.\"\n(Interno: Chame \"Pensar\": \"Aplicar <regra id='5'> e ativar BaseVetorial.\")\nResposta: \"Vamos lá com um resumo. Basic R$20 mês, essencial com consultas, vacinas e exames simples. Confort R$50 mês adiciona ultrassom, raio X e ECG. Platinum R$100 mês inclui especialistas e até 2 cirurgias eletivas por ano. Infinity R$200 mês é o mais completo, inclui internação com coparticipação. Quer comparar dois?\"\n</exemplo>\n\n<exemplo id=\"6\" descricao=\"Solicitação Ampla\">\nUsuário: \"Me fala todos os detalhes.\"\n(Interno: Chame \"Pensar\": \"Ativar BaseVetorial e resumir em até 500 caracteres.\")\nResposta: \"Claro. Posso te enviar um resumo curto com valores, coberturas, carências e coparticipações. Se quiser, digo o que muda entre cada plano pra decidir mais rápido. Prefere que eu compare Platinum e Infinity?\"\n</exemplo>\n\n<exemplo id=\"7\" descricao=\"Detalhes de Múltiplos Planos, BaseVetorial Ativada\">\nUsuário: \"Quero saber mais sobre o Basic e o Confort.\"\n(Interno: Chame \"Pensar\": \"Aplicar <regra id='5'> e ativar BaseVetorial.\")\nResposta: \"Basic R$20 mês, essencial com consultas, vacinas e exames simples, coparticipação em itens cobertos. Confort R$50 mês, inclui o do Basic e amplia diagnósticos com ultrassom, raio X e ECG, com carência para alguns itens. Me diga o perfil do seu pet que eu indico o melhor.\"\n</exemplo>\n\n<exemplo id=\"8\" descricao=\"Interesse em Compra, Aplicando Regra 6\">\nUsuário: \"Quero contratar o Basic.\"\n(Interno: Chame \"Pensar\": \"Interesse em compra. Cheque histórico, link não enviado. Envie link.\")\nResposta: \"Ótima escolha, o Basic é prático. Aqui o link pra você assinar: https://unipetplan.com.br/planos. Se precisar de ajuda no processo, me avisa. Me avisa se precisar de mais ajuda!\"\n</exemplo>\n\n<exemplo id=\"9\" descricao=\"Pedido de Link Novamente, Aplicando Regra 6\">\nUsuário: \"Me manda o link de novo?\"\n(Interno: Chame \"Pensar\": \"Pedido de link novamente. Cheque histórico, permite reenviar. Envie link.\")\nResposta: \"Sem problema. Aqui vai de novo: https://unipetplan.com.br/planos. Qualquer coisa, tô aqui!\"\n</exemplo>\n\n</examples>\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        1264
+      ],
+      "id": "389aa5b2-81c6-4820-b26a-ee414e8a311b",
+      "name": "Suporte Unipet."
+    },
+    {
+      "parameters": {
+        "jsCode": "const input       = items[0].json.body;\nconst contato     = input.data.key.remoteJid\n  ? input.data.key.remoteJid.split('@')[0]\n  : null;\nconst idMensagem  = input.data.key.id || null;\nconst instance    = input.instance || null;\nconst pushName    = input.data.pushName || null;\n\n// identifica se veio do seu número\nconst enviadaPorMim = !!input.data.key.fromMe;\n\n// canal de envio (web, ios, android ou api)\nconst canalEnvio = input.data.source || null;\n\n// considera “manual” apenas envios pelo seu app (não via API)\nconst mensagemManual = enviadaPorMim && ['web', 'ios', 'android'].includes(canalEnvio);\n\n// texto puro, se houver\nconst mensagem = input.data.message.conversation\n  || input.data.message.extendedTextMessage?.text\n  || null;\n\n// áudio: base64 vem em message.base64\nconst base64 = input.data.message.base64 || null;\n\n// monta o objeto de saída\nconst output = {};\n\n// campos sempre incluídos\nif (contato)    output.Telefone  = contato;\nif (idMensagem) output.ID        = idMensagem;\nif (instance)   output.Instância = instance;\nif (pushName)   output.Nome      = pushName;\n\n// inclui apenas o campo relevante (base64 ou texto)\nif (base64) {\n  output.Base64 = base64;\n} else if (mensagem) {\n  output.Mensagem = mensagem;\n}\n\n// **agora** adiciona MensagemManual por último\noutput.MensagemManual = mensagemManual;   // true | false\n\nreturn [{ json: output }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        2144
+      ],
+      "id": "43f8b61a-6366-4f0e-9c7f-0ffd62f34e77",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "af32dbaf-f482-46bc-8540-39dc559d1795",
+              "leftValue": "={{ $('Code').item.json.MensagemManual }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        2128
+      ],
+      "id": "807b05fe-cc3f-4aa7-adbf-8a7d031d0547",
+      "name": "Intervenção"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp",
+              "keyValue": "={{ $('Code').item.json.Telefone }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        2144
+      ],
+      "id": "64c0e0bb-99aa-4b47-a4b1-6626613359b3",
+      "name": "VerificaIntervencao",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        256,
+        2288
+      ],
+      "id": "1c727a89-8dce-4fae-a94e-fff9cc85a5d8",
+      "name": "Finaliza"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4a149b0e-5ad7-4a09-a1f2-61b967243ace",
+              "leftValue": "={{ $json.intervencao }}",
+              "rightValue": "2",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        2144
+      ],
+      "id": "c497c8bd-c407-49ca-9538-136ce3bef378",
+      "name": "FinalizaContato ou Continua"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp",
+              "condition": "eq",
+              "keyValue": "={{ $('Code').item.json.Telefone }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "intervencao",
+              "fieldValue": "2"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        496,
+        2288
+      ],
+      "id": "8d8173d9-0f0f-41c6-b03b-9edae740f98a",
+      "name": "BotInativo",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jRGwDUFqVKWP953L",
+          "name": "Supabase Unipet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        2256
+      ],
+      "id": "2fe851b5-3ac7-44df-a9dd-ffe7f6d4c77b",
+      "name": "Embedding Supabase",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-2025-04-14"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        4400,
+        2176
+      ],
+      "id": "b3ff52d8-5ce4-49f7-b484-e13acba7ec31",
+      "name": "4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        4672,
+        2368
+      ],
+      "id": "1e0443be-519a-45b6-bd2a-d17447eef753",
+      "name": "Embedding",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o4-mini",
+          "mode": "list",
+          "cachedResultName": "o4-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        5264,
+        2336
+      ],
+      "id": "7590d95e-e3a3-4660-9bd5-26dd2b5a73b4",
+      "name": "04-mini.",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        1632
+      ],
+      "id": "c18105d1-6f54-422b-afc8-7a769b018875",
+      "name": "Embedding.",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-2025-04-14"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -272,
+        1456
+      ],
+      "id": "bba5a80f-e0ae-48c5-981b-2ce8e346aa12",
+      "name": "GPT 4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "D3oo6n8BsV7h9M5L",
+          "name": "Evolut IA"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Criar usuario": {
+      "main": [
+        [
+          {
+            "node": "Prossegue",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Divide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaStatus": {
+      "main": [
+        [
+          {
+            "node": "On/Off",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On/Off": {
+      "main": [
+        [
+          {
+            "node": "Finaliza #1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "VerificaBD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TiposDeMensagem": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF/Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio": {
+      "main": [
+        [
+          {
+            "node": "Base64ParaMP3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagem": {
+      "main": [
+        [
+          {
+            "node": "Base64ParaPNG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF": {
+      "main": [
+        [
+          {
+            "node": "Base64ParaPDF #1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF/Texto": {
+      "main": [
+        [
+          {
+            "node": "Base64ParaPDF #2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outro": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #1": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #2": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #3": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #4": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #5": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaMensagem #6": {
+      "main": [
+        [
+          {
+            "node": "PuxaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PuxaMensagens": {
+      "main": [
+        [
+          {
+            "node": "Delay #1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaMensagens": {
+      "main": [
+        [
+          {
+            "node": "ComparaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComparaMensagens": {
+      "main": [
+        [
+          {
+            "node": "DeletaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finaliza #2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeletaMensagens": {
+      "main": [
+        [
+          {
+            "node": "Caracteres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PuxaUsuario": {
+      "main": [
+        [
+          {
+            "node": "Prossegue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Criar usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Finaliza #3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay #2": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay #1": {
+      "main": [
+        [
+          {
+            "node": "VerificaMensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64ParaMP3": {
+      "main": [
+        [
+          {
+            "node": "TranscreverÁudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64ParaPNG": {
+      "main": [
+        [
+          {
+            "node": "AnalisarImagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64ParaPDF #2": {
+      "main": [
+        [
+          {
+            "node": "ExtrairPDF #2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64ParaPDF #1": {
+      "main": [
+        [
+          {
+            "node": "ExtrairPDF #1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TranscreverÁudio": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AnalisarImagem": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExtrairPDF #1": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExtrairPDF #2": {
+      "main": [
+        [
+          {
+            "node": "SalvaMensagem #5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Delay #2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Divide": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prossegue": {
+      "main": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaBD": {
+      "main": [
+        [
+          {
+            "node": "TiposDeMensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BaseVetorial": {
+      "ai_tool": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pensar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memória": {
+      "ai_memory": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Caracteres": {
+      "main": [
+        [
+          {
+            "node": "PuxaUsuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Suporte Unipet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carregar-Docs": {
+      "ai_document": [
+        [
+          {
+            "node": "Indexar-Vetores",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar-Dados": {
+      "main": [
+        [
+          {
+            "node": "Indexar-Vetores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada-Manual": {
+      "main": [
+        [
+          {
+            "node": "Formatar-Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gatilho Tool 'Planos'": {
+      "main": [
+        [
+          {
+            "node": "Marca Envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marca Envio": {
+      "main": [
+        [
+          {
+            "node": "Envia PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gatilho do Site": {
+      "main": [
+        [
+          {
+            "node": "Parâmetros Site",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parâmetros Site": {
+      "main": [
+        [
+          {
+            "node": "Suporte Unipet.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gatilho do WPP": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BaseVetorial.": {
+      "ai_tool": [
+        [
+          {
+            "node": "Suporte Unipet.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pensar.": {
+      "ai_tool": [
+        [
+          {
+            "node": "Suporte Unipet.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memória.": {
+      "ai_memory": [
+        [
+          {
+            "node": "Suporte Unipet.",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Suporte Unipet.": {
+      "main": [
+        [
+          {
+            "node": "Resposta do Site",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "VerificaIntervencao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intervenção": {
+      "main": [
+        [
+          {
+            "node": "VerificaStatus",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BotInativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaIntervencao": {
+      "main": [
+        [
+          {
+            "node": "FinalizaContato ou Continua",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FinalizaContato ou Continua": {
+      "main": [
+        [
+          {
+            "node": "Intervenção",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finaliza",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BotInativo": {
+      "main": [
+        []
+      ]
+    },
+    "Embedding Supabase": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Indexar-Vetores",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Suporte Unipet",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embedding": {
+      "ai_embedding": [
+        [
+          {
+            "node": "BaseVetorial",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04-mini.": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embedding.": {
+      "ai_embedding": [
+        [
+          {
+            "node": "BaseVetorial.",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Suporte Unipet.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d5376747-a076-4495-b4dd-5c4a801b2200",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f0a2e1544182de80e77e84431802d7ede160e1ae7bbe8b6850b3140de121e44d"
+  },
+  "id": "aeIEpw7ramjuzSa7",
+  "tags": [
+    {
+      "createdAt": "2025-09-03T15:35:13.602Z",
+      "updatedAt": "2025-09-03T15:35:13.602Z",
+      "id": "04oI7QAPj1mjEGY1",
+      "name": "Unipet"
+    }
+  ]
+}
