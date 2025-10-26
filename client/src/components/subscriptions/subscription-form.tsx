@@ -43,7 +43,12 @@ import {
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Search, Plus, Edit, Trash2, Download, Upload, Key, FileText } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Users, Search, Plus, Edit, Trash2, Download, Upload, Key, FileText, ChevronDown, ChevronRight, Info, MessagesSquare } from "lucide-react";
 
 interface SubscriptionFormProps {
   open: boolean;
@@ -95,6 +100,12 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
   const { toast } = useToast();
   const [showClientSheet, setShowClientSheet] = useState(false);
   const [clientSearch, setClientSearch] = useState("");
+  
+  // Collapsible sections state
+  const [isBasicInfoOpen, setIsBasicInfoOpen] = useState(true); // Open by default - contains required fields
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
+  const [isFilesOpen, setIsFilesOpen] = useState(false);
   
   // Credentials state
   const [credentials, setCredentials] = useState<CredentialFormData[]>([]);
@@ -384,299 +395,392 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
           </DialogHeader>
 
           <Form {...form}>
-            <form id="subscription-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Core Subscription Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="clientId"
-                  render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                      <FormLabel className="text-text-primary">Cliente *</FormLabel>
-                      <div className="flex gap-2">
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="input-field flex-1" data-testid="select-client">
-                              <SelectValue placeholder="Selecione um cliente" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="dropdown-content">
-                            {loadingClients ? (
-                              <SelectItem value="loading" disabled>Carregando clientes...</SelectItem>
-                            ) : !allClients || allClients.length === 0 ? (
-                              <SelectItem value="no-clients" disabled>Nenhum cliente cadastrado</SelectItem>
-                            ) : (
-                              allClients.map((client) => (
-                                <SelectItem key={client.id} value={client.id}>
-                                  {client.name} - {client.company}
-                                </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setShowClientSheet(true)}
-                          className="border-border-secondary hover:bg-bg-secondary"
-                          data-testid="button-view-clients"
-                        >
-                          <Users className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="billingDay"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-text-primary">Dia de Cobrança *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="1"
-                          max="31"
-                          placeholder="1-31"
-                          className="input-field"
-                          data-testid="input-billing-day"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-text-primary">Valor Mensal (R$) *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          placeholder="0,00"
-                          className="input-field"
-                          data-testid="input-amount"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-text-primary">Observações do Cliente</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Adicione observações sobre esta assinatura..."
-                        className="input-field min-h-[100px]"
-                        data-testid="textarea-notes"
-                        {...field}
-                        value={field.value || ""}
+            <form id="subscription-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              
+              {/* Section 1: Informações Básicas */}
+              <Collapsible
+                open={isBasicInfoOpen}
+                onOpenChange={setIsBasicInfoOpen}
+                className="border border-border-secondary rounded-lg"
+                data-testid="collapsible-basic-info"
+              >
+                <CollapsibleTrigger className="w-full" data-testid="trigger-basic-info">
+                  <div className="flex items-center justify-between p-4 hover:bg-bg-secondary transition-colors rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Info className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold text-text-primary">Informações Básicas</h3>
+                      <Badge variant="outline" className="text-xs">Obrigatório</Badge>
+                    </div>
+                    {isBasicInfoOpen ? (
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-text-secondary" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="clientId"
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel className="text-text-primary">Cliente *</FormLabel>
+                            <div className="flex gap-2">
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="input-field flex-1" data-testid="select-client">
+                                    <SelectValue placeholder="Selecione um cliente" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="dropdown-content">
+                                  {loadingClients ? (
+                                    <SelectItem value="loading" disabled>Carregando clientes...</SelectItem>
+                                  ) : !allClients || allClients.length === 0 ? (
+                                    <SelectItem value="no-clients" disabled>Nenhum cliente cadastrado</SelectItem>
+                                  ) : (
+                                    allClients.map((client) => (
+                                      <SelectItem key={client.id} value={client.id}>
+                                        {client.name} - {client.company}
+                                      </SelectItem>
+                                    ))
+                                  )}
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setShowClientSheet(true)}
+                                className="border-border-secondary hover:bg-bg-secondary"
+                                data-testid="button-view-clients"
+                              >
+                                <Users className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              {/* Credentials Section */}
-              <div className="space-y-4 border-t border-border-secondary pt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Key className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-text-primary">Credenciais de Acesso</h3>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleAddCredential}
-                    className="btn-secondary"
-                    data-testid="button-add-credential"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Credencial
-                  </Button>
-                </div>
+                      <FormField
+                        control={form.control}
+                        name="billingDay"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-text-primary">Dia de Cobrança *</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                min="1"
+                                max="31"
+                                placeholder="1-31"
+                                className="input-field"
+                                data-testid="input-billing-day"
+                                {...field}
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                {credentials.length === 0 ? (
-                  <div className="text-center py-8 text-text-secondary border border-dashed border-border-secondary rounded-lg">
-                    Nenhuma credencial adicionada. Clique em "Adicionar Credencial" para começar.
+                      <FormField
+                        control={form.control}
+                        name="amount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-text-primary">Valor Mensal (R$) *</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                placeholder="0,00"
+                                className="input-field"
+                                data-testid="input-amount"
+                                {...field}
+                                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {credentials.map((credential, index) => (
-                      <Card key={credential.id || index} className="bg-bg-secondary border-border-secondary" data-testid={`card-credential-${credential.id || index}`}>
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-sm flex items-center justify-between">
-                            <span className="text-primary">{credential.plataforma || "Sem plataforma"}</span>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Section 2: Observações */}
+              <Collapsible
+                open={isNotesOpen}
+                onOpenChange={setIsNotesOpen}
+                className="border border-border-secondary rounded-lg"
+                data-testid="collapsible-notes"
+              >
+                <CollapsibleTrigger className="w-full" data-testid="trigger-notes">
+                  <div className="flex items-center justify-between p-4 hover:bg-bg-secondary transition-colors rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <MessagesSquare className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold text-text-primary">Observações</h3>
+                      <Badge variant="outline" className="text-xs">Opcional</Badge>
+                    </div>
+                    {isNotesOpen ? (
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-text-secondary" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4">
+                    <FormField
+                      control={form.control}
+                      name="notes"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-text-primary">Observações do Cliente</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Adicione observações sobre esta assinatura..."
+                              className="input-field min-h-[100px]"
+                              data-testid="textarea-notes"
+                              {...field}
+                              value={field.value || ""}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Section 3: Credenciais de Acesso */}
+              <Collapsible
+                open={isCredentialsOpen}
+                onOpenChange={setIsCredentialsOpen}
+                className="border border-border-secondary rounded-lg"
+                data-testid="collapsible-credentials"
+              >
+                <CollapsibleTrigger className="w-full" data-testid="trigger-credentials">
+                  <div className="flex items-center justify-between p-4 hover:bg-bg-secondary transition-colors rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Key className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold text-text-primary">Credenciais de Acesso</h3>
+                      {credentials.length > 0 && (
+                        <Badge variant="secondary" className="text-xs">{credentials.length}</Badge>
+                      )}
+                    </div>
+                    {isCredentialsOpen ? (
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-text-secondary" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleAddCredential}
+                        className="btn-secondary w-full"
+                        data-testid="button-add-credential"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Adicionar Credencial
+                      </Button>
+                    </div>
+
+                    {credentials.length === 0 ? (
+                      <div className="text-center py-8 text-text-secondary border border-dashed border-border-secondary rounded-lg">
+                        Nenhuma credencial adicionada. Clique em "Adicionar Credencial" para começar.
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {credentials.map((credential, index) => (
+                          <Card key={credential.id || index} className="bg-bg-secondary border-border-secondary" data-testid={`card-credential-${credential.id || index}`}>
+                            <CardHeader className="pb-3">
+                              <CardTitle className="text-sm flex items-center justify-between">
+                                <span className="text-primary">{credential.plataforma || "Sem plataforma"}</span>
+                                <div className="flex gap-1">
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleEditCredential(credential)}
+                                    className="h-7 w-7 p-0"
+                                    data-testid={`button-edit-credential-${credential.id || index}`}
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteCredential(credential)}
+                                    className="h-7 w-7 p-0 text-red-500 hover:text-red-600"
+                                    data-testid={`button-delete-credential-${credential.id || index}`}
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-1 text-xs">
+                              <div>
+                                <span className="text-text-secondary">Login: </span>
+                                <span className="text-text-primary">{credential.login || "-"}</span>
+                              </div>
+                              <div>
+                                <span className="text-text-secondary">Senha: </span>
+                                <span className="text-text-primary">{credential.senha ? "•••••••" : "-"}</span>
+                              </div>
+                              {credential.secrets && (
+                                <div>
+                                  <span className="text-text-secondary">Secrets: </span>
+                                  <span className="text-text-primary">Definido</span>
+                                </div>
+                              )}
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Section 4: Arquivos */}
+              <Collapsible
+                open={isFilesOpen}
+                onOpenChange={setIsFilesOpen}
+                className="border border-border-secondary rounded-lg"
+                data-testid="collapsible-files"
+              >
+                <CollapsibleTrigger className="w-full" data-testid="trigger-files">
+                  <div className="flex items-center justify-between p-4 hover:bg-bg-secondary transition-colors rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold text-text-primary">Arquivos</h3>
+                      {(existingFiles.length + pendingFiles.length) > 0 && (
+                        <Badge variant="secondary" className="text-xs">{existingFiles.length + pendingFiles.length}</Badge>
+                      )}
+                    </div>
+                    {isFilesOpen ? (
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-text-secondary" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Input
+                        type="file"
+                        multiple
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="file-upload"
+                        data-testid="input-file-upload"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => document.getElementById('file-upload')?.click()}
+                        className="btn-secondary w-full"
+                        data-testid="button-upload-file"
+                      >
+                        <Upload className="w-4 h-4 mr-2" />
+                        Adicionar Arquivo
+                      </Button>
+                    </div>
+
+                    {existingFiles.length === 0 && pendingFiles.length === 0 ? (
+                      <div className="text-center py-8 text-text-secondary border border-dashed border-border-secondary rounded-lg">
+                        Nenhum arquivo anexado. Clique em "Adicionar Arquivo" para fazer upload.
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {/* Existing files */}
+                        {existingFiles.map((file) => (
+                          <div
+                            key={file.id}
+                            className="flex items-center justify-between p-3 bg-bg-secondary border border-border-secondary rounded-lg"
+                            data-testid={`file-existing-${file.id}`}
+                          >
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <FileText className="w-5 h-5 text-primary flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-text-primary truncate">{file.originalName}</p>
+                                <p className="text-xs text-text-secondary">{(file.size / 1024).toFixed(2)} KB</p>
+                              </div>
+                            </div>
                             <div className="flex gap-1">
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleEditCredential(credential)}
-                                className="h-7 w-7 p-0"
-                                data-testid={`button-edit-credential-${credential.id || index}`}
+                                onClick={() => handleDownloadFile(file.id)}
+                                className="h-8 px-2"
+                                data-testid={`button-download-file-${file.id}`}
                               >
-                                <Edit className="w-3 h-3" />
+                                <Download className="w-4 h-4" />
                               </Button>
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleDeleteCredential(credential)}
-                                className="h-7 w-7 p-0 text-red-500 hover:text-red-600"
-                                data-testid={`button-delete-credential-${credential.id || index}`}
+                                onClick={() => handleDeleteExistingFile(file)}
+                                className="h-8 px-2 text-red-500 hover:text-red-600"
+                                data-testid={`button-delete-file-${file.id}`}
                               >
-                                <Trash2 className="w-3 h-3" />
+                                <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-1 text-xs">
-                          <div>
-                            <span className="text-text-secondary">Login: </span>
-                            <span className="text-text-primary">{credential.login || "-"}</span>
                           </div>
-                          <div>
-                            <span className="text-text-secondary">Senha: </span>
-                            <span className="text-text-primary">{credential.senha ? "•••••••" : "-"}</span>
-                          </div>
-                          {credential.secrets && (
-                            <div>
-                              <span className="text-text-secondary">Secrets: </span>
-                              <span className="text-text-primary">Definido</span>
+                        ))}
+
+                        {/* Pending files */}
+                        {pendingFiles.map((file, index) => (
+                          <div
+                            key={`pending-${index}`}
+                            className="flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg"
+                            data-testid={`file-pending-${index}`}
+                          >
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <Upload className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-text-primary truncate">{file.name}</p>
+                                <p className="text-xs text-text-secondary">{(file.size / 1024).toFixed(2)} KB - Pendente upload</p>
+                              </div>
                             </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Files Section */}
-              <div className="space-y-4 border-t border-border-secondary pt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-text-primary">Arquivos</h3>
-                  </div>
-                  <div>
-                    <Input
-                      type="file"
-                      multiple
-                      onChange={handleFileSelect}
-                      className="hidden"
-                      id="file-upload"
-                      data-testid="input-file-upload"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('file-upload')?.click()}
-                      className="btn-secondary"
-                      data-testid="button-upload-file"
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Adicionar Arquivo
-                    </Button>
-                  </div>
-                </div>
-
-                {existingFiles.length === 0 && pendingFiles.length === 0 ? (
-                  <div className="text-center py-8 text-text-secondary border border-dashed border-border-secondary rounded-lg">
-                    Nenhum arquivo anexado. Clique em "Adicionar Arquivo" para fazer upload.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {/* Existing files */}
-                    {existingFiles.map((file) => (
-                      <div
-                        key={file.id}
-                        className="flex items-center justify-between p-3 bg-bg-secondary border border-border-secondary rounded-lg"
-                        data-testid={`file-existing-${file.id}`}
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <FileText className="w-5 h-5 text-primary flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-text-primary truncate">{file.originalName}</p>
-                            <p className="text-xs text-text-secondary">{(file.size / 1024).toFixed(2)} KB</p>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemovePendingFile(index)}
+                              className="h-8 px-2 text-red-500 hover:text-red-600"
+                              data-testid={`button-remove-pending-file-${index}`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
                           </div>
-                        </div>
-                        <div className="flex gap-1">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDownloadFile(file.id)}
-                            className="h-8 px-2"
-                            data-testid={`button-download-file-${file.id}`}
-                          >
-                            <Download className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteExistingFile(file)}
-                            className="h-8 px-2 text-red-500 hover:text-red-600"
-                            data-testid={`button-delete-file-${file.id}`}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-
-                    {/* Pending files */}
-                    {pendingFiles.map((file, index) => (
-                      <div
-                        key={`pending-${index}`}
-                        className="flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg"
-                        data-testid={`file-pending-${index}`}
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <Upload className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-text-primary truncate">{file.name}</p>
-                            <p className="text-xs text-text-secondary">{(file.size / 1024).toFixed(2)} KB - Pendente upload</p>
-                          </div>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleRemovePendingFile(index)}
-                          className="h-8 px-2 text-red-500 hover:text-red-600"
-                          data-testid={`button-remove-pending-file-${index}`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
+                    )}
                   </div>
-                )}
-              </div>
+                </CollapsibleContent>
+              </Collapsible>
+
             </form>
           </Form>
         </CustomDialogContent>

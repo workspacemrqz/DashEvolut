@@ -6,6 +6,19 @@ The application follows a modern full-stack architecture with a React frontend, 
 
 # Recent Changes
 
+## Oct 26, 2025 - Subscription Form UI Refactor with Collapsible Sections
+- **UX Improvement**: Refactored "Nova Assinatura" (New Subscription) popup to use collapsible sections for better organization
+  - **Four organized sections**:
+    1. **Informações Básicas** (Basic Information) - Client selection, billing day, monthly amount - marked as "Obrigatório" (Required)
+    2. **Observações** (Notes) - Client notes textarea - marked as "Opcional" (Optional)
+    3. **Credenciais de Acesso** (Access Credentials) - Multiple credentials management - shows count badge when credentials exist
+    4. **Arquivos** (Files) - File upload and management - shows count badge with total files (existing + pending)
+  - **Improved UX**: All sections start collapsed by default, allowing users to focus on one section at a time
+  - **Visual indicators**: Each section has icons (Info, MessagesSquare, Key, FileText) and chevron arrows (down/right) to indicate open/closed state
+  - **Interactive triggers**: Click section headers to expand/collapse, with smooth transitions and hover effects
+  - **Maintained functionality**: All existing features (credentials CRUD, file upload, validation) preserved without changes
+  - **Better navigation**: Cleaner visual hierarchy makes it easier to navigate long forms
+
 ## Oct 8, 2025 - Complete URL Translation to Portuguese Brazilian
 - **URL Translation**: All website routes and API endpoints translated from English to Portuguese Brazilian
   - Frontend routes: /clients → /clientes, /projects → /projetos, /subscriptions → /assinaturas, /proposals → /propostas, /replit → /servidores
