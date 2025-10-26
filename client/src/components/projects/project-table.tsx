@@ -161,56 +161,17 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
                 className={`border border-border-secondary rounded-lg p-4 ${projectOverdue ? 'bg-red-50 dark:bg-red-950' : 'bg-bg-primary'}`}
               >
                 {/* Header com Nome do Projeto */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-text-primary text-sm truncate" data-testid={`project-name-${project.id}`}>
-                      {project.name}
-                    </p>
-                    <p className="text-xs text-text-secondary line-clamp-2 mt-1" data-testid={`project-description-${project.id}`}>
-                      {project.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 ml-2">
-                    <button 
-                      onClick={() => handleViewProject(project)}
-                      className="text-blue-500 p-2"
-                      data-testid={`action-view-${project.id}`}
-                    >
-                      <Eye className="w-5 h-5" />
-                    </button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button 
-                          className="text-text-secondary p-2"
-                          data-testid={`action-more-${project.id}`}
-                        >
-                          <MoreHorizontal className="w-5 h-5" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
-                        <DropdownMenuItem onClick={() => handleCostsProject(project)}>
-                          <DollarSign className="h-4 w-4 mr-2" />
-                          Custos
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEditProject(project)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={() => handleDeleteProject(project)}
-                          className="text-red-600 dark:text-red-400"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Remover
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                <div className="mb-3">
+                  <p className="font-medium text-text-primary text-sm" data-testid={`project-name-${project.id}`}>
+                    {project.name}
+                  </p>
+                  <p className="text-xs text-text-secondary line-clamp-2 mt-1" data-testid={`project-description-${project.id}`}>
+                    {project.description}
+                  </p>
                 </div>
 
                 {/* Informações em Grid */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 mb-4">
                   <div>
                     <p className="text-xs text-text-secondary mb-1">Status</p>
                     <Badge 
@@ -241,6 +202,45 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
                       {new Date(project.dueDate).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
+                </div>
+
+                {/* Botões de Ação - Agora embaixo */}
+                <div className="flex items-center gap-2 pt-3 border-t border-border-secondary">
+                  <button 
+                    onClick={() => handleViewProject(project)}
+                    className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition-colors"
+                    data-testid={`action-view-${project.id}`}
+                  >
+                    <Eye className="w-5 h-5" />
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button 
+                        className="text-text-secondary p-2 hover:bg-bg-secondary rounded-lg transition-colors"
+                        data-testid={`action-more-${project.id}`}
+                      >
+                        <MoreHorizontal className="w-5 h-5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
+                      <DropdownMenuItem onClick={() => handleCostsProject(project)}>
+                        <DollarSign className="h-4 w-4 mr-2" />
+                        Custos
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditProject(project)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={() => handleDeleteProject(project)}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Remover
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             );
