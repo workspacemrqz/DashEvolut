@@ -516,70 +516,155 @@ export default function ReplitPage() {
               {expenses.length === 0 ? "Nenhuma despesa cadastrada" : "Nenhuma despesa encontrada com este filtro"}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[800px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead>Valor</TableHead>
-                    <TableHead>Periodicidade</TableHead>
-                    <TableHead className="hidden md:table-cell">Categoria</TableHead>
-                    <TableHead className="hidden md:table-cell">Data de Início</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredExpenses.map((expense) => (
-                    <TableRow key={expense.id} data-testid={`row-expense-${expense.id}`}>
-                      <TableCell data-testid={`text-description-${expense.id}`}>
-                        {expense.description}
-                      </TableCell>
-                      <TableCell data-testid={`text-amount-${expense.id}`}>
-                        {formatCurrency(expense.amount)}
-                      </TableCell>
-                      <TableCell data-testid={`text-frequency-${expense.id}`}>
-                        {FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell" data-testid={`text-category-${expense.id}`}>
-                        {expense.category || "-"}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell" data-testid={`text-start-date-${expense.id}`}>
-                        {formatDate(expense.startDate)}
-                      </TableCell>
-                      <TableCell data-testid={`text-status-${expense.id}`}>
+            <>
+              {/* Mobile Card Layout */}
+              <div className="block md:hidden space-y-4">
+                {filteredExpenses.map((expense) => (
+                  <div 
+                    key={expense.id}
+                    className="border border-border-secondary rounded-lg p-4 bg-bg-primary"
+                    data-testid={`card-expense-${expense.id}`}
+                  >
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-text-primary text-sm truncate" data-testid={`text-description-${expense.id}`}>
+                          {expense.description}
+                        </p>
+                        <p className="font-semibold text-accent-primary text-lg mt-1" data-testid={`text-amount-${expense.id}`}>
+                          {formatCurrency(expense.amount)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 ml-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(expense)}
+                          data-testid={`button-edit-${expense.id}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(expense.id)}
+                          data-testid={`button-delete-${expense.id}`}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Information Grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-xs text-text-secondary mb-1">Periodicidade</p>
+                        <p className="text-sm font-medium text-text-primary" data-testid={`text-frequency-${expense.id}`}>
+                          {FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-text-secondary mb-1">Status</p>
                         <Badge 
                           variant={expense.status === "ativo" ? "default" : "secondary"}
                           className={expense.status === "ativo" ? "bg-green-500 hover:bg-green-600" : "bg-gray-500 hover:bg-gray-600"}
+                          data-testid={`text-status-${expense.id}`}
                         >
                           {expense.status === "ativo" ? "Ativo" : "Inativo"}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(expense)}
-                            data-testid={`button-edit-${expense.id}`}
+                      </div>
+                      <div>
+                        <p className="text-xs text-text-secondary mb-1">Categoria</p>
+                        <p className="text-sm font-medium text-text-primary truncate" data-testid={`text-category-${expense.id}`}>
+                          {expense.category || "-"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-text-secondary mb-1">Data de Início</p>
+                        <p className="text-sm font-medium text-text-primary" data-testid={`text-start-date-${expense.id}`}>
+                          {formatDate(expense.startDate)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {expense.notes && (
+                      <div className="mt-3 pt-3 border-t border-border-secondary">
+                        <p className="text-xs text-text-secondary mb-1">Observações</p>
+                        <p className="text-sm text-text-primary line-clamp-2">
+                          {expense.notes}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table Layout */}
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Descrição</TableHead>
+                      <TableHead>Valor</TableHead>
+                      <TableHead>Periodicidade</TableHead>
+                      <TableHead>Categoria</TableHead>
+                      <TableHead>Data de Início</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredExpenses.map((expense) => (
+                      <TableRow key={expense.id} data-testid={`row-expense-${expense.id}`}>
+                        <TableCell data-testid={`text-description-${expense.id}`}>
+                          {expense.description}
+                        </TableCell>
+                        <TableCell data-testid={`text-amount-${expense.id}`}>
+                          {formatCurrency(expense.amount)}
+                        </TableCell>
+                        <TableCell data-testid={`text-frequency-${expense.id}`}>
+                          {FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency}
+                        </TableCell>
+                        <TableCell data-testid={`text-category-${expense.id}`}>
+                          {expense.category || "-"}
+                        </TableCell>
+                        <TableCell data-testid={`text-start-date-${expense.id}`}>
+                          {formatDate(expense.startDate)}
+                        </TableCell>
+                        <TableCell data-testid={`text-status-${expense.id}`}>
+                          <Badge 
+                            variant={expense.status === "ativo" ? "default" : "secondary"}
+                            className={expense.status === "ativo" ? "bg-green-500 hover:bg-green-600" : "bg-gray-500 hover:bg-gray-600"}
                           >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(expense.id)}
-                            data-testid={`button-delete-${expense.id}`}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                            {expense.status === "ativo" ? "Ativo" : "Inativo"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(expense)}
+                              data-testid={`button-edit-${expense.id}`}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(expense.id)}
+                              data-testid={`button-delete-${expense.id}`}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
+            </>
           )}
         </CardContent>
       </Card>

@@ -192,16 +192,173 @@ export default function SubscriptionTable({
 
   return (
     <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px]">
+      {/* Mobile Card Layout */}
+      <div className="block md:hidden">
+        <div className="p-4 space-y-4">
+          {subscriptions.map((subscription) => {
+            const nextBillingDate = new Date(subscription.nextBillingDate);
+            const isOverdue = !isNaN(nextBillingDate.getTime()) && isPast(nextBillingDate);
+            const completedServices = subscription.services?.filter(s => s.isCompleted).length || 0;
+            
+            return (
+              <div 
+                key={subscription.id} 
+                className={`border border-border-secondary rounded-lg p-4 ${isOverdue ? 'bg-red-50 dark:bg-red-950' : 'bg-bg-primary'}`}
+              >
+                {/* Header com Cliente */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center flex-1 min-w-0">
+                    <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <span className="text-sm font-semibold">
+                        {subscription.client?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '??'}
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-text-primary text-sm truncate" data-testid={`subscription-client-name-${subscription.id}`}>
+                        {subscription.client?.name || 'Cliente não encontrado'}
+                      </p>
+                      <p className="text-xs text-text-secondary truncate" data-testid={`subscription-client-company-${subscription.id}`}>
+                        {subscription.client?.company || 'Empresa não informada'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
+                    <button 
+                      onClick={() => handleViewSubscription(subscription)}
+                      className="text-blue-500 p-2"
+                      data-testid={`action-view-subscription-${subscription.id}`}
+                    >
+                      <Eye className="w-5 h-5" />
+                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button 
+                          className="text-text-secondary p-2"
+                          data-testid={`action-more-subscription-${subscription.id}`}
+                        >
+                          <MoreHorizontal className="w-5 h-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
+                        <DropdownMenuItem onClick={() => onPaymentClick(subscription.id)}>
+                          <CreditCard className="h-4 w-4 mr-2" />
+                          Registrar Pagamento
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleManageServices(subscription)}>
+                          <CheckSquare className="h-4 w-4 mr-2" />
+                          Gerenciar Serviços
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEditSubscription(subscription)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar Assinatura
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {subscription.status === "active" && (
+                          <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "paused")}>
+                            <Pause className="h-4 w-4 mr-2" />
+                            Pausar
+                          </DropdownMenuItem>
+                        )}
+                        {subscription.status === "paused" && (
+                          <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")}>
+                            <Play className="h-4 w-4 mr-2" />
+                            Reativar
+                          </DropdownMenuItem>
+                        )}
+                        {subscription.status === "cancelled" && (
+                          <DropdownMenuItem onClick={() => handleStatusChange(subscription.id, "active")}>
+                            <Play className="h-4 w-4 mr-2" />
+                            Reativar
+                          </DropdownMenuItem>
+                        )}
+                        {subscription.status !== "cancelled" && (
+                          <DropdownMenuItem 
+                            onClick={() => handleStatusChange(subscription.id, "cancelled")}
+                          >
+                            <X className="h-4 w-4 mr-2" />
+                            Cancelar
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => handleDeleteSubscription(subscription)}
+                          className="text-red-600 dark:text-red-400"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Remover
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                {/* Informações em Grid */}
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Status</p>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge 
+                        className={`status-badge ${statusMap[subscription.status].className} text-xs`}
+                        data-testid={`subscription-status-${subscription.id}`}
+                      >
+                        {statusMap[subscription.status].label}
+                      </Badge>
+                      {isOverdue && (
+                        <Badge className="status-badge status-subscription-cancelled text-xs">
+                          Vencida
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Valor Mensal</p>
+                    <p className="font-semibold text-accent-primary text-sm" data-testid={`subscription-amount-${subscription.id}`}>
+                      R$ {subscription.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </p>
+                    <p className="text-xs text-text-secondary">
+                      Dia {subscription.billingDay}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Próximo Venc.</p>
+                    <p 
+                      className={`text-sm font-medium ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
+                      data-testid={`subscription-next-billing-${subscription.id}`}
+                    >
+                      {!isNaN(nextBillingDate.getTime()) ? format(nextBillingDate, "dd/MM/yy", { locale: ptBR }) : 'Inválida'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Serviços</p>
+                    <p className="text-sm font-medium text-text-primary" data-testid={`subscription-services-${subscription.id}`}>
+                      {subscription.services && subscription.services.length > 0 ? (
+                        <span>{completedServices} concluídos</span>
+                      ) : (
+                        <span className="text-text-secondary">Nenhum</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-border-secondary">
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Cliente</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Valor Mensal</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">Próximo Vencimento</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Serviços</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
+              <th className="text-left p-4 font-semibold text-text-primary">Cliente</th>
+              <th className="text-left p-4 font-semibold text-text-primary">Status</th>
+              <th className="text-left p-4 font-semibold text-text-primary">Valor Mensal</th>
+              <th className="text-left p-4 font-semibold text-text-primary hidden lg:table-cell">Próximo Vencimento</th>
+              <th className="text-left p-4 font-semibold text-text-primary">Serviços</th>
+              <th className="text-left p-4 font-semibold text-text-primary">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -215,24 +372,24 @@ export default function SubscriptionTable({
                   key={subscription.id} 
                   className={`border-b border-border-secondary ${isOverdue ? 'bg-red-50 dark:bg-red-950' : ''}`}
                 >
-                  <td className="p-2 lg:p-4">
+                  <td className="p-4">
                     <div className="flex items-center">
-                      <div className="w-8 lg:w-10 h-8 lg:h-10 gradient-bg rounded-full flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
-                        <span className="text-xs lg:text-sm font-semibold">
+                      <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                        <span className="text-sm font-semibold">
                           {subscription.client?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '??'}
                         </span>
                       </div>
                       <div className="min-w-0">
-                        <p className="font-medium text-text-primary text-sm lg:text-base truncate" data-testid={`subscription-client-name-${subscription.id}`}>
+                        <p className="font-medium text-text-primary truncate" data-testid={`subscription-client-name-${subscription.id}`}>
                           {subscription.client?.name || 'Cliente não encontrado'}
                         </p>
-                        <p className="text-xs lg:text-sm text-text-secondary truncate" data-testid={`subscription-client-company-${subscription.id}`}>
+                        <p className="text-sm text-text-secondary truncate" data-testid={`subscription-client-company-${subscription.id}`}>
                           {subscription.client?.company || 'Empresa não informada'}
                         </p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-2 lg:p-4">
+                  <td className="p-4">
                     <Badge 
                       className={`status-badge ${statusMap[subscription.status].className} text-xs`}
                       data-testid={`subscription-status-${subscription.id}`}
@@ -245,7 +402,7 @@ export default function SubscriptionTable({
                       </Badge>
                     )}
                   </td>
-                  <td className="p-2 lg:p-4 text-text-primary text-sm lg:text-base hidden md:table-cell" data-testid={`subscription-amount-${subscription.id}`}>
+                  <td className="p-4 text-text-primary" data-testid={`subscription-amount-${subscription.id}`}>
                     <span className="font-semibold text-accent-primary">
                       R$ {subscription.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
@@ -253,7 +410,7 @@ export default function SubscriptionTable({
                       Todo dia {subscription.billingDay}
                     </p>
                   </td>
-                  <td className="p-2 lg:p-4 hidden lg:table-cell">
+                  <td className="p-4 hidden lg:table-cell">
                     <span 
                       className={`text-sm font-medium ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
                       data-testid={`subscription-next-billing-${subscription.id}`}
@@ -261,7 +418,7 @@ export default function SubscriptionTable({
                       {!isNaN(nextBillingDate.getTime()) ? format(nextBillingDate, "dd/MM/yyyy", { locale: ptBR }) : 'Data inválida'}
                     </span>
                   </td>
-                  <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base" data-testid={`subscription-services-${subscription.id}`}>
+                  <td className="p-4 text-text-secondary" data-testid={`subscription-services-${subscription.id}`}>
                     {subscription.services && subscription.services.length > 0 ? (
                       <span className="text-text-primary">
                         {completedServices}
@@ -270,8 +427,8 @@ export default function SubscriptionTable({
                       <span>Nenhum serviço</span>
                     )}
                   </td>
-                  <td className="p-2 lg:p-4">
-                    <div className="flex space-x-1 lg:space-x-2">
+                  <td className="p-4">
+                    <div className="flex space-x-2">
                       <button 
                         onClick={() => handleViewSubscription(subscription)}
                         className="text-blue-500 p-1"

@@ -14,6 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import DeleteConfirmationDialog from "@/components/ui/delete-confirmation-dialog";
 import { apiRequest } from "@/lib/queryClient";
@@ -157,14 +163,114 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
 
   return (
     <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px]">
+      {/* Mobile Card Layout */}
+      <div className="block md:hidden">
+        <div className="p-4 space-y-4">
+          {clients.map((client) => (
+            <div 
+              key={client.id} 
+              className="border border-border-secondary rounded-lg p-4 bg-bg-primary"
+            >
+              {/* Header com Cliente */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center flex-1 min-w-0">
+                  <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <span className="text-sm font-semibold">
+                      {client.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-text-primary text-sm truncate" data-testid={`client-name-${client.id}`}>
+                      {client.name}
+                    </p>
+                    <p className="text-xs text-text-secondary truncate" data-testid={`client-sector-${client.id}`}>
+                      {client.sector}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 ml-2">
+                  <button 
+                    onClick={() => handleViewClient(client)}
+                    className="text-blue-500 p-2"
+                    data-testid={`action-view-${client.id}`}
+                  >
+                    <Eye className="w-5 h-5" />
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button 
+                        className="text-text-secondary p-2"
+                        data-testid={`action-more-${client.id}`}
+                      >
+                        <MoreHorizontal className="w-5 h-5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
+                      <DropdownMenuItem onClick={() => handleWhatsAppContact(client)}>
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        WhatsApp
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEmailContact(client)}>
+                        <Mail className="h-4 w-4 mr-2" />
+                        Email
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditClient(client)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleDeleteClient(client)}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Remover
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {/* Informações em Grid */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs text-text-secondary mb-1">Status</p>
+                  <Badge 
+                    className={`status-badge ${getClientStatus(client).className} text-xs`}
+                    data-testid={`client-status-${client.id}`}
+                  >
+                    {getClientStatus(client).label}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-xs text-text-secondary mb-1">Fonte</p>
+                  <p className="text-sm font-medium text-text-primary" data-testid={`client-source-${client.id}`}>
+                    {client.source}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-text-secondary mb-1">Potencial Upsell</p>
+                  <span 
+                    className={`font-semibold text-sm ${upsellMap[client.upsellPotential || 'medium'].color}`}
+                    data-testid={`client-upsell-${client.id}`}
+                  >
+                    {upsellMap[client.upsellPotential || 'medium'].label}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-border-secondary">
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Cliente</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Fonte</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden lg:table-cell">Upsell</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Fonte</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Upsell</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
             </tr>
           </thead>
@@ -196,10 +302,10 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                     {getClientStatus(client).label}
                   </Badge>
                 </td>
-                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base hidden md:table-cell" data-testid={`client-source-${client.id}`}>
+                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base" data-testid={`client-source-${client.id}`}>
                   {client.source}
                 </td>
-                <td className="p-2 lg:p-4 hidden lg:table-cell">
+                <td className="p-2 lg:p-4">
                   <span 
                     className={`font-semibold text-sm ${upsellMap[client.upsellPotential || 'medium'].color}`}
                     data-testid={`client-upsell-${client.id}`}
@@ -218,21 +324,28 @@ export default function ClientTable({ clients, isLoading, "data-testid": testId 
                     </button>
                     <button 
                       onClick={() => handleWhatsAppContact(client)}
-                      className="text-green-500 p-1 hidden sm:block"
+                      className="text-green-500 p-1"
                       data-testid={`action-whatsapp-${client.id}`}
                     >
                       <MessageCircle className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleEmailContact(client)}
-                      className="text-blue-500 p-1 hidden sm:block"
+                      className="text-blue-500 p-1"
                       data-testid={`action-email-${client.id}`}
                     >
                       <Mail className="w-4 h-4" />
                     </button>
                     <button 
+                      onClick={() => handleEditClient(client)}
+                      className="text-green-500 p-1"
+                      data-testid={`action-edit-${client.id}`}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button 
                       onClick={() => handleDeleteClient(client)}
-                      className="text-red-500 p-1 hidden sm:block"
+                      className="text-red-500 p-1"
                       data-testid={`action-delete-${client.id}`}
                     >
                       <Trash2 className="w-4 h-4" />

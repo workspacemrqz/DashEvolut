@@ -1,5 +1,5 @@
 import { ProjectWithClient } from "@shared/schema";
-import { Eye, Edit, Trash2, DollarSign } from "lucide-react";
+import { Eye, Edit, Trash2, DollarSign, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -9,6 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import ProjectDetails from "@/components/projects/project-details";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -142,15 +149,115 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
 
   return (
     <div className="container-bg rounded-xl border border-border-secondary overflow-hidden" data-testid={testId}>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px]">
+      {/* Mobile Card Layout */}
+      <div className="block md:hidden">
+        <div className="p-4 space-y-4">
+          {projects.map((project) => {
+            const projectOverdue = isOverdue(project.dueDate);
+            
+            return (
+              <div 
+                key={project.id} 
+                className={`border border-border-secondary rounded-lg p-4 ${projectOverdue ? 'bg-red-50 dark:bg-red-950' : 'bg-bg-primary'}`}
+              >
+                {/* Header com Nome do Projeto */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-text-primary text-sm truncate" data-testid={`project-name-${project.id}`}>
+                      {project.name}
+                    </p>
+                    <p className="text-xs text-text-secondary line-clamp-2 mt-1" data-testid={`project-description-${project.id}`}>
+                      {project.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
+                    <button 
+                      onClick={() => handleViewProject(project)}
+                      className="text-blue-500 p-2"
+                      data-testid={`action-view-${project.id}`}
+                    >
+                      <Eye className="w-5 h-5" />
+                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button 
+                          className="text-text-secondary p-2"
+                          data-testid={`action-more-${project.id}`}
+                        >
+                          <MoreHorizontal className="w-5 h-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-[#1a1a1a] border border-[#333] text-white">
+                        <DropdownMenuItem onClick={() => handleCostsProject(project)}>
+                          <DollarSign className="h-4 w-4 mr-2" />
+                          Custos
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEditProject(project)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => handleDeleteProject(project)}
+                          className="text-red-600 dark:text-red-400"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Remover
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                {/* Informações em Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Status</p>
+                    <Badge 
+                      className={`status-badge ${statusMap[project.status].className} text-xs`}
+                      data-testid={`project-status-${project.id}`}
+                    >
+                      {statusMap[project.status].label}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Cliente</p>
+                    <p className="text-sm font-medium text-text-primary truncate" data-testid={`project-client-${project.id}`}>
+                      {project.client.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Valor</p>
+                    <p className="font-semibold text-accent-primary text-sm" data-testid={`project-value-${project.id}`}>
+                      R$ {project.value.toLocaleString('pt-BR')}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary mb-1">Prazo</p>
+                    <p 
+                      className={`text-sm font-medium ${projectOverdue ? 'text-red-600 dark:text-red-400' : 'text-text-primary'}`}
+                      data-testid={`project-due-date-${project.id}`}
+                    >
+                      {new Date(project.dueDate).toLocaleDateString('pt-BR')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-border-secondary">
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Projeto</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Status</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Cliente</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Cliente</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Valor</th>
-              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base hidden md:table-cell">Prazo</th>
+              <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Prazo</th>
               <th className="text-left p-2 lg:p-4 font-semibold text-text-primary text-sm lg:text-base">Ações</th>
             </tr>
           </thead>
@@ -169,21 +276,19 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
                 </td>
                 <td className="p-2 lg:p-4">
                   <Badge 
-                    className="inline-flex items-center rounded-full border px-2 lg:px-2.5 py-0.5 text-xs font-semibold border-transparent bg-primary status-badge status-development text-[#060606]"
+                    className={`status-badge ${statusMap[project.status].className} text-xs`}
                     data-testid={`project-status-${project.id}`}
                   >
-                    <span className="lg:hidden">{statusMap[project.status].label.slice(0, 4)}</span>
-                    <span className="hidden lg:inline">{statusMap[project.status].label}</span>
+                    {statusMap[project.status].label}
                   </Badge>
                 </td>
-                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base hidden md:table-cell truncate" data-testid={`project-client-${project.id}`}>
+                <td className="p-2 lg:p-4 text-text-secondary text-sm lg:text-base truncate" data-testid={`project-client-${project.id}`}>
                   {project.client.name}
                 </td>
                 <td className="p-2 lg:p-4 text-text-primary text-sm lg:text-base" data-testid={`project-value-${project.id}`}>
-                  <span className="lg:hidden">R$ {Math.round(project.value / 1000)}k</span>
-                  <span className="hidden lg:inline">R$ {project.value.toLocaleString('pt-BR')}</span>
+                  R$ {project.value.toLocaleString('pt-BR')}
                 </td>
-                <td className="p-2 lg:p-4 hidden md:table-cell">
+                <td className="p-2 lg:p-4">
                   <span 
                     className={`text-xs lg:text-sm ${isOverdue(project.dueDate) ? 'text-red-500' : 'text-text-secondary'}`}
                     data-testid={`project-due-date-${project.id}`}
@@ -209,14 +314,14 @@ export default function ProjectTable({ projects, isLoading, onEditProject, onCos
                     </button>
                     <button 
                       onClick={() => handleEditProject(project)}
-                      className="text-green-500 p-1 hidden sm:block"
+                      className="text-green-500 p-1"
                       data-testid={`action-edit-${project.id}`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleDeleteProject(project)}
-                      className="text-red-500 p-1 hidden sm:block"
+                      className="text-red-500 p-1"
                       data-testid={`action-delete-${project.id}`}
                     >
                       <Trash2 className="w-4 h-4" />
