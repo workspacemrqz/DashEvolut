@@ -436,12 +436,12 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                                 </FormControl>
                                 <SelectContent className="dropdown-content">
                                   {loadingClients ? (
-                                    <SelectItem value="loading" disabled>Carregando clientes...</SelectItem>
+                                    <SelectItem value="loading" disabled className="focus:outline-none focus:ring-0">Carregando clientes...</SelectItem>
                                   ) : !allClients || allClients.length === 0 ? (
-                                    <SelectItem value="no-clients" disabled>Nenhum cliente cadastrado</SelectItem>
+                                    <SelectItem value="no-clients" disabled className="focus:outline-none focus:ring-0">Nenhum cliente cadastrado</SelectItem>
                                   ) : (
                                     allClients.map((client) => (
-                                      <SelectItem key={client.id} value={client.id}>
+                                      <SelectItem key={client.id} value={client.id} className="focus:outline-none focus:ring-0">
                                         {client.name} - {client.company}
                                       </SelectItem>
                                     ))

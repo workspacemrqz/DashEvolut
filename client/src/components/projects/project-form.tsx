@@ -270,12 +270,12 @@ export default function ProjectForm({ open, onOpenChange, project }: ProjectForm
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-bg-container border-border-secondary">
-                        <SelectItem value="discovery">Discovery</SelectItem>
-                        <SelectItem value="development">Desenvolvimento</SelectItem>
-                        <SelectItem value="delivery">Entrega</SelectItem>
-                        <SelectItem value="post_sale">Pós-venda</SelectItem>
-                        <SelectItem value="completed">Concluído</SelectItem>
-                        <SelectItem value="cancelled">Cancelado</SelectItem>
+                        <SelectItem value="discovery" className="focus:outline-none focus:ring-0">Discovery</SelectItem>
+                        <SelectItem value="development" className="focus:outline-none focus:ring-0">Desenvolvimento</SelectItem>
+                        <SelectItem value="delivery" className="focus:outline-none focus:ring-0">Entrega</SelectItem>
+                        <SelectItem value="post_sale" className="focus:outline-none focus:ring-0">Pós-venda</SelectItem>
+                        <SelectItem value="completed" className="focus:outline-none focus:ring-0">Concluído</SelectItem>
+                        <SelectItem value="cancelled" className="focus:outline-none focus:ring-0">Cancelado</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

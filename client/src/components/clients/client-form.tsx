@@ -326,13 +326,13 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-bg-container border-border-secondary">
-                        <SelectItem value="Indicação">Indicação</SelectItem>
-                        <SelectItem value="Google Ads">Google Ads</SelectItem>
-                        <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                        <SelectItem value="Site">Site</SelectItem>
-                        <SelectItem value="Evento">Evento</SelectItem>
-                        <SelectItem value="Cold Call">Cold Call</SelectItem>
-                        <SelectItem value="Outros">Outros</SelectItem>
+                        <SelectItem value="Indicação" className="focus:outline-none focus:ring-0">Indicação</SelectItem>
+                        <SelectItem value="Google Ads" className="focus:outline-none focus:ring-0">Google Ads</SelectItem>
+                        <SelectItem value="LinkedIn" className="focus:outline-none focus:ring-0">LinkedIn</SelectItem>
+                        <SelectItem value="Site" className="focus:outline-none focus:ring-0">Site</SelectItem>
+                        <SelectItem value="Evento" className="focus:outline-none focus:ring-0">Evento</SelectItem>
+                        <SelectItem value="Cold Call" className="focus:outline-none focus:ring-0">Cold Call</SelectItem>
+                        <SelectItem value="Outros" className="focus:outline-none focus:ring-0">Outros</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -359,9 +359,9 @@ export default function ClientForm({ open, onOpenChange, clientToEdit }: ClientF
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-bg-container border-border-secondary">
-                        <SelectItem value="low">Baixo</SelectItem>
-                        <SelectItem value="medium">Médio</SelectItem>
-                        <SelectItem value="high">Alto</SelectItem>
+                        <SelectItem value="low" className="focus:outline-none focus:ring-0">Baixo</SelectItem>
+                        <SelectItem value="medium" className="focus:outline-none focus:ring-0">Médio</SelectItem>
+                        <SelectItem value="high" className="focus:outline-none focus:ring-0">Alto</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
