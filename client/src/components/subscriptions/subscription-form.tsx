@@ -85,15 +85,19 @@ const CustomDialogContent = React.forwardRef<
 ));
 CustomDialogContent.displayName = "CustomDialogContent";
 
-const formSchema = insertSubscriptionSchema.extend({
-  billingDay: insertSubscriptionSchema.shape.billingDay.refine(
+const formSchema = z.object({
+  clientId: z.string().min(1, "Cliente é obrigatório"),
+  billingDay: z.number().min(1).max(31).refine(
     (day) => day >= 1 && day <= 31,
     { message: "O dia de cobrança deve estar entre 1 e 31" }
   ),
-  amount: insertSubscriptionSchema.shape.amount.refine(
+  amount: z.number().refine(
     (amount) => amount > 0,
     { message: "O valor deve ser maior que zero" }
   ),
+  notes: z.string().optional().default(""),
+  secrets: z.string().optional().default(""),
+  status: z.enum(["active", "paused", "cancelled"]).default("active"),
 });
 
 export default function SubscriptionForm({ open, onOpenChange, subscription }: SubscriptionFormProps) {
@@ -122,7 +126,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
     queryKey: ["/api/clientes"],
   });
 
-  const form = useForm<InsertSubscription>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       clientId: subscription?.clientId || "",
@@ -160,12 +164,10 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
       const method = subscription ? "PATCH" : "POST";
       
       // Submit core subscription data
-      const response = await apiRequest<SubscriptionWithClient>(url, {
-        method,
-        body: JSON.stringify(data),
-      });
+      const response = await apiRequest(method, url, data);
+      const savedSubscription = await response.json();
       
-      return response;
+      return savedSubscription as SubscriptionWithClient;
     },
     onSuccess: async (savedSubscription) => {
       try {
@@ -174,34 +176,26 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         // Handle credentials
         // Delete removed credentials
         for (const credId of credentialsToDelete) {
-          await apiRequest(`/api/credenciais-assinatura/${credId}`, {
-            method: "DELETE",
-          });
+          await apiRequest("DELETE", `/api/credenciais-assinatura/${credId}`);
         }
         
         // Create or update credentials
         for (const cred of credentials) {
           if (cred.id && !cred.id.startsWith('temp-')) {
             // Update existing
-            await apiRequest(`/api/credenciais-assinatura/${cred.id}`, {
-              method: "PATCH",
-              body: JSON.stringify({
-                plataforma: cred.plataforma,
-                login: cred.login,
-                senha: cred.senha,
-                secrets: cred.secrets,
-              }),
+            await apiRequest("PATCH", `/api/credenciais-assinatura/${cred.id}`, {
+              plataforma: cred.plataforma,
+              login: cred.login,
+              senha: cred.senha,
+              secrets: cred.secrets,
             });
           } else {
             // Create new
-            await apiRequest(`/api/assinaturas/${subscriptionId}/credenciais`, {
-              method: "POST",
-              body: JSON.stringify({
-                plataforma: cred.plataforma,
-                login: cred.login,
-                senha: cred.senha,
-                secrets: cred.secrets,
-              }),
+            await apiRequest("POST", `/api/assinaturas/${subscriptionId}/credenciais`, {
+              plataforma: cred.plataforma,
+              login: cred.login,
+              senha: cred.senha,
+              secrets: cred.secrets,
             });
           }
         }
@@ -209,9 +203,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         // Handle files
         // Delete removed files
         for (const fileId of filesToDelete) {
-          await apiRequest(`/api/arquivos-assinatura/${fileId}`, {
-            method: "DELETE",
-          });
+          await apiRequest("DELETE", `/api/arquivos-assinatura/${fileId}`);
         }
         
         // Upload new files
