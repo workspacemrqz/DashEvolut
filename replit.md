@@ -19,7 +19,7 @@ The application follows a modern full-stack architecture with a React frontend, 
     - Form fields completely redesigned: Descrição, Valor (R$), Periodicidade, Categoria, Data de Início, Status, Observações
     - Statistics cards: Show expense totals grouped by frequency (Mensal, Anual, Semanal, Único)
     - Chart visualization: Expense breakdown by frequency with total amounts and quantities
-    - Filters: Replaced name filters with frequency (Mensal/Anual/Semanal/Único) and status (Ativo/Inativo) filters
+    - Filters: Replaced button-based filters with dropdown selects for Periodicidade (Todos/Mensal/Anual/Semanal/Único) and Status (Todos/Ativo/Inativo) with soft, rounded styling
     - Table columns: Descrição | Valor | Periodicidade | Categoria | Data de Início | Status | Ações
     - Excel export removed: Export functionality has been completely removed from the page
   - **Navigation**: Sidebar updated from "Servidores" to "Gestão Financeira" with DollarSign icon

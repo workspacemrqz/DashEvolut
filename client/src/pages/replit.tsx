@@ -471,36 +471,36 @@ export default function ReplitPage() {
           </div>
           <div className="flex gap-4 flex-wrap mt-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Periodicidade:</span>
+              <span className="text-sm text-muted-foreground font-medium">Periodicidade:</span>
               <Select
                 value={frequencyFilter}
                 onValueChange={setFrequencyFilter}
               >
-                <SelectTrigger className="w-[150px]" data-testid="select-frequency-filter">
+                <SelectTrigger className="w-[150px] h-10 rounded-lg border-border/50 bg-background/50 hover:bg-background/80 transition-colors" data-testid="select-frequency-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Todos">Todos</SelectItem>
-                  <SelectItem value="Mensal">Mensal</SelectItem>
-                  <SelectItem value="Anual">Anual</SelectItem>
-                  <SelectItem value="Semanal">Semanal</SelectItem>
-                  <SelectItem value="Único">Único</SelectItem>
+                <SelectContent className="rounded-lg border-border/50">
+                  <SelectItem value="Todos" className="rounded-md">Todos</SelectItem>
+                  <SelectItem value="Mensal" className="rounded-md">Mensal</SelectItem>
+                  <SelectItem value="Anual" className="rounded-md">Anual</SelectItem>
+                  <SelectItem value="Semanal" className="rounded-md">Semanal</SelectItem>
+                  <SelectItem value="Único" className="rounded-md">Único</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Status:</span>
+              <span className="text-sm text-muted-foreground font-medium">Status:</span>
               <Select
                 value={statusFilter}
                 onValueChange={setStatusFilter}
               >
-                <SelectTrigger className="w-[130px]" data-testid="select-status-filter">
+                <SelectTrigger className="w-[130px] h-10 rounded-lg border-border/50 bg-background/50 hover:bg-background/80 transition-colors" data-testid="select-status-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Todos">Todos</SelectItem>
-                  <SelectItem value="Ativo">Ativo</SelectItem>
-                  <SelectItem value="Inativo">Inativo</SelectItem>
+                <SelectContent className="rounded-lg border-border/50">
+                  <SelectItem value="Todos" className="rounded-md">Todos</SelectItem>
+                  <SelectItem value="Ativo" className="rounded-md">Ativo</SelectItem>
+                  <SelectItem value="Inativo" className="rounded-md">Inativo</SelectItem>
                 </SelectContent>
               </Select>
             </div>
