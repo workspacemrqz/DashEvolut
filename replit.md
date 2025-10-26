@@ -6,6 +6,23 @@ The application follows a modern full-stack architecture with a React frontend, 
 
 # Recent Changes
 
+## Oct 26, 2025 - UI/UX Improvements: Clean Focus States, Collapsible Sidebar, and Consistent Filters
+- **Focus Outline Removal**: Removed all blue focus rings and outlines throughout the entire application for cleaner visual appearance
+  - Applied `focus:outline-none focus:ring-0` to all interactive elements (buttons, inputs, selects, menu items)
+  - Affected components: Client form, Project form, Subscription form, Sidebar navigation, Financial page dropdowns
+  - Result: Clean, professional appearance without distracting blue outlines on click/focus
+- **Collapsible Sidebar**: Implemented desktop sidebar collapse/expand functionality
+  - Click logo to toggle between collapsed (80px/icons only) and expanded (256px/icons + text) states
+  - Logo scales proportionally using `object-contain` to prevent distortion
+  - Smooth 300ms transitions for all sidebar elements
+  - Tooltips show menu item names when collapsed
+  - Mobile sidebar remains unchanged with hamburger menu
+- **Sidebar Border Removal**: Removed border from active menu items (`sidebar-active` class) for cleaner gradient-only highlighting
+- **Subscription Filters Refactor**: Converted button-based filters to dropdown select (matching Financial page style)
+  - Changed from 4 buttons (Todas, Ativas, Pausadas, Canceladas) to single Select dropdown with label "Status:"
+  - Applied consistent styling: `rounded-lg`, `border-border/50`, soft semi-transparent backgrounds
+  - Maintains all filter functionality with more compact, professional UI
+
 ## Oct 26, 2025 - Complete Transformation: Replit Units → Financial Expense Management
 - **Major Refactoring**: Completely transformed the Replit Units tracking page into a comprehensive Financial Expense Management system
   - **Database Schema**: Created new `expenses` table with fields: description, amount, frequency (mensal/anual/semanal/unico), category, startDate, status (ativo/inativo), notes
