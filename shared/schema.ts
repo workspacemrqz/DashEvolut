@@ -99,6 +99,7 @@ export const subscriptions = pgTable("subscriptions", {
   billingDay: integer("billing_day").notNull(), // 1-31
   amount: real("amount").notNull(),
   notes: text("notes"),
+  secrets: text("secrets"),
   status: text("status", { enum: ["active", "paused", "cancelled"] }).notNull().default("active"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

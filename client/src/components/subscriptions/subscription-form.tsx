@@ -129,6 +129,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
       billingDay: subscription?.billingDay || 1,
       amount: subscription?.amount || 0,
       notes: subscription?.notes || "",
+      secrets: subscription?.secrets || "",
       status: subscription?.status || "active",
     },
   });
@@ -264,6 +265,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         billingDay: subscription.billingDay,
         amount: subscription.amount,
         notes: subscription.notes || "",
+        secrets: subscription.secrets || "",
         status: subscription.status,
       });
     } else {
@@ -272,6 +274,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
         billingDay: 1,
         amount: 0,
         notes: "",
+        secrets: "",
         status: "active",
       });
       setCredentials([]);
@@ -535,7 +538,7 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                   </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <div className="px-4 pb-4">
+                  <div className="px-4 pb-4 space-y-4">
                     <FormField
                       control={form.control}
                       name="notes"
@@ -547,6 +550,26 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                               placeholder="Adicione observações sobre esta assinatura..."
                               className="input-field min-h-[100px]"
                               data-testid="textarea-notes"
+                              {...field}
+                              value={field.value || ""}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="secrets"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-text-primary">Secrets</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Informações adicionais de segurança, tokens, chaves de API, etc..."
+                              className="input-field min-h-[100px]"
+                              data-testid="textarea-secrets"
                               {...field}
                               value={field.value || ""}
                             />
@@ -908,17 +931,6 @@ export default function SubscriptionForm({ open, onOpenChange, subscription }: S
                 placeholder="Senha de acesso"
                 className="input-field mt-1"
                 data-testid="input-credential-senha"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-text-primary">Secrets</label>
-              <Textarea
-                value={editingCredential?.secrets || ""}
-                onChange={(e) => setEditingCredential(prev => prev ? {...prev, secrets: e.target.value} : null)}
-                placeholder="Informações adicionais de segurança, tokens, chaves de API, etc..."
-                className="input-field min-h-[100px] mt-1"
-                data-testid="input-credential-secrets"
               />
             </div>
 
