@@ -88,16 +88,16 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
     return (
       <Card className="kpi-card rounded-xl">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-2 gradient-bg rounded-lg">
+              <div className="p-2 gradient-bg rounded-lg flex-shrink-0">
                 <FileText className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <CardTitle className="text-text-primary text-xl">
+              <div className="min-w-0">
+                <CardTitle className="text-text-primary text-lg sm:text-xl">
                   Propostas Criadas
                 </CardTitle>
-                <CardDescription className="text-text-secondary">
+                <CardDescription className="text-text-secondary text-sm">
                   Lista de todas as propostas geradas
                 </CardDescription>
               </div>
@@ -106,10 +106,10 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
               onClick={handleRefresh}
               variant="outline"
               size="sm"
-              className="btn-secondary"
+              className="btn-secondary w-full sm:w-auto"
             >
-              <RefreshCw className="w-4 h-4 mr-2" style={{ color: '#F5F5F5' }} />
-              Atualizar
+              <RefreshCw className="w-4 h-4 sm:mr-2" style={{ color: '#F5F5F5' }} />
+              <span className="ml-2 sm:ml-0">Atualizar</span>
             </Button>
           </div>
         </CardHeader>
@@ -142,16 +142,16 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
   return (
     <Card className="kpi-card rounded-xl">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 gradient-bg rounded-lg">
+            <div className="p-2 gradient-bg rounded-lg flex-shrink-0">
               <FileText className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <CardTitle className="text-text-primary text-xl">
+            <div className="min-w-0">
+              <CardTitle className="text-text-primary text-lg sm:text-xl">
                 Propostas Criadas
               </CardTitle>
-              <CardDescription className="text-text-secondary">
+              <CardDescription className="text-text-secondary text-sm">
                 Lista de todas as propostas geradas
               </CardDescription>
             </div>
@@ -160,12 +160,12 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
             onClick={handleRefresh}
             variant="outline"
             size="sm"
-            className="btn-secondary proposal-btn-update"
+            className="btn-secondary proposal-btn-update w-full sm:w-auto"
             data-proposal-button="update"
             disabled={isLoading || isRefreshing}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} style={{ color: '#F5F5F5' }} />
-            {isRefreshing ? 'Atualizando...' : 'Atualizar'}
+            <RefreshCw className={`w-4 h-4 sm:mr-2 ${isRefreshing ? 'animate-spin' : ''}`} style={{ color: '#F5F5F5' }} />
+            <span className="ml-2 sm:ml-0">{isRefreshing ? 'Atualizando...' : 'Atualizar'}</span>
           </Button>
         </div>
       </CardHeader>
@@ -190,10 +190,10 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
             {proposals.map((proposal, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 border border-border-secondary rounded-lg"
+                className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border border-border-secondary rounded-lg gap-3"
               >
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-text-primary font-medium truncate mb-1">
+                  <h3 className="text-text-primary font-medium mb-1">
                     {proposal.titulo || 'Proposta sem título'}
                   </h3>
                   <div className="flex items-center gap-2">
@@ -202,38 +202,38 @@ export default function ProposalsTable({ onEditProposal }: ProposalsTableProps) 
                     </Badge>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <Button
                     onClick={() => handleEditProposal(proposal.id)}
                     size="sm"
                     variant="outline"
-                    className="btn-secondary proposal-btn-edit flex items-center gap-2"
+                    className="btn-secondary proposal-btn-edit flex items-center justify-center gap-2 w-full sm:w-auto"
                     data-proposal-button="edit"
                     data-testid={`button-edit-${proposal.id}`}
                   >
                     <Edit className="h-4 w-4" style={{ color: '#F5F5F5' }} />
-                    Editar
+                    <span>Editar</span>
                   </Button>
                   <Button
                     onClick={() => handleDeleteProposal(proposal.id)}
                     size="sm"
                     variant="outline"
-                    className="btn-secondary proposal-btn-delete flex items-center gap-2"
+                    className="btn-secondary proposal-btn-delete flex items-center justify-center gap-2 w-full sm:w-auto"
                     disabled={deleteMutation.isPending}
                     data-testid={`button-delete-${proposal.id}`}
                   >
                     <Trash2 className="h-4 w-4" style={{ color: '#F5F5F5' }} />
-                    Apagar
+                    <span>Apagar</span>
                   </Button>
                   <Button
                     onClick={() => handleViewProposal(proposal.link)}
                     size="sm"
-                    className="btn-primary flex items-center gap-2"
+                    className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
                     style={{ color: '#F5F5F5' }}
                     data-testid={`button-view-${proposal.id}`}
                   >
                     <ExternalLink className="w-4 h-4" style={{ color: '#F5F5F5' }} />
-                    Ver Proposta
+                    <span>Ver Proposta</span>
                   </Button>
                 </div>
               </div>
