@@ -30,9 +30,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Download } from "lucide-react";
 import type { ReplitUnit, InsertReplitUnit } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import * as XLSX from "xlsx";
 
 const STATUS_OPTIONS = [
   { value: "Limpo", bgColor: "bg-[#277677]", textColor: "text-white" },
@@ -252,6 +253,28 @@ export default function ReplitPage() {
     });
   };
 
+  const handleExportToExcel = () => {
+    const exportData = filteredUnits.map(unit => ({
+      "Valor (R$)": unit.valor,
+      "Email": unit.email,
+      "Nome": unit.nome,
+      "Data & Horário": formatDataHorario(unit.dataHorario),
+      "Status": unit.status?.join(", ") || ""
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Unidades Replit");
+
+    const fileName = `unidades-replit-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+
+    toast({
+      title: "Sucesso",
+      description: "Planilha exportada com sucesso!",
+    });
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
@@ -420,6 +443,15 @@ export default function ReplitPage() {
                 className="w-[200px]"
                 data-testid="input-email-filter"
               />
+              <Button
+                variant="outline"
+                onClick={handleExportToExcel}
+                data-testid="button-export-excel"
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Exportar Excel
+              </Button>
               <Button
                 variant={nameFilter === "Todos" ? "default" : "outline"}
                 onClick={() => setNameFilter("Todos")}
