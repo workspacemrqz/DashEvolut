@@ -16,6 +16,7 @@ export default function Sidebar() {
   const [location] = useLocation();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Close mobile menu when location changes
   useEffect(() => {
@@ -115,15 +116,17 @@ export default function Sidebar() {
     );
   }
 
-  // Desktop sidebar - same as before but hidden on mobile
+  // Desktop sidebar - collapsible version
   return (
-    <div className="w-64 container-bg border-r border-border-secondary flex flex-col hidden lg:flex">
-      <div className="p-6">
+    <div className={`${isCollapsed ? 'w-20' : 'w-64'} container-bg border-r border-border-secondary flex flex-col hidden lg:flex transition-all duration-300`}>
+      <div className={`${isCollapsed ? 'p-4' : 'p-6'} flex items-center justify-center transition-all duration-300`}>
         <img 
           src="/assets/LOGO Evolut IA com texto na horizontal.png" 
           alt="Evolut IA Logo" 
-          className="h-10 w-auto"
+          className={`${isCollapsed ? 'h-8' : 'h-10'} w-auto cursor-pointer transition-all duration-300`}
           data-testid="logo"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? "Expandir menu" : "Colapsar menu"}
         />
       </div>
       
@@ -135,15 +138,16 @@ export default function Sidebar() {
           return (
             <Link key={item.name} href={item.href} className="focus:outline-none focus:ring-0">
               <div
-                className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer focus:outline-none focus:ring-0 ${
+                className={`flex items-center ${isCollapsed ? 'justify-center px-3' : 'px-4'} py-3 rounded-lg text-sm font-medium transition-all cursor-pointer focus:outline-none focus:ring-0 ${
                   isActive 
                     ? "sidebar-active text-text-primary" 
                     : "text-text-secondary"
                 }`}
                 data-testid={`nav-${item.name.toLowerCase()}`}
+                title={isCollapsed ? item.name : ""}
               >
-                <Icon className="w-5 h-5 mr-3" />
-                {item.name}
+                <Icon className={`w-5 h-5 ${isCollapsed ? '' : 'mr-3'} transition-all`} />
+                {!isCollapsed && <span className="whitespace-nowrap">{item.name}</span>}
               </div>
             </Link>
           );
