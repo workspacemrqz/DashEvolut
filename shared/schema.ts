@@ -100,11 +100,6 @@ export const subscriptions = pgTable("subscriptions", {
   amount: real("amount").notNull(),
   notes: text("notes"),
   status: text("status", { enum: ["active", "paused", "cancelled"] }).notNull().default("active"),
-  plataforma: text("plataforma"),
-  login: text("login"),
-  senha: text("senha"),
-  secrets: text("secrets"),
-  attachmentFileId: varchar("attachment_file_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -142,11 +137,22 @@ export const paymentFiles = pgTable("payment_files", {
 
 export const subscriptionFiles = pgTable("subscription_files", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subscriptionId: varchar("subscription_id").references(() => subscriptions.id).notNull(),
   filename: text("filename").notNull(),
   originalName: text("original_name").notNull(),
   mimeType: text("mime_type").notNull(),
   size: integer("size").notNull(),
   filePath: text("file_path").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const subscriptionCredentials = pgTable("subscription_credentials", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subscriptionId: varchar("subscription_id").references(() => subscriptions.id).notNull(),
+  plataforma: text("plataforma").notNull(),
+  login: text("login").notNull(),
+  senha: text("senha").notNull(),
+  secrets: text("secrets"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -273,6 +279,11 @@ export const insertSubscriptionFileSchema = createInsertSchema(subscriptionFiles
   createdAt: true,
 });
 
+export const insertSubscriptionCredentialSchema = createInsertSchema(subscriptionCredentials).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertProjectCostSchema = createInsertSchema(projectCosts).omit({
   id: true,
   createdAt: true,
@@ -335,6 +346,9 @@ export type InsertPaymentFile = z.infer<typeof insertPaymentFileSchema>;
 export type SubscriptionFile = typeof subscriptionFiles.$inferSelect;
 export type InsertSubscriptionFile = z.infer<typeof insertSubscriptionFileSchema>;
 
+export type SubscriptionCredential = typeof subscriptionCredentials.$inferSelect;
+export type InsertSubscriptionCredential = z.infer<typeof insertSubscriptionCredentialSchema>;
+
 export type ProjectCost = typeof projectCosts.$inferSelect;
 export type InsertProjectCost = z.infer<typeof insertProjectCostSchema>;
 export type UpdateProjectCost = z.infer<typeof updateProjectCostSchema>;
@@ -360,7 +374,8 @@ export type SubscriptionWithClient = Subscription & {
   services: SubscriptionService[];
   lastPayment?: Payment;
   nextBillingDate: Date;
-  file?: SubscriptionFile;
+  credentials: SubscriptionCredential[];
+  files: SubscriptionFile[];
 };
 
 export type PaymentWithFile = Payment & {
@@ -372,5 +387,6 @@ export type SubscriptionWithDetails = Subscription & {
   services: SubscriptionService[];
   payments: PaymentWithFile[];
   nextBillingDate: Date;
-  file?: SubscriptionFile;
+  credentials: SubscriptionCredential[];
+  files: SubscriptionFile[];
 };

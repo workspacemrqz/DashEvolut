@@ -12,10 +12,11 @@ import {
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
   type SubscriptionFile, type InsertSubscriptionFile,
+  type SubscriptionCredential, type InsertSubscriptionCredential,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
   type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile,
-  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, subscriptionFiles, projectCosts, replitUnits
+  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, subscriptionFiles, subscriptionCredentials, projectCosts, replitUnits
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -397,15 +398,19 @@ export class PostgresStorage implements IStorage {
     
     console.log('🔍 [DEBUG] Raw query result:', JSON.stringify(result, null, 2));
     
-    // Get services for each subscription
-    const subscriptionsWithServices = await Promise.all(
+    // Get services, credentials, and files for each subscription
+    const subscriptionsWithDetails = await Promise.all(
       result.map(async (row) => {
         console.log(`🔍 [DEBUG] Processing subscription ${row.subscription.id}:`);
         console.log(`  - clientId: ${row.subscription.clientId}`);
         console.log(`  - client: ${row.client ? JSON.stringify(row.client) : 'NULL'}`);
         
         const services = await this.getSubscriptionServicesBySubscription(row.subscription.id);
+        const credentials = await this.getSubscriptionCredentialsBySubscription(row.subscription.id);
+        const files = await this.getSubscriptionFilesBySubscription(row.subscription.id);
         console.log(`  - services count: ${services.length}`);
+        console.log(`  - credentials count: ${credentials.length}`);
+        console.log(`  - files count: ${files.length}`);
         
         // Calculate next billing date
         const now = new Date();
@@ -419,6 +424,8 @@ export class PostgresStorage implements IStorage {
           ...row.subscription,
           client: row.client,
           services,
+          credentials,
+          files,
           nextBillingDate
         };
         
@@ -428,9 +435,9 @@ export class PostgresStorage implements IStorage {
       })
     );
     
-    console.log('🔍 [DEBUG] Final subscriptionsWithServices:', JSON.stringify(subscriptionsWithServices, null, 2));
+    console.log('🔍 [DEBUG] Final subscriptionsWithDetails:', JSON.stringify(subscriptionsWithDetails, null, 2));
     
-    return subscriptionsWithServices;
+    return subscriptionsWithDetails;
   }
 
   async getSubscription(id: string): Promise<Subscription | undefined> {
@@ -589,6 +596,10 @@ export class PostgresStorage implements IStorage {
     return await this.db.select().from(subscriptionFiles).orderBy(desc(subscriptionFiles.createdAt));
   }
 
+  async getSubscriptionFilesBySubscription(subscriptionId: string): Promise<SubscriptionFile[]> {
+    return await this.db.select().from(subscriptionFiles).where(eq(subscriptionFiles.subscriptionId, subscriptionId)).orderBy(desc(subscriptionFiles.createdAt));
+  }
+
   async getSubscriptionFile(id: string): Promise<SubscriptionFile | undefined> {
     const result = await this.db.select().from(subscriptionFiles).where(eq(subscriptionFiles.id, id)).limit(1);
     return result[0];
@@ -607,6 +618,36 @@ export class PostgresStorage implements IStorage {
 
   async deleteSubscriptionFile(id: string): Promise<boolean> {
     const result = await this.db.delete(subscriptionFiles).where(eq(subscriptionFiles.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Subscription Credentials
+  async getSubscriptionCredentials(): Promise<SubscriptionCredential[]> {
+    return await this.db.select().from(subscriptionCredentials).orderBy(desc(subscriptionCredentials.createdAt));
+  }
+
+  async getSubscriptionCredentialsBySubscription(subscriptionId: string): Promise<SubscriptionCredential[]> {
+    return await this.db.select().from(subscriptionCredentials).where(eq(subscriptionCredentials.subscriptionId, subscriptionId)).orderBy(desc(subscriptionCredentials.createdAt));
+  }
+
+  async getSubscriptionCredential(id: string): Promise<SubscriptionCredential | undefined> {
+    const result = await this.db.select().from(subscriptionCredentials).where(eq(subscriptionCredentials.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createSubscriptionCredential(credential: InsertSubscriptionCredential): Promise<SubscriptionCredential> {
+    const newCredential = { ...credential, id: randomUUID(), createdAt: new Date() };
+    await this.db.insert(subscriptionCredentials).values(newCredential);
+    return newCredential;
+  }
+
+  async updateSubscriptionCredential(id: string, credential: Partial<InsertSubscriptionCredential>): Promise<SubscriptionCredential | undefined> {
+    const result = await this.db.update(subscriptionCredentials).set(credential).where(eq(subscriptionCredentials.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteSubscriptionCredential(id: string): Promise<boolean> {
+    const result = await this.db.delete(subscriptionCredentials).where(eq(subscriptionCredentials.id, id));
     return result.rowCount > 0;
   }
 
