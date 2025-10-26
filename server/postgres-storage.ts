@@ -14,9 +14,9 @@ import {
   type SubscriptionFile, type InsertSubscriptionFile,
   type SubscriptionCredential, type InsertSubscriptionCredential,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
-  type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
+  type Expense, type InsertExpense, type UpdateExpense,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile,
-  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, subscriptionFiles, subscriptionCredentials, projectCosts, replitUnits
+  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, subscriptionFiles, subscriptionCredentials, projectCosts, expenses
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -651,42 +651,30 @@ export class PostgresStorage implements IStorage {
     return result.rowCount > 0;
   }
 
-  // Replit Units
-  async getReplitUnits(): Promise<ReplitUnit[]> {
-    const units = await this.db.select().from(replitUnits);
-    // Sort by dataHorario (format: DD/MM/YYYY HH:MM) from newest to oldest
-    return units.sort((a, b) => {
-      const parseDate = (dateStr: string) => {
-        const [datePart, timePart] = dateStr.split(' ');
-        const [day, month, yearOrTime] = datePart.split('/');
-        const year = yearOrTime.length === 4 ? yearOrTime : `2024`;
-        const time = timePart || yearOrTime;
-        const [hours, minutes] = time.split(':');
-        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
-      };
-      return parseDate(b.dataHorario).getTime() - parseDate(a.dataHorario).getTime();
-    });
+  // Expenses
+  async getExpenses(): Promise<Expense[]> {
+    return await this.db.select().from(expenses).orderBy(desc(expenses.startDate));
   }
 
-  async getReplitUnit(id: string): Promise<ReplitUnit | undefined> {
-    const result = await this.db.select().from(replitUnits).where(eq(replitUnits.id, id)).limit(1);
+  async getExpense(id: string): Promise<Expense | undefined> {
+    const result = await this.db.select().from(expenses).where(eq(expenses.id, id)).limit(1);
     return result[0];
   }
 
-  async createReplitUnit(unit: InsertReplitUnit): Promise<ReplitUnit> {
-    const newUnit = { ...unit, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
-    const result = await this.db.insert(replitUnits).values(newUnit).returning();
+  async createExpense(expense: InsertExpense): Promise<Expense> {
+    const newExpense = { ...expense, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const result = await this.db.insert(expenses).values(newExpense).returning();
     return result[0];
   }
 
-  async updateReplitUnit(id: string, unit: UpdateReplitUnit): Promise<ReplitUnit | undefined> {
-    const updatedUnit = { ...unit, updatedAt: new Date() };
-    const result = await this.db.update(replitUnits).set(updatedUnit).where(eq(replitUnits.id, id)).returning();
+  async updateExpense(id: string, expense: UpdateExpense): Promise<Expense | undefined> {
+    const updatedExpense = { ...expense, updatedAt: new Date() };
+    const result = await this.db.update(expenses).set(updatedExpense).where(eq(expenses.id, id)).returning();
     return result[0];
   }
 
-  async deleteReplitUnit(id: string): Promise<boolean> {
-    const result = await this.db.delete(replitUnits).where(eq(replitUnits.id, id));
+  async deleteExpense(id: string): Promise<boolean> {
+    const result = await this.db.delete(expenses).where(eq(expenses.id, id));
     return result.rowCount > 0;
   }
 }

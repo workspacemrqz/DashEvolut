@@ -168,13 +168,15 @@ export const projectCosts = pgTable("project_costs", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const replitUnits = pgTable("replit_units", {
+export const expenses = pgTable("expenses", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  valor: real("valor").notNull(),
-  email: text("email").notNull(),
-  nome: text("nome", { enum: ["Camargo", "Marquez", "Dividido"] }).notNull(),
-  dataHorario: text("data_horario").notNull(),
-  status: text("status").array().default(sql`'{}'::text[]`).notNull(),
+  description: text("description").notNull(),
+  amount: real("amount").notNull(),
+  frequency: text("frequency", { enum: ["mensal", "anual", "semanal", "unico"] }).notNull(),
+  category: text("category"),
+  startDate: timestamp("start_date").notNull(),
+  status: text("status", { enum: ["ativo", "inativo"] }).notNull().default("ativo"),
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -296,13 +298,13 @@ export const updateProjectCostSchema = createInsertSchema(projectCosts).omit({
   updatedAt: true,
 }).partial();
 
-export const insertReplitUnitSchema = createInsertSchema(replitUnits).omit({
+export const insertExpenseSchema = createInsertSchema(expenses).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const updateReplitUnitSchema = insertReplitUnitSchema.partial();
+export const updateExpenseSchema = insertExpenseSchema.partial();
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -353,9 +355,9 @@ export type ProjectCost = typeof projectCosts.$inferSelect;
 export type InsertProjectCost = z.infer<typeof insertProjectCostSchema>;
 export type UpdateProjectCost = z.infer<typeof updateProjectCostSchema>;
 
-export type ReplitUnit = typeof replitUnits.$inferSelect;
-export type InsertReplitUnit = z.infer<typeof insertReplitUnitSchema>;
-export type UpdateReplitUnit = z.infer<typeof updateReplitUnitSchema>;
+export type Expense = typeof expenses.$inferSelect;
+export type InsertExpense = z.infer<typeof insertExpenseSchema>;
+export type UpdateExpense = z.infer<typeof updateExpenseSchema>;
 
 // Derived types for API responses
 export type ProjectWithClient = Project & {

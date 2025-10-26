@@ -14,7 +14,7 @@ import {
   type SubscriptionFile, type InsertSubscriptionFile,
   type SubscriptionCredential, type InsertSubscriptionCredential,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
-  type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
+  type Expense, type InsertExpense, type UpdateExpense,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile
 } from "@shared/schema";
 import { PostgresStorage } from "./postgres-storage";
@@ -133,12 +133,12 @@ export interface IStorage {
   updateSubscriptionCredential(id: string, credential: Partial<InsertSubscriptionCredential>): Promise<SubscriptionCredential | undefined>;
   deleteSubscriptionCredential(id: string): Promise<boolean>;
   
-  // Replit Units
-  getReplitUnits(): Promise<ReplitUnit[]>;
-  getReplitUnit(id: string): Promise<ReplitUnit | undefined>;
-  createReplitUnit(unit: InsertReplitUnit): Promise<ReplitUnit>;
-  updateReplitUnit(id: string, unit: UpdateReplitUnit): Promise<ReplitUnit | undefined>;
-  deleteReplitUnit(id: string): Promise<boolean>;
+  // Expenses
+  getExpenses(): Promise<Expense[]>;
+  getExpense(id: string): Promise<Expense | undefined>;
+  createExpense(expense: InsertExpense): Promise<Expense>;
+  updateExpense(id: string, expense: UpdateExpense): Promise<Expense | undefined>;
+  deleteExpense(id: string): Promise<boolean>;
 }
 
 export const storage = new PostgresStorage();

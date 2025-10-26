@@ -19,7 +19,9 @@ import {
   insertNotificationRuleSchema,
   updateNotificationRuleSchema,
   insertProjectCostSchema,
-  updateProjectCostSchema
+  updateProjectCostSchema,
+  insertExpenseSchema,
+  updateExpenseSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -1116,63 +1118,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Replit Units Routes
-  app.get("/api/unidades-replit", async (_req, res) => {
+  // Expense Routes
+  app.get("/api/despesas", async (_req, res) => {
     try {
-      const units = await storage.getReplitUnits();
-      res.json(units);
+      const expenses = await storage.getExpenses();
+      res.json(expenses);
     } catch (error) {
-      console.error('Error fetching replit units:', error);
-      res.status(500).json({ message: "Failed to fetch replit units" });
+      console.error('Error fetching expenses:', error);
+      res.status(500).json({ message: "Failed to fetch expenses" });
     }
   });
 
-  app.get("/api/unidades-replit/:id", async (req, res) => {
+  app.get("/api/despesas/:id", async (req, res) => {
     try {
-      const unit = await storage.getReplitUnit(req.params.id);
-      if (!unit) {
-        return res.status(404).json({ message: "Replit unit not found" });
+      const expense = await storage.getExpense(req.params.id);
+      if (!expense) {
+        return res.status(404).json({ message: "Expense not found" });
       }
-      res.json(unit);
+      res.json(expense);
     } catch (error) {
-      console.error('Error fetching replit unit:', error);
-      res.status(500).json({ message: "Failed to fetch replit unit" });
+      console.error('Error fetching expense:', error);
+      res.status(500).json({ message: "Failed to fetch expense" });
     }
   });
 
-  app.post("/api/unidades-replit", async (req, res) => {
+  app.post("/api/despesas", async (req, res) => {
     try {
-      const unit = await storage.createReplitUnit(req.body);
-      res.status(201).json(unit);
+      const expenseSchemaWithStringDate = insertExpenseSchema.extend({
+        startDate: z.string().transform((val) => new Date(val)),
+      });
+      const validatedData = expenseSchemaWithStringDate.parse(req.body);
+      const expense = await storage.createExpense(validatedData);
+      res.status(201).json(expense);
     } catch (error) {
-      console.error('Error creating replit unit:', error);
-      res.status(500).json({ message: "Failed to create replit unit" });
+      console.error('Error creating expense:', error);
+      res.status(400).json({ message: "Invalid expense data" });
     }
   });
 
-  app.put("/api/unidades-replit/:id", async (req, res) => {
+  app.patch("/api/despesas/:id", async (req, res) => {
     try {
-      const unit = await storage.updateReplitUnit(req.params.id, req.body);
-      if (!unit) {
-        return res.status(404).json({ message: "Replit unit not found" });
+      const updateSchemaWithStringDate = updateExpenseSchema.extend({
+        startDate: z.union([
+          z.string().transform((val) => new Date(val)),
+          z.date()
+        ]).optional(),
+      });
+      const updates = updateSchemaWithStringDate.parse(req.body);
+      const expense = await storage.updateExpense(req.params.id, updates);
+      if (!expense) {
+        return res.status(404).json({ message: "Expense not found" });
       }
-      res.json(unit);
+      res.json(expense);
     } catch (error) {
-      console.error('Error updating replit unit:', error);
-      res.status(500).json({ message: "Failed to update replit unit" });
+      console.error('Error updating expense:', error);
+      res.status(400).json({ message: "Invalid expense data" });
     }
   });
 
-  app.delete("/api/replit-units/:id", async (req, res) => {
+  app.delete("/api/despesas/:id", async (req, res) => {
     try {
-      const deleted = await storage.deleteReplitUnit(req.params.id);
+      const deleted = await storage.deleteExpense(req.params.id);
       if (!deleted) {
-        return res.status(404).json({ message: "Replit unit not found" });
+        return res.status(404).json({ message: "Expense not found" });
       }
-      res.json({ message: "Replit unit deleted successfully" });
+      res.status(204).send();
     } catch (error) {
-      console.error('Error deleting replit unit:', error);
-      res.status(500).json({ message: "Failed to delete replit unit" });
+      console.error('Error deleting expense:', error);
+      res.status(500).json({ message: "Failed to delete expense" });
     }
   });
 
