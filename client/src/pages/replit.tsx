@@ -469,84 +469,40 @@ export default function ReplitPage() {
               data-testid="input-search-filter"
             />
           </div>
-          <div className="flex gap-2 flex-wrap mt-4">
-            <div className="flex gap-2 flex-wrap">
-              <span className="text-sm text-muted-foreground self-center">Periodicidade:</span>
-              <Button
-                variant={frequencyFilter === "Todos" ? "default" : "outline"}
-                onClick={() => setFrequencyFilter("Todos")}
-                data-testid="filter-frequency-todos"
-                className={frequencyFilter === "Todos" ? "btn-primary" : ""}
-                size="sm"
+          <div className="flex gap-4 flex-wrap mt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Periodicidade:</span>
+              <Select
+                value={frequencyFilter}
+                onValueChange={setFrequencyFilter}
               >
-                Todos
-              </Button>
-              <Button
-                variant={frequencyFilter === "Mensal" ? "default" : "outline"}
-                onClick={() => setFrequencyFilter("Mensal")}
-                data-testid="filter-frequency-mensal"
-                className={frequencyFilter === "Mensal" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Mensal
-              </Button>
-              <Button
-                variant={frequencyFilter === "Anual" ? "default" : "outline"}
-                onClick={() => setFrequencyFilter("Anual")}
-                data-testid="filter-frequency-anual"
-                className={frequencyFilter === "Anual" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Anual
-              </Button>
-              <Button
-                variant={frequencyFilter === "Semanal" ? "default" : "outline"}
-                onClick={() => setFrequencyFilter("Semanal")}
-                data-testid="filter-frequency-semanal"
-                className={frequencyFilter === "Semanal" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Semanal
-              </Button>
-              <Button
-                variant={frequencyFilter === "Único" ? "default" : "outline"}
-                onClick={() => setFrequencyFilter("Único")}
-                data-testid="filter-frequency-unico"
-                className={frequencyFilter === "Único" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Único
-              </Button>
+                <SelectTrigger className="w-[150px]" data-testid="select-frequency-filter">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Todos">Todos</SelectItem>
+                  <SelectItem value="Mensal">Mensal</SelectItem>
+                  <SelectItem value="Anual">Anual</SelectItem>
+                  <SelectItem value="Semanal">Semanal</SelectItem>
+                  <SelectItem value="Único">Único</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="flex gap-2 flex-wrap">
-              <span className="text-sm text-muted-foreground self-center">Status:</span>
-              <Button
-                variant={statusFilter === "Todos" ? "default" : "outline"}
-                onClick={() => setStatusFilter("Todos")}
-                data-testid="filter-status-todos"
-                className={statusFilter === "Todos" ? "btn-primary" : ""}
-                size="sm"
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Status:</span>
+              <Select
+                value={statusFilter}
+                onValueChange={setStatusFilter}
               >
-                Todos
-              </Button>
-              <Button
-                variant={statusFilter === "Ativo" ? "default" : "outline"}
-                onClick={() => setStatusFilter("Ativo")}
-                data-testid="filter-status-ativo"
-                className={statusFilter === "Ativo" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Ativo
-              </Button>
-              <Button
-                variant={statusFilter === "Inativo" ? "default" : "outline"}
-                onClick={() => setStatusFilter("Inativo")}
-                data-testid="filter-status-inativo"
-                className={statusFilter === "Inativo" ? "btn-primary" : ""}
-                size="sm"
-              >
-                Inativo
-              </Button>
+                <SelectTrigger className="w-[130px]" data-testid="select-status-filter">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Todos">Todos</SelectItem>
+                  <SelectItem value="Ativo">Ativo</SelectItem>
+                  <SelectItem value="Inativo">Inativo</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardHeader>
