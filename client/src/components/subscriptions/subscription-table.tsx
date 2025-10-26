@@ -439,6 +439,64 @@ export default function SubscriptionTable({
                   </div>
                 </div>
 
+                {/* Credenciais e Arquivos */}
+                {(selectedSubscription.plataforma || selectedSubscription.login || selectedSubscription.senha || selectedSubscription.secrets || selectedSubscription.file) && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-text-primary border-b border-border-secondary pb-2">
+                      Credenciais de Acesso
+                    </h3>
+                    
+                    <div className="space-y-3 text-sm">
+                      {selectedSubscription.plataforma && (
+                        <div>
+                          <span className="text-text-secondary">Plataforma:</span>
+                          <p className="font-medium text-text-primary">{selectedSubscription.plataforma}</p>
+                        </div>
+                      )}
+                      {selectedSubscription.login && (
+                        <div>
+                          <span className="text-text-secondary">Login:</span>
+                          <p className="font-medium text-text-primary">{selectedSubscription.login}</p>
+                        </div>
+                      )}
+                      {selectedSubscription.senha && (
+                        <div>
+                          <span className="text-text-secondary">Senha:</span>
+                          <p className="font-medium text-text-primary font-mono">{selectedSubscription.senha}</p>
+                        </div>
+                      )}
+                      {selectedSubscription.secrets && (
+                        <div>
+                          <span className="text-text-secondary">Secrets:</span>
+                          <p className="font-medium text-text-primary bg-bg-tertiary p-3 rounded mt-1 whitespace-pre-wrap font-mono text-xs">
+                            {selectedSubscription.secrets}
+                          </p>
+                        </div>
+                      )}
+                      {selectedSubscription.file && (
+                        <div>
+                          <span className="text-text-secondary">Arquivo Anexo:</span>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => window.open(`/api/subscription-files/${selectedSubscription.attachmentFileId}`, '_blank')}
+                              data-testid="button-download-attachment"
+                              className="btn-secondary"
+                            >
+                              <FileText className="h-4 w-4 mr-2" />
+                              {selectedSubscription.file.originalName}
+                            </Button>
+                            <span className="text-xs text-text-secondary">
+                              ({(selectedSubscription.file.size / 1024).toFixed(2)} KB)
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Serviços */}
                 {selectedSubscription.services && selectedSubscription.services.length > 0 && (
                   <div className="space-y-4">

@@ -755,6 +755,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Subscription file download route
+  app.get("/api/subscription-files/:id", async (req, res) => {
+    try {
+      const file = await storage.getSubscriptionFile(req.params.id);
+      if (!file) {
+        return res.status(404).json({ message: "File not found" });
+      }
+      
+      if (!fs.existsSync(file.filePath)) {
+        return res.status(404).json({ message: "File not found on disk" });
+      }
+
+      res.setHeader('Content-Type', file.mimeType);
+      res.setHeader('Content-Disposition', `attachment; filename="${file.originalName}"`);
+      res.sendFile(path.resolve(file.filePath));
+    } catch (error) {
+      res.status(500).json({ message: "Failed to download file" });
+    }
+  });
+
   // Proposals routes - Connect to PostgreSQL database for proposals
   app.get("/api/propostas", async (req, res) => {
     try {
