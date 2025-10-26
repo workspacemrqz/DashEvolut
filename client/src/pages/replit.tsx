@@ -476,15 +476,15 @@ export default function ReplitPage() {
                 value={frequencyFilter}
                 onValueChange={setFrequencyFilter}
               >
-                <SelectTrigger className="w-[150px] h-10 rounded-lg border-border/50 bg-background/50 hover:bg-background/80 transition-colors" data-testid="select-frequency-filter">
+                <SelectTrigger className="w-[150px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-frequency-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-border/50">
-                  <SelectItem value="Todos" className="rounded-md focus:outline-none focus:ring-0">Todos</SelectItem>
-                  <SelectItem value="Mensal" className="rounded-md focus:outline-none focus:ring-0">Mensal</SelectItem>
-                  <SelectItem value="Anual" className="rounded-md focus:outline-none focus:ring-0">Anual</SelectItem>
-                  <SelectItem value="Semanal" className="rounded-md focus:outline-none focus:ring-0">Semanal</SelectItem>
-                  <SelectItem value="Único" className="rounded-md focus:outline-none focus:ring-0">Único</SelectItem>
+                <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">
+                  <SelectItem value="Todos" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Todos</SelectItem>
+                  <SelectItem value="Mensal" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Mensal</SelectItem>
+                  <SelectItem value="Anual" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Anual</SelectItem>
+                  <SelectItem value="Semanal" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Semanal</SelectItem>
+                  <SelectItem value="Único" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Único</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -494,13 +494,13 @@ export default function ReplitPage() {
                 value={statusFilter}
                 onValueChange={setStatusFilter}
               >
-                <SelectTrigger className="w-[130px] h-10 rounded-lg border-border/50 bg-background/50 hover:bg-background/80 transition-colors" data-testid="select-status-filter">
+                <SelectTrigger className="w-[130px] bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0 focus:ring-offset-0 data-[state=open]:border-border/50" data-testid="select-status-filter">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-border/50">
-                  <SelectItem value="Todos" className="rounded-md focus:outline-none focus:ring-0">Todos</SelectItem>
-                  <SelectItem value="Ativo" className="rounded-md focus:outline-none focus:ring-0">Ativo</SelectItem>
-                  <SelectItem value="Inativo" className="rounded-md focus:outline-none focus:ring-0">Inativo</SelectItem>
+                <SelectContent className="bg-bg-container border-border/50 rounded-lg focus:outline-none focus:ring-0">
+                  <SelectItem value="Todos" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Todos</SelectItem>
+                  <SelectItem value="Ativo" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Ativo</SelectItem>
+                  <SelectItem value="Inativo" className="focus:bg-bg-primary/50 focus:text-text-primary cursor-pointer focus:outline-none focus:ring-0">Inativo</SelectItem>
                 </SelectContent>
               </Select>
             </div>
