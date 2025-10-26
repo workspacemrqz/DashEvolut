@@ -5,13 +5,15 @@ The Evolutia Dashboard is a comprehensive full-stack web application designed fo
 ## Recent Changes (October 26, 2025)
 
 ### Mobile Responsiveness Improvements
-- **Header Component**: Reduced padding from `pl-16` to `pl-14` on mobile, added responsive breakpoints for better mobile fit
-- **Page Containers**: All pages now use `overflow-x-hidden` and `min-w-0` to prevent horizontal scrolling
+- **Modern Mobile Header**: Replaced floating menu button with fixed header at top featuring gradient background, centered logo, and integrated menu button
+- **Fixed Header Layout**: 64px (h-16) fixed header on mobile with proper z-indexing and shadow
+- **Page Containers**: All pages now use `overflow-x-hidden`, `min-w-0`, and `pt-16 lg:pt-0` to prevent horizontal scrolling and accommodate fixed header
 - **KPI Cards**: Adjusted padding from `p-6` to `p-4 sm:p-6` for better mobile spacing
 - **Typography**: Implemented responsive text sizes (e.g., `text-lg sm:text-xl lg:text-2xl`)
 - **Button Actions**: Simplified button structure in headers, removed unnecessary wrapper divs
-- **Filter Controls**: Already using responsive pattern `w-full sm:w-[Xpx]` across all pages
+- **Filter Controls**: Using responsive pattern `w-full sm:w-[Xpx]` across all pages
 - **Gestão Financeira Page**: Completely refactored to match the standard Header pattern used in other pages
+- **Sidebar Enhancement**: Mobile sidebar now includes gradient header matching the fixed top header
 
 # User Preferences
 

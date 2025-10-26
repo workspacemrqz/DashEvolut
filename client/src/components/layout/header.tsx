@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ title, subtitle, actions }: HeaderProps) {
   return (
-    <header className="container-bg border-b border-border-secondary px-3 py-6 pl-14 sm:px-6 lg:pl-6">
+    <header className="container-bg border-b border-border-secondary px-3 py-4 sm:py-6 sm:px-6 lg:pl-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="min-w-0 flex-1">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold break-words" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }} data-testid="header-title">
