@@ -100,6 +100,11 @@ export const subscriptions = pgTable("subscriptions", {
   amount: real("amount").notNull(),
   notes: text("notes"),
   status: text("status", { enum: ["active", "paused", "cancelled"] }).notNull().default("active"),
+  plataforma: text("plataforma"),
+  login: text("login"),
+  senha: text("senha"),
+  secrets: text("secrets"),
+  attachmentFileId: varchar("attachment_file_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -126,6 +131,16 @@ export const payments = pgTable("payments", {
 });
 
 export const paymentFiles = pgTable("payment_files", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(),
+  filePath: text("file_path").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const subscriptionFiles = pgTable("subscription_files", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   filename: text("filename").notNull(),
   originalName: text("original_name").notNull(),
@@ -253,6 +268,11 @@ export const insertPaymentFileSchema = createInsertSchema(paymentFiles).omit({
   createdAt: true,
 });
 
+export const insertSubscriptionFileSchema = createInsertSchema(subscriptionFiles).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertProjectCostSchema = createInsertSchema(projectCosts).omit({
   id: true,
   createdAt: true,
@@ -312,6 +332,9 @@ export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type PaymentFile = typeof paymentFiles.$inferSelect;
 export type InsertPaymentFile = z.infer<typeof insertPaymentFileSchema>;
 
+export type SubscriptionFile = typeof subscriptionFiles.$inferSelect;
+export type InsertSubscriptionFile = z.infer<typeof insertSubscriptionFileSchema>;
+
 export type ProjectCost = typeof projectCosts.$inferSelect;
 export type InsertProjectCost = z.infer<typeof insertProjectCostSchema>;
 export type UpdateProjectCost = z.infer<typeof updateProjectCostSchema>;
@@ -337,6 +360,7 @@ export type SubscriptionWithClient = Subscription & {
   services: SubscriptionService[];
   lastPayment?: Payment;
   nextBillingDate: Date;
+  file?: SubscriptionFile;
 };
 
 export type PaymentWithFile = Payment & {
@@ -348,4 +372,5 @@ export type SubscriptionWithDetails = Subscription & {
   services: SubscriptionService[];
   payments: PaymentWithFile[];
   nextBillingDate: Date;
+  file?: SubscriptionFile;
 };
