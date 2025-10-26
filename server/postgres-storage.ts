@@ -11,10 +11,11 @@ import {
   type SubscriptionService, type InsertSubscriptionService,
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
+  type SubscriptionFile, type InsertSubscriptionFile,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
   type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile,
-  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, projectCosts, replitUnits
+  users, clients, projects, interactions, analytics, alerts, notificationRules, subscriptions, subscriptionServices, payments, paymentFiles, subscriptionFiles, projectCosts, replitUnits
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -580,6 +581,32 @@ export class PostgresStorage implements IStorage {
 
   async deletePaymentFile(id: string): Promise<boolean> {
     const result = await this.db.delete(paymentFiles).where(eq(paymentFiles.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Subscription Files
+  async getSubscriptionFiles(): Promise<SubscriptionFile[]> {
+    return await this.db.select().from(subscriptionFiles).orderBy(desc(subscriptionFiles.createdAt));
+  }
+
+  async getSubscriptionFile(id: string): Promise<SubscriptionFile | undefined> {
+    const result = await this.db.select().from(subscriptionFiles).where(eq(subscriptionFiles.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createSubscriptionFile(file: InsertSubscriptionFile): Promise<SubscriptionFile> {
+    const newFile = { ...file, id: randomUUID(), createdAt: new Date() };
+    await this.db.insert(subscriptionFiles).values(newFile);
+    return newFile;
+  }
+
+  async updateSubscriptionFile(id: string, file: Partial<InsertSubscriptionFile>): Promise<SubscriptionFile | undefined> {
+    const result = await this.db.update(subscriptionFiles).set(file).where(eq(subscriptionFiles.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteSubscriptionFile(id: string): Promise<boolean> {
+    const result = await this.db.delete(subscriptionFiles).where(eq(subscriptionFiles.id, id));
     return result.rowCount > 0;
   }
 

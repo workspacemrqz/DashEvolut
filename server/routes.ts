@@ -118,6 +118,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  const uploadSubscriptionAttachment = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+      },
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+      }
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = [
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+        'application/pdf',
+        'application/json',
+        'application/zip',
+        'application/x-zip-compressed',
+        'text/plain',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/msword',
+        'application/vnd.ms-excel'
+      ];
+      if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    },
+    limits: {
+      fileSize: 50 * 1024 * 1024 // 50MB limit for subscription attachments
+    }
+  });
+
   // Apply authentication middleware to all API routes except auth endpoints
   app.use('/api', (req, res, next) => {
     if (req.path.startsWith('/auth/')) {
@@ -567,9 +601,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/assinaturas/:id", async (req, res) => {
+  app.patch("/api/assinaturas/:id", uploadSubscriptionAttachment.single('attachment'), async (req, res) => {
     try {
-      const updates = insertSubscriptionSchema.partial().parse(req.body);
+      let fileId = null;
+      
+      if (req.file) {
+        const subscriptionFile = await storage.createSubscriptionFile({
+          filename: req.file.filename,
+          originalName: req.file.originalname,
+          mimeType: req.file.mimetype,
+          size: req.file.size,
+          filePath: req.file.path
+        });
+        fileId = subscriptionFile.id;
+      }
+
+      const updates = insertSubscriptionSchema.partial().parse({
+        ...req.body,
+        attachmentFileId: fileId || req.body.attachmentFileId
+      });
+      
       const subscription = await storage.updateSubscription(req.params.id, updates);
       if (!subscription) {
         return res.status(404).json({ message: "Subscription not found" });

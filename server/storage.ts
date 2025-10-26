@@ -11,6 +11,7 @@ import {
   type SubscriptionService, type InsertSubscriptionService,
   type Payment, type InsertPayment,
   type PaymentFile, type InsertPaymentFile,
+  type SubscriptionFile, type InsertSubscriptionFile,
   type ProjectCost, type InsertProjectCost, type UpdateProjectCost,
   type ReplitUnit, type InsertReplitUnit, type UpdateReplitUnit,
   type SubscriptionWithClient, type SubscriptionWithDetails, type PaymentWithFile
@@ -114,6 +115,13 @@ export interface IStorage {
   createPaymentFile(file: InsertPaymentFile): Promise<PaymentFile>;
   updatePaymentFile(id: string, file: Partial<InsertPaymentFile>): Promise<PaymentFile | undefined>;
   deletePaymentFile(id: string): Promise<boolean>;
+  
+  // Subscription Files
+  getSubscriptionFiles(): Promise<SubscriptionFile[]>;
+  getSubscriptionFile(id: string): Promise<SubscriptionFile | undefined>;
+  createSubscriptionFile(file: InsertSubscriptionFile): Promise<SubscriptionFile>;
+  updateSubscriptionFile(id: string, file: Partial<InsertSubscriptionFile>): Promise<SubscriptionFile | undefined>;
+  deleteSubscriptionFile(id: string): Promise<boolean>;
   
   // Replit Units
   getReplitUnits(): Promise<ReplitUnit[]>;
