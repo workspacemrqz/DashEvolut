@@ -225,19 +225,23 @@ export default function ReplitPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-foreground">Gestão Financeira</h1>
-        <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-          <DialogTrigger asChild>
-            <Button 
-              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-              data-testid="button-add-expense"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Nova Despesa</span>
-            </Button>
-          </DialogTrigger>
+    <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+      <div className="container-bg border-b border-border-secondary px-3 py-6 pl-14 sm:px-6 lg:pl-6">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold break-words" style={{ color: 'hsl(203.89, 88.28%, 53.14%)' }}>Gestão Financeira</h1>
+            <p className="text-text-secondary mt-1 text-xs sm:text-sm lg:text-base break-words">Controle de despesas e custos operacionais</p>
+          </div>
+          <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+            <DialogTrigger asChild>
+              <Button 
+                className="btn-primary px-3 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap"
+                data-testid="button-add-expense"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="hidden sm:inline">Nova Despesa</span>
+              </Button>
+            </DialogTrigger>
           <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -367,9 +371,11 @@ export default function ReplitPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <main className="flex-1 p-3 lg:p-6 overflow-y-auto overflow-x-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-4 lg:mb-6 w-full">
         <Card className="kpi-card rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Mensal</CardTitle>
@@ -426,9 +432,9 @@ export default function ReplitPage() {
             </p>
           </CardContent>
         </Card>
-      </div>
+        </div>
 
-      <Card className="kpi-card rounded-xl mb-6">
+        <Card className="kpi-card rounded-xl mb-4 lg:mb-6">
         <CardHeader>
           <CardTitle>Despesas por Periodicidade</CardTitle>
         </CardHeader>
@@ -456,7 +462,7 @@ export default function ReplitPage() {
         </CardContent>
       </Card>
 
-      <Card className="kpi-card rounded-xl">
+        <Card className="kpi-card rounded-xl">
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <CardTitle>Lista de Despesas</CardTitle>
@@ -668,6 +674,7 @@ export default function ReplitPage() {
           )}
         </CardContent>
       </Card>
+      </main>
     </div>
   );
 }

@@ -42,48 +42,46 @@ export default function Clients() {
   const prospects = clients?.filter(c => !c.hasActiveSubscription).length || 0;
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
       <Header 
         title="Gestão de Clientes" 
         subtitle="Relacionamento e análise de clientes"
         actions={
-          <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
-            <Button 
-              onClick={() => setShowClientForm(true)}
-              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-              data-testid="button-new-client"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Novo Cliente</span>
-            </Button>
-          </div>
+          <Button 
+            onClick={() => setShowClientForm(true)}
+            className="btn-primary px-3 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap"
+            data-testid="button-new-client"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Novo Cliente</span>
+          </Button>
         }
       />
-      <main className="flex-1 p-3 lg:p-6 overflow-auto">
+      <main className="flex-1 p-3 lg:p-6 overflow-y-auto overflow-x-hidden">
         {/* Client Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mb-4 lg:mb-6">
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-3 text-text-primary">Clientes Ativos</h3>
-            <div className="text-3xl font-bold text-green-500 mb-2" data-testid="stat-active-clients">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mb-4 lg:mb-6 w-full">
+          <div className="kpi-card rounded-xl p-4 sm:p-6 min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-text-primary">Clientes Ativos</h3>
+            <div className="text-2xl sm:text-3xl font-bold text-green-500 mb-1 sm:mb-2" data-testid="stat-active-clients">
               {activeClients}
             </div>
-            <p className="text-text-secondary">Contratos vigentes</p>
+            <p className="text-xs sm:text-sm text-text-secondary">Contratos vigentes</p>
           </div>
           
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-3 text-text-primary">Prospects</h3>
-            <div className="text-3xl font-bold text-yellow-500 mb-2" data-testid="stat-prospects">
+          <div className="kpi-card rounded-xl p-4 sm:p-6 min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-text-primary">Prospects</h3>
+            <div className="text-2xl sm:text-3xl font-bold text-yellow-500 mb-1 sm:mb-2" data-testid="stat-prospects">
               {prospects}
             </div>
-            <p className="text-text-secondary">Em negociação</p>
+            <p className="text-xs sm:text-sm text-text-secondary">Em negociação</p>
           </div>
 
-          <div className="kpi-card rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-3 text-text-primary">Total de Clientes</h3>
-            <div className="text-3xl font-bold text-blue-500 mb-2" data-testid="stat-total-clients">
+          <div className="kpi-card rounded-xl p-4 sm:p-6 min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-text-primary">Total de Clientes</h3>
+            <div className="text-2xl sm:text-3xl font-bold text-blue-500 mb-1 sm:mb-2" data-testid="stat-total-clients">
               {clients?.length || 0}
             </div>
-            <p className="text-text-secondary">Base completa</p>
+            <p className="text-xs sm:text-sm text-text-secondary">Base completa</p>
           </div>
           
         </div>

@@ -2,6 +2,17 @@
 
 The Evolutia Dashboard is a comprehensive full-stack web application designed for business management. It functions as a Client Relationship Management (CRM) and project management platform, enabling businesses to track clients, manage projects, handle subscriptions, generate proposals, and monitor key business metrics through an interactive dashboard. Its primary purpose is to assist business owners and managers in overseeing client relationships, project progress, subscription billing, and automated proposal generation.
 
+## Recent Changes (October 26, 2025)
+
+### Mobile Responsiveness Improvements
+- **Header Component**: Reduced padding from `pl-16` to `pl-14` on mobile, added responsive breakpoints for better mobile fit
+- **Page Containers**: All pages now use `overflow-x-hidden` and `min-w-0` to prevent horizontal scrolling
+- **KPI Cards**: Adjusted padding from `p-6` to `p-4 sm:p-6` for better mobile spacing
+- **Typography**: Implemented responsive text sizes (e.g., `text-lg sm:text-xl lg:text-2xl`)
+- **Button Actions**: Simplified button structure in headers, removed unnecessary wrapper divs
+- **Filter Controls**: Already using responsive pattern `w-full sm:w-[Xpx]` across all pages
+- **Gestão Financeira Page**: Completely refactored to match the standard Header pattern used in other pages
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.

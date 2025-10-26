@@ -90,40 +90,38 @@ export default function Projects() {
 
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
       <Header 
         title="Gestão de Projetos" 
         subtitle="Controle financeiro e operacional"
         actions={
-          <div className="flex space-x-2 lg:space-x-3 flex-wrap gap-2">
-            <Button 
-              onClick={() => setShowProjectForm(true)}
-              className="btn-primary px-2 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium flex items-center gap-1 lg:gap-2 flex-shrink-0"
-              data-testid="button-new-project"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Novo Projeto</span>
-            </Button>
-          </div>
+          <Button 
+            onClick={() => setShowProjectForm(true)}
+            className="btn-primary px-3 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap"
+            data-testid="button-new-project"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Novo Projeto</span>
+          </Button>
         }
       />
-      <main className="flex-1 p-3 lg:p-6 overflow-auto">
+      <main className="flex-1 p-3 lg:p-6 overflow-y-auto overflow-x-hidden">
         {/* Project KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-6 mb-4 lg:mb-6">
-          <div className="kpi-card rounded-xl p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-6 mb-4 lg:mb-6 w-full">
+          <div className="kpi-card rounded-xl p-4 sm:p-6 min-w-0">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Faturamento</h3>
-            <div className="text-2xl font-bold text-text-primary" data-testid="kpi-revenue">
+            <div className="text-xl sm:text-2xl font-bold text-text-primary break-words" data-testid="kpi-revenue">
               R$ {totalRevenue.toLocaleString('pt-BR')}
             </div>
-            <p className="text-sm text-text-secondary">Total dos projetos</p>
+            <p className="text-xs sm:text-sm text-text-secondary">Total dos projetos</p>
           </div>
 
-          <div className="kpi-card rounded-xl p-6">
+          <div className="kpi-card rounded-xl p-4 sm:p-6 min-w-0">
             <h3 className="text-sm font-medium mb-2 text-text-secondary">Projetos Ativos</h3>
-            <div className="text-2xl font-bold text-blue-500 mb-1" data-testid="kpi-active-projects">
+            <div className="text-xl sm:text-2xl font-bold text-blue-500 mb-1" data-testid="kpi-active-projects">
               {projects?.filter(p => p.status !== 'completed' && p.status !== 'cancelled').length || 0}
             </div>
-            <p className="text-sm text-text-secondary">Em andamento</p>
+            <p className="text-xs sm:text-sm text-text-secondary">Em andamento</p>
           </div>
         </div>
 

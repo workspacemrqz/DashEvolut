@@ -72,18 +72,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
       <Header 
         title="Dashboard" 
         subtitle="Visão geral dos principais indicadores"
       />
 
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-3 lg:p-6 overflow-y-auto overflow-x-hidden">
         {/* Métricas Essenciais */}
         {metrics && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div className="kpi-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-blue-300">{metrics.activeProjects}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8 w-full">
+            <div className="kpi-card rounded-xl p-4 text-center min-w-0">
+              <div className="text-xl sm:text-2xl font-bold text-blue-300">{metrics.activeProjects}</div>
               <div className="text-sm text-gray-300">
                 Projetos
               </div>
