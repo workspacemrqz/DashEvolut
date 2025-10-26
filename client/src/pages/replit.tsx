@@ -31,10 +31,9 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Download, DollarSign } from "lucide-react";
+import { Plus, Pencil, Trash2, DollarSign } from "lucide-react";
 import type { Expense, InsertExpense, UpdateExpense } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import * as XLSX from "xlsx";
 
 const FREQUENCY_OPTIONS = [
   { value: "mensal", label: "Mensal" },
@@ -223,30 +222,6 @@ export default function ReplitPage() {
   const formatDateForInput = (date: Date | string) => {
     const d = new Date(date);
     return d.toISOString().split('T')[0];
-  };
-
-  const handleExportToExcel = () => {
-    const exportData = filteredExpenses.map(expense => ({
-      "Descrição": expense.description,
-      "Valor (R$)": expense.amount,
-      "Periodicidade": FREQUENCY_OPTIONS.find(f => f.value === expense.frequency)?.label || expense.frequency,
-      "Categoria": expense.category || "",
-      "Data de Início": formatDate(expense.startDate),
-      "Status": expense.status === "ativo" ? "Ativo" : "Inativo",
-      "Observações": expense.notes || ""
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Despesas");
-
-    const fileName = `despesas-financeiras-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
-
-    toast({
-      title: "Sucesso",
-      description: "Planilha exportada com sucesso!",
-    });
   };
 
   return (
@@ -485,25 +460,14 @@ export default function ReplitPage() {
         <CardHeader>
           <div className="flex justify-between items-center flex-wrap gap-4">
             <CardTitle>Lista de Despesas</CardTitle>
-            <div className="flex gap-2 flex-wrap">
-              <Input
-                type="text"
-                placeholder="Buscar por descrição..."
-                value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
-                className="w-[200px]"
-                data-testid="input-search-filter"
-              />
-              <Button
-                variant="outline"
-                onClick={handleExportToExcel}
-                data-testid="button-export-excel"
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Exportar Excel
-              </Button>
-            </div>
+            <Input
+              type="text"
+              placeholder="Buscar por descrição..."
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+              className="w-[200px]"
+              data-testid="input-search-filter"
+            />
           </div>
           <div className="flex gap-2 flex-wrap mt-4">
             <div className="flex gap-2 flex-wrap">

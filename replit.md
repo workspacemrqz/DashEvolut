@@ -21,7 +21,7 @@ The application follows a modern full-stack architecture with a React frontend, 
     - Chart visualization: Expense breakdown by frequency with total amounts and quantities
     - Filters: Replaced name filters with frequency (Mensal/Anual/Semanal/Único) and status (Ativo/Inativo) filters
     - Table columns: Descrição | Valor | Periodicidade | Categoria | Data de Início | Status | Ações
-    - Excel export: Updated to "despesas-financeiras-{date}.xlsx" with all expense fields
+    - Excel export removed: Export functionality has been completely removed from the page
   - **Navigation**: Sidebar updated from "Servidores" to "Gestão Financeira" with DollarSign icon
   - **Data Preservation**: All date formatting in pt-BR locale (DD/MM/YYYY), currency in R$, proper ISO date conversion for API calls
 
@@ -119,7 +119,7 @@ Language: Brazilian Portuguese
 - **Subscription Billing**: Recurring payment management with service checklists. Enhanced client selection in subscription form with searchable sheet interface for better UX when selecting clients from the database.
 - **Proposal Generation**: Integration with external webhook for automated proposal creation
 - **Notification System**: Rule-based alerting for delayed projects, payment reminders, and upselling opportunities
-- **Financial Expense Management**: Complete expense tracking system with CRUD operations, categorization by frequency (monthly/annual/weekly/one-time), category filtering, status management (active/inactive), visual analytics with charts showing expense breakdown, and Excel export capabilities
+- **Financial Expense Management**: Complete expense tracking system with CRUD operations, categorization by frequency (monthly/annual/weekly/one-time), category filtering, status management (active/inactive), and visual analytics with charts showing expense breakdown
 
 ## External Dependencies
 
